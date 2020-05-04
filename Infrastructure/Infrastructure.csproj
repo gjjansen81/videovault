@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>VideoVault.Infrastructure</AssemblyName>
+    <RootNamespace>VideoVault.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+</Project>

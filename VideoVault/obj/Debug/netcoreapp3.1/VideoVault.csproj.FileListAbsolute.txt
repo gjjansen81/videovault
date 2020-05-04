@@ -1,0 +1,10 @@
+C:\prive\VideoVault\VideoVault\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\prive\VideoVault\VideoVault\bin\Debug\netcoreapp3.1\appsettings.json
+C:\prive\VideoVault\VideoVault\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+C:\prive\VideoVault\VideoVault\bin\Debug\netcoreapp3.1\VideoVault.exe
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\VideoVault.csprojAssemblyReference.cache
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\staticwebassets\VideoVault.StaticWebAssets.Manifest.cache
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\staticwebassets\VideoVault.StaticWebAssets.xml
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\VideoVault.AssemblyInfoInputs.cache
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\VideoVault.AssemblyInfo.cs
+C:\prive\VideoVault\VideoVault\obj\Debug\netcoreapp3.1\VideoVault.RazorTargetAssemblyInfo.cache

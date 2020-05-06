@@ -38,7 +38,7 @@ namespace VideoVault.Infrastructure
             services.AddTransient<IIdentityService, IdentityService>();
             //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
-            services.AddAuthentication()
+            services.AddAuthentication()    
                 .AddIdentityServerJwt();
             
             return services;

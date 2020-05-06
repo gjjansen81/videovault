@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Infrastructure;
+using VideoVault.Infrastructure.Persistence;
 using VideoVault.WebUI.Services;
 
 namespace VideoVault.WebUI
@@ -25,6 +26,8 @@ namespace VideoVault.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>();
 
             services.AddControllers();
         }

@@ -13,12 +13,10 @@ namespace VideoVault.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(opt =>
-                opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("CleanArchitectureDb"));
+                    options.UseInMemoryDatabase("VideoVaultDb"));
             }
             else
             {

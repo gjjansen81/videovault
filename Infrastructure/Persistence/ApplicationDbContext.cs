@@ -107,7 +107,7 @@ namespace VideoVault.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
+            builder.HasDefaultSchema("public");
             base.OnModelCreating(builder);
         }
     }

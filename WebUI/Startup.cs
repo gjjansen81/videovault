@@ -35,7 +35,7 @@ namespace VideoVault.WebUI
             services.AddControllers();
 
             // Register the Swagger services
-            services.AddSwaggerDocument();
+            //services.AddSwaggerDocument();
 
             services.AddOpenApiDocument(configure =>
             {
@@ -67,12 +67,14 @@ namespace VideoVault.WebUI
             app.UseAuthorization();
         
             app.UseOpenApi();
+            app.UseSwaggerUi3();
+            /*
             app.UseSwaggerUi3(settings =>
             {
                 settings.Path = "/api";
                 settings.DocumentPath = "/api/specification.json";
             });
-
+            */
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

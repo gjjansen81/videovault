@@ -56,10 +56,10 @@
   },
   "codeGenerators": {
     "openApiToCSharpClient": {
-      "clientBaseClass": null,
+      "clientBaseClass": "VideoVaultAppBase",
       "configurationClass": null,
       "generateClientClasses": true,
-      "generateClientInterfaces": false,
+      "generateClientInterfaces": true,
       "clientBaseInterface": null,
       "injectHttpClient": true,
       "disposeHttpClient": true,
@@ -69,16 +69,16 @@
       "wrapDtoExceptions": true,
       "useHttpClientCreationMethod": false,
       "httpClientType": "System.Net.Http.HttpClient",
-      "useHttpRequestMessageCreationMethod": false,
-      "useBaseUrl": true,
+      "useHttpRequestMessageCreationMethod": true,
+      "useBaseUrl": false,
       "generateBaseUrlProperty": true,
       "generateSyncMethods": false,
       "exposeJsonSerializerSettings": false,
       "clientClassAccessModifier": "public",
       "typeAccessModifier": "public",
-      "generateContractsOutput": false,
-      "contractsNamespace": null,
-      "contractsOutputFilePath": null,
+      "generateContractsOutput": true,
+      "contractsNamespace": "VideoVault.WebApi",
+      "contractsOutputFilePath": "../WebUI/ClientApp/VideoVaultContracts.g.cs",
       "parameterDateTimeFormat": "s",
       "parameterDateFormat": "yyyy-MM-dd",
       "generateUpdateJsonSerializerSettingsMethod": true,
@@ -135,7 +135,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../WebUI/ClientApp/VideoVaultApp.cs"
+      "output": "../WebUI/ClientApp/VideoVaultApp.g.cs"
     }
   }
 }

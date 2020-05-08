@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using VideoVault.Application.Common.Interfaces;
 
-namespace VideoVault.WebUI.Services
+namespace VideoVault.WebApi.Services
 {
     public class CurrentUserService : ICurrentUserService
     {

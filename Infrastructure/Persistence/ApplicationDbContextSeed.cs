@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace VideoVault.Infrastructure.Persistence
+namespace Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {

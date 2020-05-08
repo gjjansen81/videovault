@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using VideoVault.Application.Common.Models;
 
-namespace VideoVault.Infrastructure.Identity
+namespace Infrastructure.Identity
 {
     public static class IdentityResultExtensions
     {

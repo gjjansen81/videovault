@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using VideoVault.Domain.Entities;
 
-namespace VideoVault.Infrastructure.Identity
+namespace Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser
     {

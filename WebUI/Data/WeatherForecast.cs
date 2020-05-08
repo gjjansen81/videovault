@@ -1,6 +1,6 @@
 using System;
 
-namespace VideoVault.WebUI
+namespace VideoVault.WebUI.Data
 {
     public class WeatherForecast
     {

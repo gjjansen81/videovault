@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 
-namespace VideoVault.Infrastructure.Identity
+namespace Infrastructure.Identity
 {
     public class IdentityService : IIdentityService
     {

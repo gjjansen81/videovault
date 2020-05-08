@@ -1,13 +1,13 @@
-﻿using Infrastructure.Services;
+﻿using Infrastructure.Identity;
+using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoVault.Application.Common.Interfaces;
-using VideoVault.Infrastructure.Identity;
-using VideoVault.Infrastructure.Persistence;
 
-namespace VideoVault.Infrastructure
+namespace Infrastructure
 {
     public static class DependencyInjection
     {

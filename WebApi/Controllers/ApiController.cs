@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace VideoVault.WebUI.Controllers
+namespace VideoVault.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace VideoVault.WebUI.Controllers
+namespace VideoVault.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

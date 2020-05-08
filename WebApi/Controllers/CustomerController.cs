@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VideoVault.WebUI.Controllers
+namespace VideoVault.WebApi.Controllers
 {
     [Authorize]
     public class CustomerController : ApiController

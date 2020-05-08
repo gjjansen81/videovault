@@ -1,19 +1,18 @@
-﻿using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Options;
-using System.Data;
+﻿using System.Data;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using IdentityServer4.EntityFramework.Options;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Options;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Domain.Common;
 using VideoVault.Domain.Entities;
-using VideoVault.Infrastructure.Identity;
 
-namespace VideoVault.Infrastructure.Persistence
+namespace Infrastructure.Persistence
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {

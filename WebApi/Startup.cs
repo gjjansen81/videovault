@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using VideoVault.Application;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.WebApi.Services;
 
@@ -25,7 +26,7 @@ namespace VideoVault.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddApplication();
+            services.AddApplication();
             services.AddInfrastructure(Configuration);
 
             services.AddScoped<ICurrentUserService, CurrentUserService>();

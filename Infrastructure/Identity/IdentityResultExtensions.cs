@@ -1,16 +1,16 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using VideoVault.Application.Common.Models;
 
 namespace Infrastructure.Identity
 {
     public static class IdentityResultExtensions
     {
-        public static Result ToApplicationResult(this IdentityResult result)
+        public static OutputResult<string> ToApplicationResult(this IdentityResult result, string userId= null)
         {
             return result.Succeeded
-                ? Result.Success()
-                : Result.Failure(result.Errors.Select(e => e.Description));
+                ? OutputResult<string>.Success(userId)
+                : OutputResult<string>.Failure(result.Errors.Select(e => e.Description));
         }
     }
 }

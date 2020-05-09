@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 
@@ -22,7 +22,8 @@ namespace Infrastructure.Identity
 
             return user.UserName;
         }
-        public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+
+        public async Task<OutputResult<string>> CreateUserAsync(string userName, string password)
         {
             var user = new ApplicationUser
             {
@@ -32,7 +33,7 @@ namespace Infrastructure.Identity
 
             var result = await _userManager.CreateAsync(user, password);
 
-            return (result.ToApplicationResult(), user.Id);
+            return result.ToApplicationResult(user.Id);
         }
 
         public async Task<Result> DeleteUserAsync(string userId)

@@ -9,13 +9,7 @@ namespace VideoVault.WebApi.Controllers
     //[Authorize]
     public class UserController : ApiController
     {
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult<OutputResult<string>>> Create(CreateIdentityCommand command)
-        {
-            return await Mediator.Send(command);
-        }
-
+       
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, object command)
         {

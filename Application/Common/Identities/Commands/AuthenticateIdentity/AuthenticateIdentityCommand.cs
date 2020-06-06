@@ -6,13 +6,13 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Identities.Commands.AuthenticateIdentity
 {
-    public class AuthenticateIdentityCommand : IRequest<OutputResult<string>>
+    public class AuthenticateIdentityCommand : IRequest<OutputResult<AuthenticationDto>>
     {
-        public string Password { get; set; }
         public string UserName { get; set; }
+        public string Password { get; set; }
     }
 
-    public class AuthenticateIdentityCommandHandler : IRequestHandler<AuthenticateIdentityCommand, OutputResult<string>>
+    public class AuthenticateIdentityCommandHandler : IRequestHandler<AuthenticateIdentityCommand, OutputResult<AuthenticationDto>>
     {
         private readonly IIdentityService _identityService;
 
@@ -21,7 +21,7 @@ namespace VideoVault.Application.Common.Identities.Commands.AuthenticateIdentity
             _identityService = identityService;
         }
 
-        public async Task<OutputResult<string>> Handle(AuthenticateIdentityCommand request, CancellationToken cancellationToken)
+        public async Task<OutputResult<AuthenticationDto>> Handle(AuthenticateIdentityCommand request, CancellationToken cancellationToken)
         {
             return await _identityService.AuthenticateAsync(request.UserName, request.Password);
         }

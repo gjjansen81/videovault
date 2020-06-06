@@ -56,25 +56,26 @@ namespace Infrastructure.Identity
             return Result.Success();
         }
 
-        public async Task<OutputResult<string>> AuthenticateAsync(string userName, string password)
+        public async Task<OutputResult<AuthenticationDto>> AuthenticateAsync(string userName, string password)
         {
             var user = await _userManager.FindByNameAsync(userName);
             var loginResult = await _userManager.CheckPasswordAsync(user, password );
             if (!loginResult)
             {
-                return new OutputResult<string>() { Output = null };
+                return new OutputResult<AuthenticationDto>() { Output = null };
             }
 
             var signingKey = Convert.FromBase64String(_configuration["Jwt:Key"]);
             var expiryDuration = int.Parse(_configuration["Jwt:ExpiryDuration"]);
-
+            DateTime expirationDate = DateTime.UtcNow.AddMinutes(expiryDuration);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = null,              // Not required as no third-party is involved
                 Audience = null,            // Not required as no third-party is involved
                 IssuedAt = DateTime.UtcNow,
                 NotBefore = DateTime.UtcNow,
-                Expires = DateTime.UtcNow.AddMinutes(expiryDuration),
+                Expires = expirationDate,
                 Subject = new ClaimsIdentity(new List<Claim>()
                 {
                     new Claim("userid", user.Id.ToString())//,
@@ -85,7 +86,7 @@ namespace Infrastructure.Identity
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
             var token = jwtTokenHandler.WriteToken(jwtToken);
-            return new OutputResult<string>() { Output = token };
+            return new OutputResult<AuthenticationDto>() { Output = new AuthenticationDto(){ Token = token , ExpirationDate = expirationDate}, Succeeded = true};
         }
 
         public async Task<Result> DeleteUserAsync(ApplicationUser user)

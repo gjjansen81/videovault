@@ -1,23 +1,24 @@
 ﻿@page "/Identity/Account/login"
 @using System.Net
 @using VideoVault.WebApi
+@using VideoVault.WebUI.Services
 
-@inject IIdentityClient IdentityClient
+@inject IIdentityService IdentityService
 
 <h1>Login</h1>
 
 <label>Username</label>
-<input @bind="userName" placeholder="Username" />
+<input @bind="userName" placeholder="Username"/>
 <label>password</label>
-<input @bind="password" placeholder="password" />
+<input @bind="password" type="password" placeholder="password"/>
 <button @onclick="@Authenticate">Login</button>
 
 @code {
-    private string userName;
-    private string password;
+    private string userName = "Test1";
+    private string password = "Test123!";
 
     private async Task Authenticate()
     {
-        var result = await IdentityClient.AuthenticateAsync(new AuthenticateIdentityCommand(password, userName));
+        var result = await IdentityService.AuthenticateAsync(userName, password);
     }
 }

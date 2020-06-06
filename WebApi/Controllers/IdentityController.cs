@@ -24,9 +24,9 @@ namespace VideoVault.WebApi.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Authenticate")]
-        public async Task<ActionResult<OutputResult<string>>> Authenticate(AuthenticateIdentityCommand command)
+        public async Task<ActionResult<OutputResult<AuthenticationDto>>> Authenticate(string userName, string password)
         {
-            return await Mediator.Send(command);
+            return await Mediator.Send(new AuthenticateIdentityCommand { UserName = userName, Password = password});
         }
     }
 }

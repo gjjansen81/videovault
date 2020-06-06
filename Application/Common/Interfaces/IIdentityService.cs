@@ -8,6 +8,6 @@ namespace VideoVault.Application.Common.Interfaces
         Task<string> GetUserNameAsync(string userId);
         Task<OutputResult<string>> CreateUserAsync(string userName, string password);
         Task<Result> DeleteUserAsync(string userId);
-        Task<OutputResult<string>> AuthenticateAsync(string userName, string password);
+        Task<OutputResult<AuthenticationDto>> AuthenticateAsync(string userName, string password);
     }
 }

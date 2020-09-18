@@ -1,8 +1,10 @@
-﻿<AuthorizeView>
+﻿
+<AuthorizeView>
     @page "/fetchdata"
     @using VideoVault.WebApi
 
     @inject IWeatherForecastClient ForecastService
+    @inject NavigationManager NavigationManager 
 
     <h1>Weather forecast</h1>
 
@@ -42,7 +44,14 @@
 
         protected override async Task OnInitializedAsync()
         {
-            _forecasts = (await ForecastService.GetAsync()).ToList();
+            try
+            {
+                _forecasts = (await ForecastService.GetAsync()).ToList();
+            }
+            catch (ApiException e)
+            {
+                NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+            }
         }
     }
 </AuthorizeView>

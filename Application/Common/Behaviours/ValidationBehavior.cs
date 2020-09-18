@@ -22,7 +22,7 @@ namespace VideoVault.Application.Common.Behaviours
         {
             if (_validators.Any())
             {
-                var context = new ValidationContext(request);
+                var context = new ValidationContext<TRequest>(request);
 
                 var failures = _validators
                     .Select(v => v.Validate(context))

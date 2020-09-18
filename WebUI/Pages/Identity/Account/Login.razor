@@ -1,17 +1,26 @@
 ﻿@page "/Identity/Account/login"
 @using System.Net
+@using Microsoft.AspNetCore.WebUtilities
 @using VideoVault.WebApi
 @using VideoVault.WebUI.Services
 
 @inject IIdentityService IdentityService
+@inject NavigationManager NavigationManager
 
-<h1>Login</h1>
+    <AuthorizeView roles="superuser">
+        <Authorized>
+            <span>Successfully logged in as super user!</span>
+        </Authorized>
+        <NotAuthorized>
+            <h1>Login</h1>
 
-<label>Username</label>
-<input @bind="userName" placeholder="Username"/>
-<label>password</label>
-<input @bind="password" type="password" placeholder="password"/>
-<button @onclick="@Authenticate">Login</button>
+            <label>Username</label>
+            <input @bind="userName" placeholder="Username" />
+            <label>password</label>
+            <input @bind="password" type="password" placeholder="password" />
+            <button @onclick="@Authenticate">Login</button>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     private string userName = "Test1";
@@ -20,5 +29,12 @@
     private async Task Authenticate()
     {
         var result = await IdentityService.AuthenticateAsync(userName, password);
+        if (result)
+        {
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirect", out var redirect);
+            if (!String.IsNullOrWhiteSpace(redirect))
+                NavigationManager.NavigateTo(redirect);
+        }
     }
 }

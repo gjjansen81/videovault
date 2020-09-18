@@ -13,17 +13,7 @@ namespace VideoVault.WebApi
         // Called by implementing swagger client classes
         protected async Task<HttpRequestMessage> CreateHttpRequestMessageAsync(CancellationToken cancellationToken)
         {
-            var msg = new HttpRequestMessage();
-
-            //var identityService = HttpContext.RequestServices.GetService<IIdentityService>();
-            //var token = await IdentityService.GetToken());
-
-          //  if (identityService!= null)
-            {
-                var token = "";//await identityService();
-                msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            }
-            return msg;
+            return await Task.FromResult<HttpRequestMessage>(new HttpRequestMessage());
         }
 
     }

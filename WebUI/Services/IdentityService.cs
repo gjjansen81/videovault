@@ -27,7 +27,7 @@ namespace VideoVault.WebUI.Services
 
             if (result.Succeeded)
             {
-                await _tokenAuthenticationStateProvider.SetTokenAsync(result.Output.Token);
+                _tokenAuthenticationStateProvider.SetToken(result.Output.Token);
                 _memoryCache.Set(TokenKey, result.Output.Token, result.Output.ExpirationDate);
             }
             return result.Succeeded;

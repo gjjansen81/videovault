@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using VideoVault.Domain.Entities;
 
 namespace Infrastructure.Identity
@@ -7,5 +9,19 @@ namespace Infrastructure.Identity
     {
         // Your Extended Properties
         public Customer Customer { get; set; }
+        public ICollection<IdentityRole> UserRoles { get; set; }
+        [NotMapped]
+        public ICollection<string> Roles { get; set; }
+        //public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+    }
+
+    public class ApplicationUserRole : IdentityUserRole<string>
+    {
+        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationRole Role { get; set; }
+    }
+    public class ApplicationRole : IdentityRole<string>
+    {
+        public ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }

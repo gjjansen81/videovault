@@ -12,7 +12,7 @@ namespace VideoVault.WebUI.Areas.Identity
     {
         private string _token;
 
-        public async Task SetTokenAsync(string token)
+        public void SetToken(string token)
         {
             _token = token;
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

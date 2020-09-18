@@ -65,6 +65,8 @@ namespace Infrastructure.Identity
                 return new OutputResult<AuthenticationDto>() { Output = null };
             }
 
+            user.Roles = await _userManager.GetRolesAsync(user);
+
             var signingKey = Convert.FromBase64String(_configuration["Jwt:Key"]);
             var expiryDuration = int.Parse(_configuration["Jwt:ExpiryDuration"]);
             DateTime expirationDate = DateTime.UtcNow.AddMinutes(expiryDuration);
@@ -78,8 +80,8 @@ namespace Infrastructure.Identity
                 Expires = expirationDate,
                 Subject = new ClaimsIdentity(new List<Claim>()
                 {
-                    new Claim("userid", user.Id.ToString())//,
-                    //new Claim("role", user.Role)
+                    new Claim("userid", user.Id.ToString()),
+                    new Claim("role", user.UserRoles.ToString())
                 }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature)
             };

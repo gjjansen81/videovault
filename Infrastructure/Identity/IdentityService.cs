@@ -65,7 +65,7 @@ namespace Infrastructure.Identity
                 return new OutputResult<AuthenticationDto>() { Output = null };
             }
 
-            user.Roles = await _userManager.GetRolesAsync(user);
+            user.UserRoles = (await _userManager.GetRolesAsync(user)).Select(x => new IdentityRole(x));
 
             var signingKey = Convert.FromBase64String(_configuration["Jwt:Key"]);
             var expiryDuration = int.Parse(_configuration["Jwt:ExpiryDuration"]);

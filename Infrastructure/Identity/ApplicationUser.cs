@@ -9,10 +9,7 @@ namespace Infrastructure.Identity
     {
         // Your Extended Properties
         public Customer Customer { get; set; }
-        public ICollection<IdentityRole> UserRoles { get; set; }
-        [NotMapped]
-        public ICollection<string> Roles { get; set; }
-        //public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+        public IEnumerable<IdentityRole> UserRoles { get; set; }
     }
 
     public class ApplicationUserRole : IdentityUserRole<string>

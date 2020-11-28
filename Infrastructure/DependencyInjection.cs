@@ -1,4 +1,6 @@
 ﻿using System;
+using IdentityServer4.Stores;
+using Infrastructure.Customers;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
@@ -32,13 +34,12 @@ namespace Infrastructure
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<ICustomerService, CustomerService>();
             //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             services.AddAuthentication()    

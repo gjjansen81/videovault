@@ -13,6 +13,11 @@ namespace VideoVault.WebApi.Controllers
     {
         private IIdentityService _identityService;
 
+        public IdentityController(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("Create")]

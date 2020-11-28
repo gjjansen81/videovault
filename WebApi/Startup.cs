@@ -92,6 +92,7 @@ namespace VideoVault.WebApi
         
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
             /*
             app.UseSwaggerUi3(settings =>
             {

@@ -1,9 +1,14 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using VideoVault.Application.Common.Customers.Commands.Get;
+using VideoVault.Domain.Entities;
 
 namespace VideoVault.WebApi.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     [Authorize]
     public class CustomerController : ApiController
     {
@@ -27,17 +32,16 @@ namespace VideoVault.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpGet("[action]")]
-        public async Task<ActionResult> Get(int id)
+        [HttpGet]
+        public async Task<List<Customer>> Get()
         {
-           // if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            return await Mediator.Send(new GetCustomersCommand { });
+        }
 
-            //await Mediator.Send(new GetCustomerCommand { Id = id });
-
-            return NoContent();
+        [HttpGet("[action]/{id}")]
+        public async Task<Customer> GetById(int id)
+        {
+            return await Mediator.Send(new GetCustomerCommand { Id = id });
         }
 
         [HttpDelete("{id}")]

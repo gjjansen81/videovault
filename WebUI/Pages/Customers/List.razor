@@ -1,0 +1,49 @@
+﻿@page "/Customers/List"
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+@using VideoVault.WebApi
+@using VideoVault.WebUI.Services
+
+@inject ICustomerClient CustomerService
+@inject NavigationManager NavigationManager 
+
+<AuthorizeView roles="superuser">
+    <Authorized>
+        <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.OrdersCount > 5 ? "table-success" : ""'>
+            <GridColumn TRowData="Customer" Expression="c => c.Id" />
+            <GridColumn TRowData="Customer" Expression="c => c.Name" />
+            <GridColumn TRowData="Customer" Expression="c => c.DateOfBirth" Format="d" />
+            <GridColumn TRowData="Customer" Title="# Orders">@customers.Count orders</GridColumn>
+            <GridColumn TRowData="Customer">
+                <a href="/edit/ @@ customers.Id">edit</a>
+            </GridColumn>
+        </Grid>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<Customer> customers;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            customers = (await CustomerService.GetAsync()).ToList();
+        }
+        catch (ApiException e)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if(firstRender)
+        {
+            // Do work to load page data and set properties
+        }
+    }
+}

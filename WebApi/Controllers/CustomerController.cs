@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VideoVault.Application.Common.Customers.Commands.Get;
+using VideoVault.Application.Common.Customers.Commands;
 using VideoVault.Domain.Entities;
 
 namespace VideoVault.WebApi.Controllers
@@ -13,16 +13,15 @@ namespace VideoVault.WebApi.Controllers
     public class CustomerController : ApiController
     {
         [HttpPost]
-        public async Task<ActionResult<int>> Create(int command)
+        public async Task<ActionResult<Customer>> Create(UpsertCustomerCommand command)
         {
-            return BadRequest();
-            //return await Mediator.Send(command);
+            return await Mediator.Send(command);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, object command)
+        public async Task<ActionResult<Customer>> Update(int id, UpsertCustomerCommand command)
         {
-           // if (id != command.Id)
+            if (id != command.Customer.Id)
             {
                 return BadRequest();
             }
@@ -32,7 +31,7 @@ namespace VideoVault.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<List<Customer>> Get()
         {
             return await Mediator.Send(new GetCustomersCommand { });
@@ -47,7 +46,7 @@ namespace VideoVault.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-           // await Mediator.Send(new DeleteTodoItemCommand { Id = id });
+            await Mediator.Send(new DeleteCustomerCommand { Id = id });
 
             return NoContent();
         }

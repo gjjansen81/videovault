@@ -6,7 +6,9 @@ namespace VideoVault.Application.Common.Interfaces
 {
     public interface ICustomerService
     {
-        List<Customer> GetCustomers();
+        Task<List<Customer>> GetCustomersAsync();
         Task<Customer> GetCustomerAsync(int id);
+        Task<Customer> UpsertCustomerAsync(Customer customer);
+        Task DeleteCustomerAsync(int id);
     }
 }

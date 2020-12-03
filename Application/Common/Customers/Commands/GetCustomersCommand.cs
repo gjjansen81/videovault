@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using VideoVault.Application.Common.Interfaces;
-using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Entities;
 
-namespace VideoVault.Application.Common.Customers.Commands.Get
+namespace VideoVault.Application.Common.Customers.Commands
 {
     public class GetCustomersCommand : IRequest<List<Customer>>
     {
@@ -23,7 +22,7 @@ namespace VideoVault.Application.Common.Customers.Commands.Get
 
         public async Task<List<Customer>> Handle(GetCustomersCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_customerService.GetCustomers());
+            return await _customerService.GetCustomersAsync();
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Domain.Entities;
 
-namespace VideoVault.Application.Common.Customers.Commands.Get
+namespace VideoVault.Application.Common.Customers.Commands
 {
     public class GetCustomerCommand : IRequest<Customer>
     {

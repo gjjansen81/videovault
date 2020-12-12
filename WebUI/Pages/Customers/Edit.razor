@@ -7,14 +7,15 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <Inputn id="ID" @bind="customer.Id" />
-    <InputText id="name" @bind="customer.Name" />
+    <Input @bind-Value="customer.Id" @bind-Value:event="OnInitialized" />
+    <InputText @bind-Value="customer.Name" @bind-Value:event="OnInitialized" />
+    <InputDate @bind-Value="customer.CreatedOn" @bind-Value:event="OnInitialized" />
 
     <button type="submit">Submit</button>
 </EditForm>
 
 @code {
-    private Customer customer = new Customer( null, 0,null, "");
+    private CustomerDto customer = new CustomerDto(){Id = 1, Name = "test1", CreatedOn = DateTimeOffset.Now};
     private EditContext editContext;
 
     protected override void OnInitialized()
@@ -24,6 +25,6 @@
 
     private async Task HandleValidSubmit()
     {
-        customer = await CustomerService.CreateAsync(new UpsertCustomerCommand(customer));
+        customer = await CustomerService.CreateAsync(new UpsertCustomerCommand() { Customer = customer });
     }
 }

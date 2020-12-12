@@ -3,26 +3,28 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using VideoVault.WebApi
 @using VideoVault.WebUI.Services
+@using Components.Grid
 
 @inject ICustomerClient CustomerService
 @inject NavigationManager NavigationManager 
 
 <AuthorizeView roles="superuser">
     <Authorized>
+        <h1>Customers</h1>
         <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.OrdersCount > 5 ? "table-success" : ""'>
-            <GridColumn TRowData="Customer" Expression="c => c.Id" />
-            <GridColumn TRowData="Customer" Expression="c => c.Name" />
-            <GridColumn TRowData="Customer" Expression="c => c.DateOfBirth" Format="d" />
+            <GridColumn TRowData="Customer" Expression="c => c.Id"/>
+            <GridColumn TRowData="Customer" Expression="c => c.Name"/>
+            <GridColumn TRowData="Customer" Expression="c => c.DateOfBirth" Format="d"/>
             <GridColumn TRowData="Customer" Title="# Orders">@customers.Count orders</GridColumn>
             <GridColumn TRowData="Customer">
-                <a href="/edit/ @@ customers.Id">edit</a>
+                <a href="/edit/ @@customers.Id">edit</a>
             </GridColumn>
         </Grid>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    private List<Customer> customers;
+    private List<CustomerDto> customers;
 
 
     protected override async Task OnInitializedAsync()

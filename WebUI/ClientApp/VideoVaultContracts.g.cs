@@ -20,11 +20,11 @@ namespace VideoVault.WebApi
     {
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Customer> CreateAsync(UpsertCustomerCommand command, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<CustomerDto> CreateAsync(UpsertCustomerCommand command, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Customer> UpdateAsync(int id, UpsertCustomerCommand command, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<CustomerDto> UpdateAsync(int id, UpsertCustomerCommand command, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -32,11 +32,11 @@ namespace VideoVault.WebApi
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Customer>> GetAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CustomerDto>> GetAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Customer> GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<CustomerDto> GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     
     }
     
@@ -89,160 +89,173 @@ namespace VideoVault.WebApi
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Customer 
+    public partial class CustomerDto 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public Customer(System.DateTimeOffset? @createdOn, int @id, System.DateTimeOffset? @lastChangedOn, string @name)
-        {
-            this.Name = @name;
-            this.CreatedOn = @createdOn;
-            this.LastChangedOn = @lastChangedOn;
-            this.Id = @id;
-        }
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Id { get; set; }
     
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name { get; }
+        public string Name { get; set; }
     
         [Newtonsoft.Json.JsonProperty("createdOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedOn { get; }
+        public System.DateTimeOffset? CreatedOn { get; set; }
     
         [Newtonsoft.Json.JsonProperty("lastChangedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastChangedOn { get; }
+        public System.DateTimeOffset? LastChangedOn { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Id { get; }
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
     
+        public static CustomerDto FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<CustomerDto>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class UpsertCustomerCommand 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public UpsertCustomerCommand(Customer @customer)
+        [Newtonsoft.Json.JsonProperty("customer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomerDto Customer { get; set; }
+    
+        public string ToJson() 
         {
-            this.Customer = @customer;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
-        [Newtonsoft.Json.JsonProperty("customer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Customer Customer { get; }
-    
+        public static UpsertCustomerCommand FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<UpsertCustomerCommand>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class OutputResultOfString : Result
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public OutputResultOfString(System.Collections.Generic.ICollection<string> @errors, string @output, bool @succeeded)
-            : base(errors, succeeded)
+        [Newtonsoft.Json.JsonProperty("output", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Output { get; set; }
+    
+        public string ToJson() 
         {
-            this.Output = @output;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
-        [Newtonsoft.Json.JsonProperty("output", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Output { get; }
-    
+        public static OutputResultOfString FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<OutputResultOfString>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Result 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public Result(System.Collections.Generic.ICollection<string> @errors, bool @succeeded)
-        {
-            this.Succeeded = @succeeded;
-            this.Errors = @errors;
-        }
-    
         [Newtonsoft.Json.JsonProperty("succeeded", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Succeeded { get; }
+        public bool Succeeded { get; set; }
     
         [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> Errors { get; }
+        public System.Collections.Generic.ICollection<string> Errors { get; set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static Result FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Result>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class CreateIdentityCommand 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public CreateIdentityCommand(string @password, string @userName)
-        {
-            this.Password = @password;
-            this.UserName = @userName;
-        }
-    
         [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Password { get; }
+        public string Password { get; set; }
     
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UserName { get; }
+        public string UserName { get; set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static CreateIdentityCommand FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreateIdentityCommand>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class OutputResultOfAuthenticationDto : Result
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public OutputResultOfAuthenticationDto(System.Collections.Generic.ICollection<string> @errors, AuthenticationDto @output, bool @succeeded)
-            : base(errors, succeeded)
+        [Newtonsoft.Json.JsonProperty("output", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public AuthenticationDto Output { get; set; }
+    
+        public string ToJson() 
         {
-            this.Output = @output;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
-        [Newtonsoft.Json.JsonProperty("output", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AuthenticationDto Output { get; }
-    
+        public static OutputResultOfAuthenticationDto FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<OutputResultOfAuthenticationDto>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class AuthenticationDto 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public AuthenticationDto(System.DateTimeOffset @expirationDate, string @token)
-        {
-            this.Token = @token;
-            this.ExpirationDate = @expirationDate;
-        }
-    
         [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Token { get; }
+        public string Token { get; set; }
     
         [Newtonsoft.Json.JsonProperty("expirationDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset ExpirationDate { get; }
+        public System.DateTimeOffset ExpirationDate { get; set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static AuthenticationDto FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticationDto>(data);
+        }
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.1.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class WeatherForecast 
     {
-        [Newtonsoft.Json.JsonConstructor]
-        public WeatherForecast(System.DateTimeOffset @date, string @summary, int @temperatureC, int @temperatureF)
-        {
-            this.Date = @date;
-            this.TemperatureC = @temperatureC;
-            this.TemperatureF = @temperatureF;
-            this.Summary = @summary;
-        }
-    
         [Newtonsoft.Json.JsonProperty("date", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset Date { get; }
+        public System.DateTimeOffset Date { get; set; }
     
         [Newtonsoft.Json.JsonProperty("temperatureC", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TemperatureC { get; }
+        public int TemperatureC { get; set; }
     
         [Newtonsoft.Json.JsonProperty("temperatureF", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TemperatureF { get; }
+        public int TemperatureF { get; set; }
     
         [Newtonsoft.Json.JsonProperty("summary", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Summary { get; }
+        public string Summary { get; set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static WeatherForecast FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherForecast>(data);
+        }
     
     }
 

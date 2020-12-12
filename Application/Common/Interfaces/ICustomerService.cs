@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VideoVault.Domain.Entities;
+using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Interfaces
 {
     public interface ICustomerService
     {
-        Task<List<Customer>> GetCustomersAsync();
-        Task<Customer> GetCustomerAsync(int id);
-        Task<Customer> UpsertCustomerAsync(Customer customer);
+        Task<List<CustomerDto>> GetCustomersAsync();
+        Task<CustomerDto> GetCustomerAsync(int id);
+        Task<CustomerDto> UpsertCustomerAsync(CustomerDto customer);
         Task DeleteCustomerAsync(int id);
     }
 }

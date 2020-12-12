@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using VideoVault.Application.Common.Models;
+using VideoVault.Domain.Entities;
 
 namespace VideoVault.Application.Common.Mappings
 {
@@ -9,9 +11,12 @@ namespace VideoVault.Application.Common.Mappings
     {
         public MappingProfile()
         {
-            ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
-        }
+            CreateMap<Customer, CustomerDto>();
+            CreateMap<CustomerDto, Customer>();
 
+            //ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+    
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using AutoMapper;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,7 @@ using NSwag;
 using NSwag.Generation.Processors.Security;
 using VideoVault.Application;
 using VideoVault.Application.Common.Interfaces;
+using VideoVault.Application.Common.Mappings;
 using VideoVault.WebApi.Services;
 
 namespace VideoVault.WebApi
@@ -38,7 +40,14 @@ namespace VideoVault.WebApi
                 .AddDbContextCheck<ApplicationDbContext>();
 
             services.AddControllers();
+            // Auto Mapper Configurations
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
 
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             var signingKey = Convert.FromBase64String(Configuration["Jwt:Key"]);
             services.AddAuthentication(x =>
                 {

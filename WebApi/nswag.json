@@ -1,5 +1,5 @@
-﻿{
-  "runtime": "NetCore31",
+{
+  "runtime": "Net50",
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
@@ -48,6 +48,7 @@
       "allowNullableBodyParameters": true,
       "output": null,
       "outputType": "Swagger2",
+      "newLineBehavior": "Auto",
       "assemblyPaths": [],
       "assemblyConfig": null,
       "referencePaths": [],
@@ -90,7 +91,7 @@
       "additionalNamespaceUsages": [],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": true,
-      "generateJsonMethods": false,
+      "generateJsonMethods": true,
       "enforceFlagEnums": false,
       "parameterArrayType": "System.Collections.Generic.IEnumerable",
       "parameterDictionaryType": "System.Collections.Generic.IDictionary",
@@ -114,7 +115,7 @@
       "dictionaryInstanceType": "System.Collections.Generic.Dictionary",
       "arrayBaseType": "System.Collections.ObjectModel.Collection",
       "dictionaryBaseType": "System.Collections.Generic.Dictionary",
-      "classStyle": "Record",
+      "classStyle": "Poco",
       "generateDefaultValues": true,
       "generateDataAnnotations": true,
       "excludedTypeNames": [],
@@ -129,13 +130,15 @@
       "inlineNamedAny": false,
       "generateDtoTypes": true,
       "generateOptionalPropertiesAsNullable": false,
+      "generateNullableReferenceTypes": false,
       "templateDirectory": null,
       "typeNameGeneratorType": null,
       "propertyNameGeneratorType": null,
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../WebUI/ClientApp/VideoVaultApp.g.cs"
+      "output": "../WebUI/ClientApp/VideoVaultApp.g.cs",
+      "newLineBehavior": "Auto"
     }
   }
 }

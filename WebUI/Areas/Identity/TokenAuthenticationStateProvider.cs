@@ -31,7 +31,7 @@ namespace VideoVault.WebUI.Areas.Identity
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            keyValuePairs.TryGetValue(ClaimTypes.Role, out var roles);
+            keyValuePairs.TryGetValue("role", out var roles);
 
             if (roles != null)
             {

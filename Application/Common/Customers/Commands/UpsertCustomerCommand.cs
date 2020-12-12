@@ -1,17 +1,17 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using VideoVault.Application.Common.Interfaces;
-using VideoVault.Domain.Entities;
+using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Customers.Commands
 {
-    public class UpsertCustomerCommand : IRequest<Customer>
+    public class UpsertCustomerCommand : IRequest<CustomerDto>
     {
-        public Customer Customer { get; set; }
+        public CustomerDto Customer { get; set; }
     }
 
-    public class UpsertCustomerCommandHandler : IRequestHandler<UpsertCustomerCommand, Customer>
+    public class UpsertCustomerCommandHandler : IRequestHandler<UpsertCustomerCommand, CustomerDto>
     {
         private readonly ICustomerService _customerService;
 
@@ -20,7 +20,7 @@ namespace VideoVault.Application.Common.Customers.Commands
             _customerService = customerService;
         }
 
-        public async Task<Customer> Handle(UpsertCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CustomerDto> Handle(UpsertCustomerCommand request, CancellationToken cancellationToken)
         {
             return await _customerService.UpsertCustomerAsync(request.Customer);
         }

@@ -16,6 +16,7 @@ namespace Infrastructure.Identity
         public virtual ApplicationUser User { get; set; }
         public virtual ApplicationRole Role { get; set; }
     }
+
     public class ApplicationRole : IdentityRole<string>
     {
         public ICollection<ApplicationUserRole> UserRoles { get; set; }

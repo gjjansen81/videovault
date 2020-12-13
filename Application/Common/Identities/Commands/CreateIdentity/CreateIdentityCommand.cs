@@ -14,16 +14,17 @@ namespace VideoVault.Application.Common.Identities.Commands.CreateIdentity
 
     public class CreateIdentityCommandHandler : IRequestHandler<CreateIdentityCommand, OutputResult<string>>
     {
-        private readonly IIdentityService _identityService;
+        private readonly IUserService _userService;
 
-        public CreateIdentityCommandHandler(IIdentityService identityService)
+        public CreateIdentityCommandHandler(IUserService userService)
         {
-            _identityService = identityService;
+            _userService = userService;
         }
 
         public async Task<OutputResult<string>> Handle(CreateIdentityCommand request, CancellationToken cancellationToken)
         {
-            return await _identityService.CreateUserAsync(request.UserName, request.Password);
+            return null;
+            //return await _userService.CreateUserAsync(request.UserName, request.Password);
         }
     }
 }

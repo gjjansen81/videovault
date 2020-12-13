@@ -4,16 +4,20 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject ICustomerClient CustomerService
 
-<EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+        <EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <InputNumber @bind-Value="Customer.Id" TValue="int" />
-    <InputText @bind-Value="Customer.Name" />
-    <InputDate @bind-Value="Customer.CreatedOn" TValue="DateTimeOffset?" />
+            <InputNumber @bind-Value="Customer.Id" TValue="int" />
+            <InputText @bind-Value="Customer.Name" />
+            <InputDate @bind-Value="Customer.CreatedOn" TValue="DateTimeOffset?" />
 
-    <button type="submit">Submit</button>
-</EditForm>
+            <button type="submit">Submit</button>
+        </EditForm>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     [Parameter]

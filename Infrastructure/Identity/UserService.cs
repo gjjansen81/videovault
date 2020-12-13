@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using VideoVault.Application.Common.Interfaces;
@@ -13,15 +14,27 @@ using VideoVault.Application.Common.Models;
 
 namespace Infrastructure.Identity
 {
-    public class IdentityService : IIdentityService
+    public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public IdentityService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IMapper mapper)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _mapper = mapper;
+        }
+
+        public async Task<List<UserDto>> GetUsersAsync()
+        {
+            return _mapper.Map<List<UserDto>>(await _userManager.Users.ToListAsync());
+        }
+
+        public async Task<UserDto> GetUserAsync(string userId)
+        {
+            return _mapper.Map<UserDto>(await _userManager.Users.FirstAsync(u => u.Id == userId));
         }
 
         public async Task<string> GetUserNameAsync(string userId)
@@ -31,17 +44,13 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
-        public async Task<OutputResult<string>> CreateUserAsync(string userName, string password)
+        public async Task<OutputResult<UserDto>> CreateUserAsync(UserDto user)
         {
-            var user = new ApplicationUser
-            {
-                UserName = userName,
-                Email = userName,
-            };
+            var applicationUser = _mapper.Map<ApplicationUser>(user);
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(applicationUser, user.Password);
 
-            return result.ToApplicationResult(user.Id);
+            return result.ToApplicationResult(user);
         }
 
         public async Task<Result> DeleteUserAsync(string userId)

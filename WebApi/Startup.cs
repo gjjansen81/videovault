@@ -43,6 +43,7 @@ namespace VideoVault.WebApi
             // Auto Mapper Configurations
             var mapperConfig = new MapperConfiguration(cfg =>
             {
+                cfg.AddProfile(new InfrastructureMappingProfile());
                 cfg.AddProfile(new MappingProfile());
             });
 

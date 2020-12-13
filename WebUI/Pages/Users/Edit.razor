@@ -1,0 +1,49 @@
+﻿@page "/Users/Edit/{Id:int}"
+@page "/Users/Edit/"
+@using VideoVault.WebApi
+@using Microsoft.AspNetCore.Components.Forms
+@inject IUserClient UserService
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+        <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <InputNumber @bind-Value="User.Id" TValue="int" />
+            <InputText @bind-Value="User.Name" />
+            <InputText @bind-Value="User.UserName" />
+            <InputText @bind-Value="User.Email" />
+            <InputText @bind-Value="User.Password" />
+            <InputText @bind-Value="PasswordConfirm" />
+
+            <button type="submit">Submit</button>
+        </EditForm>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public UserDto User { get; set; }
+
+    [Parameter]
+    public string PasswordConfirm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = new UserDto();
+        if (Id > 0)
+            User = await UserService.GetByIdAsync(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await UserService.CreateAsync(new UpsertUserCommand() { User = User });
+
+        if (result.Succeeded)
+            User = result.Output;
+    }
+}

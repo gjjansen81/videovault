@@ -1,6 +1,4 @@
-﻿using System;
-using IdentityServer4.Stores;
-using Infrastructure.Customers;
+﻿using Infrastructure.Customers;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
@@ -9,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using VideoVault.Application.Common.Interfaces;
 
 namespace Infrastructure
@@ -39,7 +38,7 @@ namespace Infrastructure
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IDateTime, DateTimeService>();
-            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICustomerService, CustomerService>();
             //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 

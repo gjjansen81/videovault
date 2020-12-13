@@ -1,19 +1,36 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VideoVault.Application.Common.Identities.Commands.CreateIdentity;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using VideoVault.Application.Common.Models;
+using VideoVault.Application.Common.Users;
+using VideoVault.Application.Common.Users.Authentication;
 
 namespace VideoVault.WebApi.Controllers
 {
-    //[Authorize]
+    [ApiController]
+    [Route("[controller]")]
+    [Authorize]
     public class UserController : ApiController
     {
-       
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, object command)
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Authenticate")]
+        public async Task<ActionResult<OutputResult<AuthenticationDto>>> Authenticate(string userName, string password)
         {
-           // if (id != command.Id)
+            return await Mediator.Send(new AuthenticateUserCommand { UserName = userName, Password = password });
+        }
+
+        [HttpPost]
+        public async Task<OutputResult<UserDto>> Create(UpsertUserCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDto>> Update(int id, UpsertUserCommand command)
+        {
+            if (id != command.User.Id)
             {
                 return BadRequest();
             }
@@ -22,24 +39,23 @@ namespace VideoVault.WebApi.Controllers
 
             return NoContent();
         }
-
+        
         [HttpGet("[action]")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult<List<UserDto>>> Get()
         {
-           // if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            return await Mediator.Send(new GetUsersCommand { });
+        }
 
-            //await Mediator.Send(new GetCustomerCommand { Id = id });
-
-            return NoContent();
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<UserDto>> GetById(int id)
+        {
+            return await Mediator.Send(new GetUserCommand { Id = id });
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-           // await Mediator.Send(new DeleteTodoItemCommand { Id = id });
+            await Mediator.Send(new DeleteUserCommand { Id = id });
 
             return NoContent();
         }

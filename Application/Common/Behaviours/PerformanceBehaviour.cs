@@ -12,18 +12,18 @@ namespace VideoVault.Application.Common.Behaviours
         private readonly Stopwatch _timer;
         private readonly ILogger<TRequest> _logger;
         private readonly ICurrentUserService _currentUserService;
-        private readonly IIdentityService _identityService;
+        private readonly IUserService _userService;
 
         public PerformanceBehaviour(
             ILogger<TRequest> logger, 
             ICurrentUserService currentUserService,
-            IIdentityService identityService)
+            IUserService userService)
         {
             _timer = new Stopwatch();
 
             _logger = logger;
             _currentUserService = currentUserService;
-            _identityService = identityService;
+            _userService = userService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -44,7 +44,7 @@ namespace VideoVault.Application.Common.Behaviours
 
                 if (!string.IsNullOrEmpty(userId))
                 {
-                    userName = await _identityService.GetUserNameAsync(userId);
+                    userName = await _userService.GetUserNameAsync(userId);
                 }
 
                 _logger.LogWarning("VideoVault Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",

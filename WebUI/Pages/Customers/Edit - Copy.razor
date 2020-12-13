@@ -1,0 +1,27 @@
+﻿@page "/Customers/EditTest"
+@using VideoVault.WebApi
+@using Microsoft.AspNetCore.Components.Forms
+@inject ICustomerClient CustomerService
+
+
+    <input @bind="Customer.Id" TValue="int" />
+    <input @bind="Customer.Name" />
+    <input @bind="Customer.CreatedOn" TValue="DateTimeOffset"/>
+
+    <button @onclick="AddCustomer">Add todo</button>
+
+
+@code {
+    [Parameter]
+    public CustomerDto Customer { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Customer = new CustomerDto() { Id = 1, Name = "test1", CreatedOn = DateTimeOffset.Now };
+    }
+
+    private async Task AddCustomer()
+    {
+        Customer = await CustomerService.CreateAsync(new UpsertCustomerCommand() { Customer = Customer });
+    }
+}

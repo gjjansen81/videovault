@@ -1,30 +1,36 @@
-﻿@page "/Customers/Edit"
+﻿@page "/Customers/Edit/{Id:int}"
+@page "/Customers/Edit/"
 @using VideoVault.WebApi
-
+@using Microsoft.AspNetCore.Components.Forms
 @inject ICustomerClient CustomerService
 
-<EditForm EditContext="@editContext" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <Input @bind-Value="customer.Id" @bind-Value:event="OnInitialized" />
-    <InputText @bind-Value="customer.Name" @bind-Value:event="OnInitialized" />
-    <InputDate @bind-Value="customer.CreatedOn" @bind-Value:event="OnInitialized" />
+    <InputNumber @bind-Value="Customer.Id" TValue="int" />
+    <InputText @bind-Value="Customer.Name" />
+    <InputDate @bind-Value="Customer.CreatedOn" TValue="DateTimeOffset?" />
 
     <button type="submit">Submit</button>
 </EditForm>
 
 @code {
-    private CustomerDto customer = new CustomerDto(){Id = 1, Name = "test1", CreatedOn = DateTimeOffset.Now};
-    private EditContext editContext;
+    [Parameter]
+    public int Id { get; set; }
 
-    protected override void OnInitialized()
+    [Parameter]
+    public CustomerDto Customer { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        editContext = new EditContext(customer);
+        Customer = new CustomerDto();
+        if (Id > 0)
+            Customer = await CustomerService.GetByIdAsync(Id);
     }
 
     private async Task HandleValidSubmit()
     {
-        customer = await CustomerService.CreateAsync(new UpsertCustomerCommand() { Customer = customer });
+        Customer = await CustomerService.CreateAsync(new UpsertCustomerCommand() { Customer = Customer });
     }
 }

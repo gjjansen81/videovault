@@ -3,21 +3,19 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using VideoVault.WebApi
 @using VideoVault.WebUI.Services
-@using Components.Grid
+@using VideoVault.WebUI.Components.Grid
 
 @inject ICustomerClient CustomerService
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
-    <Authorized>
+    <Authorized Context="Auth">
         <h1>Customers</h1>
-        <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.OrdersCount > 5 ? "table-success" : ""'>
-            <GridColumn TRowData="Customer" Expression="c => c.Id"/>
-            <GridColumn TRowData="Customer" Expression="c => c.Name"/>
-            <GridColumn TRowData="Customer" Expression="c => c.DateOfBirth" Format="d"/>
-            <GridColumn TRowData="Customer" Title="# Orders">@customers.Count orders</GridColumn>
-            <GridColumn TRowData="Customer">
-                <a href="/edit/ @@customers.Id">edit</a>
+        <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
+            <GridColumn TRowData="CustomerDto" Expression="c => c.Id" />
+            <GridColumn TRowData="CustomerDto" Expression="c => c.Name" />
+            <GridColumn TRowData="CustomerDto">
+                <a href="/Customers/edit/@context.Id">edit</a>
             </GridColumn>
         </Grid>
     </Authorized>
@@ -43,7 +41,7 @@
     {
         // execute conditionally for loading data, otherwise this will load
         // every time the page refreshes
-        if(firstRender)
+        if (firstRender)
         {
             // Do work to load page data and set properties
         }

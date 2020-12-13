@@ -1,25 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VideoVault.Domain.Entities
 {
     public class Customer
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name;
-        public DateTime? CreatedOn;
-        public DateTime? LastChangedOn;
-
-        public Customer()
-        {
-            
-        }
-
-        public Customer(int id = 0, string name= null, DateTime? createdOn = null, DateTime? lastChangedOn = null)
-        {
-            Id = id;
-            Name = name;
-            CreatedOn = createdOn;
-            LastChangedOn = lastChangedOn;
-        }
+        public string Name { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? LastChangedOn { get; set; }
     }
 }

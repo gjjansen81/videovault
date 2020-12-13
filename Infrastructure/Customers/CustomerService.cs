@@ -3,6 +3,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
@@ -34,14 +35,26 @@ namespace Infrastructure.Customers
         public async Task<CustomerDto> UpsertCustomerAsync(CustomerDto customerDto)
         {
             var customer = _mapper.Map<Customer>(customerDto);
-            EntityEntry<Customer> entity;
+            Customer entity;
             if (customer.Id != 0)
-                entity = _context.Customers.Update(customer);
-            else 
-                entity = await _context.Customers.AddAsync(customer);
+            {
+                //_context.Customers.Update(customer);
+                entity = await _context.Customers.FirstOrDefaultAsync(x => x.Id == customer.Id);
+
+                // Validate entity is not null
+                if (entity != null)
+                {
+                    entity = customer;
+                    //entity.Name = customer.Name;
+                }
+            }
+            else
+            {
+                entity = (await _context.Customers.AddAsync(customer)).Entity;
+            }
 
             await _context.CommitTransactionAsync();
-            return _mapper.Map<CustomerDto>(entity.Entity);
+            return _mapper.Map<CustomerDto>(entity);
         }
 
         public async Task DeleteCustomerAsync(int id)

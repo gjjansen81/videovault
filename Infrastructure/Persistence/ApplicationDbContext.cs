@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using VideoVault.Application.Common.Interfaces;
+using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Common;
 using VideoVault.Domain.Entities;
 
@@ -106,7 +108,12 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            var domainAssembly = Assembly.GetAssembly(typeof(Customer));
+
+            builder.ApplyConfigurationsFromAssembly(domainAssembly );
             builder.HasDefaultSchema("public");
+            
+
             base.OnModelCreating(builder);
 
            /* builder.Entity<ApplicationUserRole>(userRole =>

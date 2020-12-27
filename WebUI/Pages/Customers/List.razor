@@ -12,9 +12,9 @@
     <Authorized Context="Auth">
         <h1>Users</h1>
         <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
-            <GridColumn TRowData="UserDto" Expression="c => c.Id" />
-            <GridColumn TRowData="UserDto" Expression="c => c.Name" />
-            <GridColumn TRowData="UserDto">
+            <GridColumn TRowData="CustomerDto" Expression="c => c.Id" />
+            <GridColumn TRowData="CustomerDto" Expression="c => c.Name" />
+            <GridColumn TRowData="CustomerDto">
                 <a href="/Customers/edit/@context.Id">edit</a>
             </GridColumn>
         </Grid>

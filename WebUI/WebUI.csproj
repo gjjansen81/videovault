@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Grid\CustomValidator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Blazored.SessionStorage" Version="1.0.12" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />

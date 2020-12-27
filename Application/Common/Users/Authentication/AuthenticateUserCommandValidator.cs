@@ -2,20 +2,14 @@
 
 namespace VideoVault.Application.Common.Users.Authentication
 {
-    public class AuthenticateUserCommandValidator : AbstractValidator<UpsertUserCommand>
+    public class AuthenticateUserCommandValidator : AbstractValidator<AuthenticateUserCommand>
     {
         public AuthenticateUserCommandValidator()
         {
-            RuleFor(v => v.User.Name)
+            RuleFor(v => v.UserName)
                 .MaximumLength(256)
                 .NotEmpty();
-            RuleFor(v => v.User.Email)
-                .MaximumLength(256)
-                .NotEmpty();
-            RuleFor(v => v.User.UserName)
-                .MaximumLength(256)
-                .NotEmpty();
-            RuleFor(v => v.User.Password)
+            RuleFor(v => v.Password)
                 .MaximumLength(256)
                 .NotEmpty();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace VideoVault.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> Update(int id, UpsertUserCommand command)
+        public async Task<ActionResult<UserDto>> Update(Guid id, UpsertUserCommand command)
         {
             if (id != command.User.Id)
             {
@@ -47,7 +48,7 @@ namespace VideoVault.WebApi.Controllers
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<ActionResult<UserDto>> GetById(int id)
+        public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
             return await Mediator.Send(new GetUserCommand { Id = id });
         }

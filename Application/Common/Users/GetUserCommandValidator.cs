@@ -7,7 +7,6 @@ namespace VideoVault.Application.Common.Users
         public GetUserCommandValidator()
         {
             RuleFor(v => v.Id)
-                .GreaterThan(0)
                 .NotEmpty();
         }
     }

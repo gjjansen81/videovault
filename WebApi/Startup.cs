@@ -1,19 +1,24 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.Json;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using VideoVault.Application;
+using VideoVault.Application.Common.Exceptions;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Mappings;
 using VideoVault.WebApi.Services;
@@ -92,6 +97,32 @@ namespace VideoVault.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.Use(async (ctx, next) =>
+            {
+                try
+                {
+                    await next();
+                }
+                catch (ValidationException e)
+                {
+                    var response = ctx.Response;
+                    if (response.HasStarted)
+                        throw;
+
+                    ctx.RequestServices
+                        .GetRequiredService<ILogger<Startup>>()
+                        .LogWarning(e, "Invalid data has been submitted");
+
+                    response.Clear();
+                    response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                    await response.WriteAsync(JsonSerializer.Serialize(new
+                    {
+                        Message = "Invalid data has been submitted",
+                        ModelState = e.Errors,//.ToDictionary(error => error.ErrorCode, error => error.ErrorMessage)
+                    }), Encoding.UTF8, ctx.RequestAborted);
+                }
+            });
 
             app.UseHttpsRedirection();
 

@@ -39,9 +39,7 @@ namespace VideoVault.WebUI
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddHttpClient<IWeatherForecastClient, WeatherForecastClient>(client => client.BaseAddress = new Uri(Configuration.GetSection("VideoVaultApi").Value))
                 .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
-            services.AddHttpClient<ICustomerClient>(client => client.BaseAddress = new Uri(Configuration.GetSection("VideoVaultApi").Value))
-                .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
-
+            
             services.AddWebClients(Configuration.GetSection("VideoVaultApi").Value, 
                 client =>
                 {

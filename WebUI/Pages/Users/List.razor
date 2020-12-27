@@ -11,8 +11,8 @@
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
         <h1>Users</h1>
-        <Grid Items="_users" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
-            <GridColumn TRowData="UserDto" Expression="c => c.Name" />
+        <Grid Items="_users" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
+            <GridColumn TRowData="UserDto" Expression="c => c.UserName" />
             <GridColumn TRowData="UserDto">
                 <a href="/Users/edit/@context.Id">edit</a>
             </GridColumn>

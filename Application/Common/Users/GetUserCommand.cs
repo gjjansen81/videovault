@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
@@ -8,7 +9,7 @@ namespace VideoVault.Application.Common.Users
 {
     public class GetUserCommand : IRequest<UserDto>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class GetUserCommandHandler : IRequestHandler<GetUserCommand, UserDto>

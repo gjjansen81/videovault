@@ -1,21 +1,49 @@
 ﻿@page "/Users/Edit/{Id:int}"
 @page "/Users/Edit/"
+@using System.Net
+@using System.Text.Json
 @using VideoVault.WebApi
 @using Microsoft.AspNetCore.Components.Forms
+@using VideoVault.WebUI.Components
+@using VideoVault.WebUI.Models
 @inject IUserClient UserService
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
         <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
+            <CustomValidator @ref="customValidator" />
             <ValidationSummary />
-
-            <InputNumber @bind-Value="User.Id" TValue="int" />
-            <InputText @bind-Value="User.Name" />
-            <InputText @bind-Value="User.UserName" />
-            <InputText @bind-Value="User.Email" />
-            <InputText @bind-Value="User.Password" />
-            <InputText @bind-Value="PasswordConfirm" />
+            <p>
+                <label>
+                    User Name:
+                    <InputText @bind-Value="User.UserName" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    E-mail address:
+                    <InputText @bind-Value="User.Email" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    Name:
+                    <InputText @bind-Value="User.Name" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    Password:
+                    <InputText @bind-Value="User.Password" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    Confirm password:
+                    <InputText @bind-Value="PasswordConfirm" />
+                </label>
+            </p>
 
             <button type="submit">Submit</button>
         </EditForm>
@@ -24,7 +52,7 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Parameter]
     public UserDto User { get; set; }
@@ -32,18 +60,32 @@
     [Parameter]
     public string PasswordConfirm { get; set; }
 
+    private CustomValidator customValidator;
+
     protected override async Task OnInitializedAsync()
     {
         User = new UserDto();
-        if (Id > 0)
+        if (Id != Guid.Empty)
             User = await UserService.GetByIdAsync(Id);
     }
 
     private async Task HandleValidSubmit()
     {
-        var result = await UserService.CreateAsync(new UpsertUserCommand() { User = User });
+        try
+        {
+            var result = await UserService.CreateAsync(new UpsertUserCommand() {User = User});
 
-        if (result.Succeeded)
-            User = result.Output;
+            if (result.Succeeded)
+                User = result.Output;
+        }
+        catch (ApiException e)
+        {
+            if (e.StatusCode == (int)HttpStatusCode.UnprocessableEntity)
+            {
+                var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
+
+                customValidator.DisplayErrors(validationResponse.ModelState);
+            };
+        }
     }
 }

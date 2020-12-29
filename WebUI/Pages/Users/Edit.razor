@@ -1,4 +1,4 @@
-﻿@page "/Users/Edit/{Id:int}"
+﻿@page "/Users/Edit/{Id:guid}"
 @page "/Users/Edit/"
 @using System.Net
 @using System.Text.Json
@@ -7,12 +7,13 @@
 @using VideoVault.WebUI.Components
 @using VideoVault.WebUI.Models
 @inject IUserClient UserService
+@inject ICustomerClient CustomerService
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
         <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
-            <CustomValidator @ref="customValidator" />
+            <CustomValidator @ref="_customValidator" />
             <ValidationSummary />
             <p>
                 <label>
@@ -28,8 +29,14 @@
             </p>
             <p>
                 <label>
-                    Name:
-                    <InputText @bind-Value="User.Name" />
+                    First name:
+                    <InputText @bind-Value="User.FirstName" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    Last name:
+                    <InputText @bind-Value="User.LastName" />
                 </label>
             </p>
             <p>
@@ -41,7 +48,18 @@
             <p>
                 <label>
                     Confirm password:
-                    <InputText @bind-Value="PasswordConfirm" />
+                    <InputText @bind-Value="User.PasswordConfirm" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    Customer:
+                    <InputSelect @bind-Value="User.CustomerId">
+                        @foreach (var customer in _customers ?? new List<CustomerDto>())
+                        {
+                        <option value="@customer.Id">@customer.Name</option>
+                        }
+                    </InputSelect>
                 </label>
             </p>
 
@@ -57,16 +75,15 @@
     [Parameter]
     public UserDto User { get; set; }
 
-    [Parameter]
-    public string PasswordConfirm { get; set; }
-
-    private CustomValidator customValidator;
+    private ICollection<CustomerDto> _customers;
+    private CustomValidator _customValidator;
 
     protected override async Task OnInitializedAsync()
     {
         User = new UserDto();
         if (Id != Guid.Empty)
             User = await UserService.GetByIdAsync(Id);
+        _customers = await CustomerService.GetAsync();
     }
 
     private async Task HandleValidSubmit()
@@ -84,8 +101,8 @@
             {
                 var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
 
-                customValidator.DisplayErrors(validationResponse.ModelState);
-            };
+                _customValidator.DisplayErrors(validationResponse.ModelState);
+            }
         }
     }
 }

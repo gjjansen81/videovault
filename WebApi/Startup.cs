@@ -119,7 +119,7 @@ namespace VideoVault.WebApi
                     await response.WriteAsync(JsonSerializer.Serialize(new
                     {
                         Message = "Invalid data has been submitted",
-                        ModelState = e.Errors,//.ToDictionary(error => error.ErrorCode, error => error.ErrorMessage)
+                        ModelState = e.Errors
                     }), Encoding.UTF8, ctx.RequestAborted);
                 }
             });

@@ -44,12 +44,19 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
-        public async Task<OutputResult<UserDto>> CreateUserAsync(UserDto user)
+        public async Task<OutputResult<UserDto>> UpsertUserAsync(UserDto user)
         {
             var applicationUser = _mapper.Map<ApplicationUser>(user);
 
-            var result = await _userManager.CreateAsync(applicationUser, user.Password);
-
+            IdentityResult result = null;
+            if (user.Id == Guid.Empty)
+            {
+                applicationUser.Id = Guid.NewGuid().ToString();
+                result = await _userManager.CreateAsync(applicationUser, user.Password);
+            }
+            else
+                result = await _userManager.UpdateAsync(applicationUser);
+            
             return result.ToApplicationResult(user);
         }
 

@@ -7,6 +7,8 @@ namespace Infrastructure.Identity
     public class ApplicationUser : IdentityUser
     {
         // Your Extended Properties
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public Customer Customer { get; set; }
         public IEnumerable<IdentityRole> UserRoles { get; set; }
     }

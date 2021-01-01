@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Models;
 
@@ -12,5 +13,6 @@ namespace VideoVault.Application.Common.Interfaces
         Task<OutputResult<UserDto>> UpsertUserAsync(UserDto user);
         Task<Result> DeleteUserAsync(string userId);
         Task<OutputResult<AuthenticationDto>> AuthenticateAsync(string userName, string password);
+        Task<Result> SetPasswordAsync(string userId, string newPassword);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using VideoVault.WebApi;
 using VideoVault.WebUI.Areas.Identity;
 
@@ -38,6 +39,11 @@ namespace VideoVault.WebUI.Services
             if (_memoryCache.TryGetValue(TokenKey, out string token))
                 return token;
             return null;
+        }
+        public void Logout()
+        {
+            _tokenAuthenticationStateProvider.SetToken(null);
+            _memoryCache.Remove(TokenKey);
         }
     }
 }

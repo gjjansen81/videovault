@@ -4,8 +4,15 @@
 @using System.Text.Json
 @using VideoVault.WebApi
 @using Microsoft.AspNetCore.Components.Forms
+@using VideoVault.Application.Common.Models
+@using VideoVault.Application.Common.Users
 @using VideoVault.WebUI.Components
 @using VideoVault.WebUI.Models
+@using CustomerDto = VideoVault.WebApi.CustomerDto
+@using UserDto = VideoVault.WebApi.UserDto
+@using UpsertUserCommand = VideoVault.WebApi.UpsertUserCommand
+@using PasswordDto = VideoVault.WebApi.PasswordDto
+@using SetPasswordCommand = VideoVault.WebApi.SetPasswordCommand
 @inject IUserClient UserService
 @inject ICustomerClient CustomerService
 
@@ -13,7 +20,7 @@
     <Authorized Context="Auth">
         <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
-            <CustomValidator @ref="_customValidator" />
+            <CustomValidator @ref="_userValidator" />
             <ValidationSummary />
             <p>
                 <label>
@@ -41,25 +48,31 @@
             </p>
             <p>
                 <label>
+                    Customer:
+                    <InputSelect @bind-Value="User.CustomerId">
+                        @foreach (var customer in _customers ?? new List<CustomerDto>())
+                        {
+                            <option value="@customer.Id">@customer.Name</option>
+                        }
+                    </InputSelect>
+                </label>
+            </p>
+            <button type="submit">Submit</button>
+        </EditForm>
+        <EditForm Model="@Password" OnValidSubmit="@HandleValidPasswordSubmit">
+            <DataAnnotationsValidator />
+            <CustomValidator @ref="_passwordValidator" />
+            <ValidationSummary />
+            <p>
+                <label>
                     Password:
-                    <InputText @bind-Value="User.Password" />
+                    <InputText @bind-Value="Password.Password" />
                 </label>
             </p>
             <p>
                 <label>
                     Confirm password:
-                    <InputText @bind-Value="User.PasswordConfirm" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    Customer:
-                    <InputSelect @bind-Value="User.CustomerId">
-                        @foreach (var customer in _customers ?? new List<CustomerDto>())
-                        {
-                        <option value="@customer.Id">@customer.Name</option>
-                        }
-                    </InputSelect>
+                    <InputText @bind-Value="Password.PasswordConfirm" />
                 </label>
             </p>
 
@@ -75,12 +88,17 @@
     [Parameter]
     public UserDto User { get; set; }
 
+    [Parameter]
+    public PasswordDto Password { get; set; }
+
     private ICollection<CustomerDto> _customers;
-    private CustomValidator _customValidator;
+    private CustomValidator _userValidator;
+    private CustomValidator _passwordValidator;
 
     protected override async Task OnInitializedAsync()
     {
         User = new UserDto();
+        Password = new PasswordDto();
         if (Id != Guid.Empty)
             User = await UserService.GetByIdAsync(Id);
         _customers = await CustomerService.GetAsync();
@@ -101,7 +119,31 @@
             {
                 var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
 
-                _customValidator.DisplayErrors(validationResponse.ModelState);
+                _userValidator.DisplayErrors(validationResponse.ModelState);
+            }
+        }
+    }
+
+    private async Task HandleValidPasswordSubmit()
+    {
+        try
+        {
+            Password.Id = User.Id;
+            var result = await UserService.SetPasswordAsync(new SetPasswordCommand() { PasswordDto = Password});
+
+            if (result.Succeeded)
+            {
+                var errors = new Dictionary<string, List<string>> {{"Password", new List<string>() {"Error setting password"}}};
+                _userValidator.DisplayErrors(errors);
+            }
+        }
+        catch (ApiException e)
+        {
+            if (e.StatusCode == (int)HttpStatusCode.UnprocessableEntity)
+            {
+                var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
+
+                _passwordValidator.DisplayErrors(validationResponse.ModelState);
             }
         }
     }

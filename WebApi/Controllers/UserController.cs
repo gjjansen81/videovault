@@ -28,14 +28,9 @@ namespace VideoVault.WebApi.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> Update(Guid id, UpsertUserCommand command)
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Result>> SetPassword(SetPasswordCommand command)
         {
-            if (id != command.User.Id)
-            {
-                return BadRequest();
-            }
-
             await Mediator.Send(command);
 
             return NoContent();

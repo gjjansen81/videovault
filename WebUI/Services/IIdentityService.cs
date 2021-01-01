@@ -6,5 +6,6 @@ namespace VideoVault.WebUI.Services
     {
         Task<bool> AuthenticateAsync(string userName, string password);
         string GetToken();
+        void Logout();
     }
 }

@@ -1,0 +1,25 @@
+﻿@page "/Identity/Account/logout"
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+@using VideoVault.WebApi
+@using VideoVault.WebUI.Services
+
+@inject IIdentityService IdentityService
+@inject NavigationManager NavigationManager
+
+    <AuthorizeView roles="superuser">
+        <Authorized>
+            <span>Failed to logout</span>
+        </Authorized>
+        <NotAuthorized>
+            <span>Successfully logged out</span>
+        </NotAuthorized>
+    </AuthorizeView>
+
+@code {
+    protected override void OnInitialized()
+    {
+        IdentityService.Logout();
+        base.OnInitialized();
+    }
+}

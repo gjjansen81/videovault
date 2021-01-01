@@ -107,6 +107,19 @@ namespace Infrastructure.Identity
             return new OutputResult<AuthenticationDto>() { Output = new AuthenticationDto(){ Token = token , ExpirationDate = expirationDate}, Succeeded = true};
         }
 
+        public async Task<Result> SetPasswordAsync(string userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, newPassword);
+            var res = await _userManager.UpdateAsync(user);
+            if (res.Succeeded)
+            {
+                // change password has been succeeded
+            }
+
+            return new Result() { Succeeded = res.Succeeded };
+        }
+
         public async Task<Result> DeleteUserAsync(ApplicationUser user)
         {
             var result = await _userManager.DeleteAsync(user);

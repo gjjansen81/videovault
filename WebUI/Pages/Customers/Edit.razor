@@ -2,10 +2,23 @@
 @page "/Customers/Edit/"
 @using VideoVault.WebApi
 @using Microsoft.AspNetCore.Components.Forms
+@using VideoVault.WebUI.Components.Tab
 @inject ICustomerClient CustomerService
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
+
+        <TabControl>
+            <TabPage Text="Tab 1">
+                <h1>The first tab</h1>
+            </TabPage>
+            <TabPage Text="Tab 2">
+                <h1>The second tab</h1>
+            </TabPage>
+            <TabPage Text="Tab 3">
+                <h1>The third tab</h1>
+            </TabPage>
+        </TabControl>
         <EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />

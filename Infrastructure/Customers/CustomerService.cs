@@ -29,7 +29,10 @@ namespace Infrastructure.Customers
 
         public async Task<CustomerDto> GetCustomerAsync(int id)
         {
-            return _mapper.Map<CustomerDto>(await _context.Customers.FirstOrDefaultAsync(x => x.Id ==id));
+            return _mapper.Map<CustomerDto>(await _context.Customers
+                .Include( a => a.Address)
+                .Include(a => a.Users)
+                .FirstOrDefaultAsync(x => x.Id ==id));
         }
 
         public async Task<CustomerDto> UpsertCustomerAsync(CustomerDto customerDto)

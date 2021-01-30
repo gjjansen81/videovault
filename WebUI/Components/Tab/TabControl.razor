@@ -1,4 +1,4 @@
-﻿<div class="btn-group" role="group">
+﻿<div class="btn-group pb-5" role="group">
     @foreach (TabPage tabPage in _pages)
     {
         <button type="button"
@@ -11,8 +11,8 @@
 
 <CascadingValue Value="this">
     @ChildContent
-
 </CascadingValue>
+
 @code {
     // Next line is needed so we are able to add <TabPage> components inside
     [Parameter]

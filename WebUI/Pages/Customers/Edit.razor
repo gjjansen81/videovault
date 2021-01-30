@@ -1,34 +1,83 @@
 ﻿@page "/Customers/Edit/{Id:int}"
 @page "/Customers/Edit/"
 @using VideoVault.WebApi
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.Tab
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
 @inject ICustomerClient CustomerService
+@inject IUserClient UserService
+@inject IStringLocalizer<App> L
+@inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
 
         <TabControl>
-            <TabPage Text="Tab 1">
-                <h1>The first tab</h1>
+            <TabPage Text=@L["CUSTOMERS_EDIT_TAB_GENERAL"]>
+
+                <h1>@L["CUSTOMERS_EDIT_TAB_GENERAL_TITLE"]</h1>
+
+                <EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group d-none">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_ID"]</label>
+                        <InputNumber @bind-Value="Customer.Id" TValue="int" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_NAME"]</label>
+                        <InputText @bind-Value="Customer.Name" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_STREET"]</label>
+                        <InputText @bind-Value="Customer.Address.Street" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_HOUSENUMBER"]</label>
+                        <InputNumber @bind-Value="Customer.Address.HouseNumber" TValue="int" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_HOUSENUMBEREXTENSION"]</label>
+                        <InputText @bind-Value="Customer.Address.HouseNumberExtension" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_ZIPCODE"]</label>
+                        <InputText @bind-Value="Customer.Address.ZipCode" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_CITY"]</label>
+                        <InputText @bind-Value="Customer.Address.City" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_COUNTRY"]</label>
+                        <InputText @bind-Value="Customer.Address.Country" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["CUSTOMERS_EDIT_TAB_GENERAL_CREATEDON"]</label>
+                        <InputDate @bind-Value="Customer.CreatedOn" TValue="DateTimeOffset?" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                </EditForm>
             </TabPage>
-            <TabPage Text="Tab 2">
-                <h1>The second tab</h1>
+            <TabPage Text=@L["CUSTOMERS_EDIT_TAB_USERS"]>
+                <h1>@L["CUSTOMERS_EDIT_TAB_USERS_TITLE"]</h1>
+                <Grid Items="Customer.Users" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
+                    <GridColumn TRowData="UserDto" Expression="c => c.UserName" />
+                    <GridColumn TRowData="UserDto">
+                        <a href="/Users/edit/@context.Id">edit</a>
+                    </GridColumn>
+                </Grid>
             </TabPage>
             <TabPage Text="Tab 3">
                 <h1>The third tab</h1>
             </TabPage>
         </TabControl>
-        <EditForm Model="@Customer" OnValidSubmit="@HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <InputNumber @bind-Value="Customer.Id" TValue="int" />
-            <InputText @bind-Value="Customer.Name" />
-            <InputDate @bind-Value="Customer.CreatedOn" TValue="DateTimeOffset?" />
-
-            <button type="submit">Submit</button>
-        </EditForm>
     </Authorized>
 </AuthorizeView>
 
@@ -41,9 +90,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Customer = new CustomerDto();
-        if (Id > 0)
-            Customer = await CustomerService.GetByIdAsync(Id);
+        Customer = new CustomerDto()
+        {
+            Address = new AddressDto()
+        };
+
+        try {
+            if (Id > 0)
+            {
+                Customer = await CustomerService.GetByIdAsync(Id);
+                //_users = (await CustomerService.GetUsersAsync()).ToList();
+            }
+        }
+        catch (ApiException)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
     }
 
     private async Task HandleValidSubmit()

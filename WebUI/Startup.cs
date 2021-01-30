@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Microsoft.Extensions.Localization;
 using VideoVault.WebApi;
 using VideoVault.WebUI.Areas.Identity;
 using VideoVault.WebUI.ClientApp;
@@ -37,6 +38,9 @@ namespace VideoVault.WebUI
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, TokenAuthenticationStateProvider>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddScoped<IStringLocalizer<App>, StringLocalizer<App>>();
+
             services.AddHttpClient<IWeatherForecastClient, WeatherForecastClient>(client => client.BaseAddress = new Uri(Configuration.GetSection("VideoVaultApi").Value))
                 .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
             

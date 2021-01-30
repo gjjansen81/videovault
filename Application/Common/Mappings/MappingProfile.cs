@@ -13,6 +13,10 @@ namespace VideoVault.Application.Common.Mappings
         {
             CreateMap<Customer, CustomerDto>();
             CreateMap<CustomerDto, Customer>();
+            CreateMap<AddressDto, Address>();
+            CreateMap<Address, AddressDto>();
+            CreateMap<AspNetUser, UserDto>();
+            CreateMap<UserDto, AspNetUser>();
             //ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
         }
     

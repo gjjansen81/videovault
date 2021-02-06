@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Sockets;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using VideoVault.Domain.Common;
 
 namespace VideoVault.Domain.Entities
@@ -10,7 +8,6 @@ namespace VideoVault.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public Address Address { get; set; }
-        public List<AspNetUser> Users { get; set; }
+        public Address Address { get; set; } = new Address();
     }
 }

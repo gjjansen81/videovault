@@ -47,6 +47,11 @@ namespace VideoVault.WebApi.Controllers
         {
             return await Mediator.Send(new GetUserCommand { Id = id });
         }
+        [HttpGet("[action]/Customer/{customerId}")]
+        public async Task<ActionResult<List<UserDto>>> GetUsersOfCustomerAsync(int customerId)
+        {
+            return await Mediator.Send(new GetUsersCommand { CustomerId = customerId });
+        }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)

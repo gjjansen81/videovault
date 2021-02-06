@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using VideoVault.Application.Common.Models
 @using VideoVault.Application.Common.Users
+@using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components
 @using VideoVault.WebUI.Models
 @using CustomerDto = VideoVault.WebApi.CustomerDto
@@ -15,48 +16,33 @@
 @using SetPasswordCommand = VideoVault.WebApi.SetPasswordCommand
 @inject IUserClient UserService
 @inject ICustomerClient CustomerService
+@inject IStringLocalizer<App> L
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
+
+        <h1>@L["USERS_EDIT_TAB_GENERAL_TITLE"]</h1>
         <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
             <CustomValidator @ref="_userValidator" />
             <ValidationSummary />
-            <p>
-                <label>
-                    User Name:
-                    <InputText @bind-Value="User.UserName" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    E-mail address:
-                    <InputText @bind-Value="User.Email" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    First name:
-                    <InputText @bind-Value="User.FirstName" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    Last name:
-                    <InputText @bind-Value="User.LastName" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    Customer:
-                    <InputSelect @bind-Value="User.CustomerId">
-                        @foreach (var customer in _customers ?? new List<CustomerDto>())
-                        {
-                            <option value="@customer.Id">@customer.Name</option>
-                        }
-                    </InputSelect>
-                </label>
-            </p>
+            <div class="form-group d-none">
+                <label>@L["USERS_EDIT_TAB_GENERAL_USERNAME"]</label>
+                <InputText @bind-Value="User.UserName" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group d-none">
+                <label>@L["USERS_EDIT_TAB_GENERAL_EMAILADDRESS"]</label>
+                <InputText @bind-Value="User.Email" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group d-none">
+                <label>@L["USERS_EDIT_TAB_GENERAL_FIRSTNAME"]</label>
+                <InputText @bind-Value="User.FirstName" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group d-none">
+                <label>@L["USERS_EDIT_TAB_GENERAL_LASTNAME"]</label>
+                <InputText @bind-Value="User.LastName" TValue="int" class="form-control" />
+            </div>
+
             <button type="submit">Submit</button>
         </EditForm>
         <EditForm Model="@Password" OnValidSubmit="@HandleValidPasswordSubmit">
@@ -108,7 +94,7 @@
     {
         try
         {
-            var result = await UserService.CreateAsync(new UpsertUserCommand() {User = User});
+            var result = await UserService.CreateAsync(new UpsertUserCommand() { User = User });
 
             if (result.Succeeded)
                 User = result.Output;
@@ -129,11 +115,11 @@
         try
         {
             Password.Id = User.Id;
-            var result = await UserService.SetPasswordAsync(new SetPasswordCommand() { PasswordDto = Password});
+            var result = await UserService.SetPasswordAsync(new SetPasswordCommand() { PasswordDto = Password });
 
             if (result.Succeeded)
             {
-                var errors = new Dictionary<string, List<string>> {{"Password", new List<string>() {"Error setting password"}}};
+                var errors = new Dictionary<string, List<string>> { { "Password", new List<string>() { "Error setting password" } } };
                 _userValidator.DisplayErrors(errors);
             }
         }

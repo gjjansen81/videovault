@@ -120,6 +120,15 @@ namespace Infrastructure.Identity
             return new Result() { Succeeded = res.Succeeded };
         }
 
+        public async Task<List<UserDto>> GetUsersOfCustomerAsync(int customerId)
+        {
+            return _mapper.Map<List<UserDto>>(
+                await _userManager.Users
+                    .Where(u => u.Customer.Id == customerId)
+                    .ToListAsync()
+            );
+        }
+
         public async Task<Result> DeleteUserAsync(ApplicationUser user)
         {
             var result = await _userManager.DeleteAsync(user);

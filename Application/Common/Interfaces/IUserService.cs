@@ -14,5 +14,6 @@ namespace VideoVault.Application.Common.Interfaces
         Task<Result> DeleteUserAsync(string userId);
         Task<OutputResult<AuthenticationDto>> AuthenticateAsync(string userName, string password);
         Task<Result> SetPasswordAsync(string userId, string newPassword);
+        Task<List<UserDto>> GetUsersOfCustomerAsync(int customerId);
     }
 }

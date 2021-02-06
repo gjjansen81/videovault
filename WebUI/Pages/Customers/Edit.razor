@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Extensions.Localization
+@using VideoVault.Domain.Entities
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.Grid
@@ -66,13 +67,10 @@
                 </EditForm>
             </TabPage>
             <TabPage Text=@L["CUSTOMERS_EDIT_TAB_USERS"]>
-                <h1>@L["CUSTOMERS_EDIT_TAB_USERS_TITLE"]</h1>
-                <Grid Items="Customer.Users" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
-                    <GridColumn TRowData="UserDto" Expression="c => c.UserName" />
-                    <GridColumn TRowData="UserDto">
-                        <a href="/Users/edit/@context.Id">edit</a>
-                    </GridColumn>
-                </Grid>
+                <div>
+                    <h1 class="d-inline">@L["CUSTOMERS_EDIT_TAB_USERS_TITLE"]</h1>
+                    <a href="/Users/edit" class="btn btn-primary ml-1 align-content-center">@L["BUTTON_ADD"]</a>
+                </div>
             </TabPage>
             <TabPage Text="Tab 3">
                 <h1>The third tab</h1>
@@ -87,6 +85,9 @@
 
     [Parameter]
     public CustomerDto Customer { get; set; }
+ 
+    [Parameter]
+    public List<UserDto> Users { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,12 +95,13 @@
         {
             Address = new AddressDto()
         };
+        Users = new List<UserDto>();
 
         try {
             if (Id > 0)
             {
                 Customer = await CustomerService.GetByIdAsync(Id);
-                //_users = (await CustomerService.GetUsersAsync()).ToList();
+                Users = (await UserService.GetUsersOfCustomerAsync(Id)).ToList();
             }
         }
         catch (ApiException)

@@ -31,7 +31,6 @@ namespace Infrastructure.Customers
         {
             return _mapper.Map<CustomerDto>(await _context.Customers
                 .Include( a => a.Address)
-                .Include(a => a.Users)
                 .FirstOrDefaultAsync(x => x.Id ==id));
         }
 

@@ -18,12 +18,6 @@ namespace VideoVault.Application.Common.Users
             RuleFor(v => v.User.UserName)
                 .MaximumLength(256)
                 .NotEmpty();
-            RuleFor(v => v.User.Password)
-                .MaximumLength(256)
-                .MinimumLength(8)
-                .Matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
-                .Must((v, password) => password.Equals(v.User.PasswordConfirm) )
-                .NotEmpty();
         }
     }
 }

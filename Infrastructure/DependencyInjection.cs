@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using VideoVault.Application.Common.Interfaces;
+using IApplicationDbContext = Infrastructure.Persistence.IApplicationDbContext;
 
 namespace Infrastructure
 {

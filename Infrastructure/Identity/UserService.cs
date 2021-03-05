@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
+using VideoVault.Domain.Entities;
+using IApplicationDbContext = Infrastructure.Persistence.IApplicationDbContext;
 
 namespace Infrastructure.Identity
 {
@@ -19,12 +21,14 @@ namespace Infrastructure.Identity
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private IApplicationDbContext _context;
 
-        public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IMapper mapper)
+        public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IMapper mapper, IApplicationDbContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<List<UserDto>> GetUsersAsync()
@@ -52,7 +56,10 @@ namespace Infrastructure.Identity
             if (user.Id == Guid.Empty)
             {
                 applicationUser.Id = Guid.NewGuid().ToString();
-                result = await _userManager.CreateAsync(applicationUser, user.Password);
+                var passwordGuid = Guid.NewGuid().ToString();
+                var password = passwordGuid.Substring(0, 5).ToUpper();
+                password += passwordGuid.Substring(5);
+                result = await _userManager.CreateAsync(applicationUser, password);
             }
             else
                 result = await _userManager.UpdateAsync(applicationUser);
@@ -123,7 +130,8 @@ namespace Infrastructure.Identity
         public async Task<List<UserDto>> GetUsersOfCustomerAsync(int customerId)
         {
             return _mapper.Map<List<UserDto>>(
-                await _userManager.Users
+                await _context.AspNetUsers
+                    .Include(u => u.Customer)
                     .Where(u => u.Customer.Id == customerId)
                     .ToListAsync()
             );

@@ -120,6 +120,9 @@
   <data name="BUTTON_ADD" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="BUTTON_SETPASSWORD" xml:space="preserve">
+    <value>Set password</value>
+  </data>
   <data name="BUTTON_SUBMIT" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -165,10 +168,28 @@
   <data name="USERS_EDIT_TAB_GENERAL_EMAILADDRESS" xml:space="preserve">
     <value>E-mail address</value>
   </data>
+  <data name="USERS_EDIT_TAB_GENERAL_FIRSTNAME" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="USERS_EDIT_TAB_GENERAL_LASTNAME" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="USERS_EDIT_TAB_GENERAL_PASSWORD" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="USERS_EDIT_TAB_GENERAL_PASSWORDCONFIRM" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
   <data name="USERS_EDIT_TAB_GENERAL_TITLE" xml:space="preserve">
-    <value>Users</value>
+    <value>Manage user</value>
   </data>
   <data name="USERS_EDIT_TAB_GENERAL_USERNAME" xml:space="preserve">
     <value>User name</value>
+  </data>
+  <data name="USERS_SETPASSWORD_PASSWORD" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="USERS_SETPASSWORD_PASSWORDCONFIRM" xml:space="preserve">
+    <value>Confirm password</value>
   </data>
 </root>

@@ -1,0 +1,132 @@
+﻿@page "/Customers/Users/Edit/{Id:guid}"
+@page "/Customers/Users/Edit/"
+@using System.Net
+@using System.Text.Json
+@using VideoVault.WebApi
+@using Microsoft.AspNetCore.Components.Forms
+@using VideoVault.Application.Common.Models
+@using VideoVault.Application.Common.Users
+@using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Components
+@using VideoVault.WebUI.Models
+@using CustomerDto = VideoVault.WebApi.CustomerDto
+@using UserDto = VideoVault.WebApi.UserDto
+@using UpsertUserCommand = VideoVault.WebApi.UpsertUserCommand
+@using PasswordDto = VideoVault.WebApi.PasswordDto
+@using SetPasswordCommand = VideoVault.WebApi.SetPasswordCommand
+@inject IUserClient UserService
+@inject ICustomerClient CustomerService
+@inject IStringLocalizer<App> L
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+
+        <h1>@L["USERS_EDIT_TAB_GENERAL_TITLE"]</h1>
+        <EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <CustomValidator @ref="_userValidator" />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_USERNAME"]</label>
+                <InputText @bind-Value="User.UserName" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_EMAILADDRESS"]</label>
+                <InputText @bind-Value="User.Email" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_FIRSTNAME"]</label>
+                <InputText @bind-Value="User.FirstName" TValue="int" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_LASTNAME"]</label>
+                <InputText @bind-Value="User.LastName" TValue="int" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+        </EditForm>
+        <EditForm Model="@Password" OnValidSubmit="@HandleValidPasswordSubmit">
+            <DataAnnotationsValidator />
+            <CustomValidator @ref="_passwordValidator" />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_PASSWORD"]</label>
+                <InputText @bind-Value="Password.Password" />
+            </div>
+            <div class="form-group">
+                <label>@L["USERS_EDIT_TAB_GENERAL_PASSWORDCONFIRM"]</label>
+                <InputText @bind-Value="Password.PasswordConfirm" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">@L["BUTTON_SETPASSWORD"]</button>
+        </EditForm>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public UserDto User { get; set; }
+
+    [Parameter]
+    public PasswordDto Password { get; set; }
+
+    private ICollection<CustomerDto> _customers;
+    private CustomValidator _userValidator;
+    private CustomValidator _passwordValidator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = new UserDto();
+        Password = new PasswordDto();
+        if (Id != Guid.Empty)
+            User = await UserService.GetByIdAsync(Id);
+        _customers = await CustomerService.GetAsync();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var result = await UserService.CreateAsync(new UpsertUserCommand() { User = User });
+
+            if (result.Succeeded)
+                User = result.Output;
+        }
+        catch (ApiException e)
+        {
+            if (e.StatusCode == (int)HttpStatusCode.UnprocessableEntity)
+            {
+                var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
+
+                _userValidator.DisplayErrors(validationResponse.ModelState);
+            }
+        }
+    }
+
+    private async Task HandleValidPasswordSubmit()
+    {
+        try
+        {
+            Password.Id = User.Id;
+            var result = await UserService.SetPasswordAsync(new SetPasswordCommand() { PasswordDto = Password });
+
+            if (result.Succeeded)
+            {
+                var errors = new Dictionary<string, List<string>> { { "Password", new List<string>() { "Error setting password" } } };
+                _userValidator.DisplayErrors(errors);
+            }
+        }
+        catch (ApiException e)
+        {
+            if (e.StatusCode == (int)HttpStatusCode.UnprocessableEntity)
+            {
+                var validationResponse = JsonSerializer.Deserialize<ValidationResponseModel>(e.Response.ToString());
+
+                _passwordValidator.DisplayErrors(validationResponse.ModelState);
+            }
+        }
+    }
+}

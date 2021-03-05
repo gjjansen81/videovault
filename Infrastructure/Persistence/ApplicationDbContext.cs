@@ -32,6 +32,7 @@ namespace Infrastructure.Persistence
             _dateTime = dateTime;
         }
 
+        public DbSet<ApplicationUser> AspNetUsers {  get; set; }
         public DbSet<Customer> Customers{  get; set; }
 
         //public DbSet<TodoItem> TodoItems { get; set; }

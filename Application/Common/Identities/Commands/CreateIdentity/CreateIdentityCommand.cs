@@ -21,9 +21,9 @@ namespace VideoVault.Application.Common.Identities.Commands.CreateIdentity
             _userService = userService;
         }
 
-        public async Task<OutputResult<string>> Handle(CreateIdentityCommand request, CancellationToken cancellationToken)
+        public Task<OutputResult<string>> Handle(CreateIdentityCommand request, CancellationToken cancellationToken)
         {
-            return null;
+            return Task.FromResult<OutputResult<string>>(null);
             //return await _userService.UpsertUserAsync(request.UserName, request.Password);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace VideoVault.Application.Common.Users.Commands
+namespace VideoVault.Application.Common.Users
 {
     public class GetUsersCommandValidator : AbstractValidator<GetUsersCommand>
     {

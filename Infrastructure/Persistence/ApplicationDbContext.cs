@@ -3,7 +3,7 @@ using System.Data;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Options;
+using Duende.IdentityServer.EntityFramework.Options;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;

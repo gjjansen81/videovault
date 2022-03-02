@@ -1,16 +1,10 @@
-using System;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
-using VideoVault.WebUI.Areas.Identity;
 using VideoVault.WebUI.Services;
 
-namespace VideoVault.WebUI
+namespace VideoVault.WebUI.Areas.Identity
 {
     public class AuthorizationHeaderHandler : DelegatingHandler
     {

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using VideoVault.Application.Common.Users.Commands;
 
 namespace VideoVault.Application.Common.Users
 {

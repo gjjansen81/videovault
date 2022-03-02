@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace VideoVault.Application.Common.Behaviours
 {
-    public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : MediatR.IRequest<TResponse>
     {
         private readonly ILogger<TRequest> _logger;
 

@@ -18,10 +18,10 @@ namespace VideoVault.WebUI.Areas.Identity
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
             
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var identity = string.IsNullOrWhiteSpace(_token) ? new ClaimsIdentity() : new ClaimsIdentity(ParseClaimsFromJwt(_token), "jwt");
-            return new AuthenticationState(new ClaimsPrincipal(identity));
+            return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
         }
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)

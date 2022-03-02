@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using VideoVault.WebApi;
+using VideoVault.WebUI.Areas.Identity;
 
 namespace VideoVault.WebUI.ClientApp
 {

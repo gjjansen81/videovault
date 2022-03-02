@@ -11,10 +11,10 @@ namespace VideoVault.WebApi.Controllers
     {
         public IActionResult GenerateKey()
         {
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var generator = RandomNumberGenerator.Create())
             {
                 var key = new byte[64];
-                rng.GetBytes(key);
+                generator.GetBytes(key);
                 return Ok(Convert.ToBase64String(key));
             }
         }

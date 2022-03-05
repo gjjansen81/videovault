@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using VideoVault.Domain.Enums;
 
 namespace VideoVault.Domain.ValidationRules
@@ -30,11 +31,11 @@ namespace VideoVault.Domain.ValidationRules
             */
             if (Level == ValidationLevels.Fatal)
             {
-                mappingData.Log.LogError(ErrorCodes.ValidationError, logMessage, inputData: jsonObject);
+                mappingData.Log.LogError(ErrorCodes.ValidationError, logMessage, new[] { jsonObject });
                 throw new ValidationException(logMessage);
             }
 
-            mappingData.Log.LogDebug($"Validation warning: {logMessage}", inputData: jsonObject);
+            mappingData.Log.LogDebug($"Validation warning: {logMessage}", new[]{ jsonObject });
         }
     }
 }

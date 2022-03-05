@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using VideoVault.Domain.Extensions;
 using VideoVault.Domain.ValidationRules;
@@ -14,11 +15,11 @@ namespace VideoVault.Domain.Mapper
      
         public dynamic Resolve(MappingData mappingData)
         {
-            mappingData.Log.LogTrace($"Resolving {GetType().Name}", inputData: JsonConvert.SerializeObject(this, Formatting.Indented));
+            mappingData.Log.LogTrace($"Resolving {GetType().Name}", JsonConvert.SerializeObject(this, Formatting.Indented));
 
             var result = ResolveChildren(mappingData);
 
-            mappingData.Log.LogTrace($"Resolved {GetType().Name}", inputData: mappingData.GlobalVariables.ToJson(), outputData: ToJson(result));
+            mappingData.Log.LogTrace($"Resolved {GetType().Name}", new []{ mappingData.GlobalVariables.ToJson(), ToJson(result) });
 
             foreach (var rule in ValidationRules)
             {

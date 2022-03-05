@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using VideoVault.Domain.ValidationRules;
 
@@ -11,7 +12,7 @@ namespace VideoVault.Domain
         public Dictionary<string, dynamic> GlobalVariables { get; set; } = new Dictionary<string, dynamic>();
         public Dictionary<string, dynamic> LocalVariables { get; set; } = new Dictionary<string, dynamic>();
 
-        public ILog Log { get; set; }
+        public ILogger Log { get; set; }
 
         public IFormatProvider SourceCultureSettings { get; set; }
         public IFormatProvider DestinationCultureSettings { get; set; }

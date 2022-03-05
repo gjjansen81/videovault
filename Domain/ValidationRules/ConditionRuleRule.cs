@@ -7,7 +7,7 @@ namespace VideoVault.Domain.ValidationRules
         public ICondition Condition { get; set; }
         public override void Validate(MappingData mappingData, dynamic validationTarget)
         {
-            if(!Condition.Evaluate(mappingData, mappingData.CurrentElement))
+            if(!Condition.Evaluate(mappingData, mappingData.Source))
                 HandleValidationResults(mappingData, $"Condition {Condition.ToString()} doesn't match");
         }
     }

@@ -11,7 +11,7 @@ namespace VideoVault.Domain.Conditions
         
         public bool Evaluate(MappingData mappingData, dynamic evaluationData)
         {
-            if(mappingData.CurrentElement.GetType() == typeof(JObject))
+            /*if(mappingData.CurrentElement.GetType() == typeof(JObject))
             {
                 IEnumerable<JToken> value = mappingData.CurrentElement.SelectTokens(Key);
                 if (value != null)
@@ -26,7 +26,7 @@ namespace VideoVault.Domain.Conditions
 
                     return false;
                 }
-            }
+            }*/
 
             return false;
         }

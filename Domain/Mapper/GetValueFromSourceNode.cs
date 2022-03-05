@@ -6,8 +6,8 @@ namespace VideoVault.Domain.Mapper
 {
     public class GetValueFromSourceNode : MappingNode
     {
-        public string PropertyName { get; set; }
-        public bool ForceUseSource { get; set; } = false;
+        public ICoordinate Coordinate { get; set; }
+        //public bool ForceUseSource { get; set; } = false;
         public bool TryParseToNumber { get; set; } = true;
         public bool ConvertToString { get; set; } = false;
         public bool Trim { get; set; } = false;
@@ -15,16 +15,17 @@ namespace VideoVault.Domain.Mapper
 
         protected override dynamic ResolveChildren(MappingData mappingData)
         {
-            var source = ForceUseSource ? mappingData.Source : mappingData.CurrentElement;
+            var source = mappingData.Source;//ForceUseSource ? mappingData.Source : mappingData.CurrentElement;
 
             if (source == null)
                 return null;
             
             if (PropertyNode != null)
-                PropertyName = PropertyNode.Resolve(mappingData)?.ToString();
+                Coordinate = PropertyNode.Resolve(mappingData)?.ToString();
 
-            JToken value = source.SelectToken(PropertyName, errorWhenNoMatch: false);
+            dynamic value = source.GetValue(Coordinate, errorWhenNoMatch: false);
 
+            /*
             if (value?.Type == JTokenType.Integer)
             {
                 if (ConvertToString)
@@ -41,10 +42,10 @@ namespace VideoVault.Domain.Mapper
                 }
                 return value.Value<decimal>();
             }
-
+            */
             var valueString = value?.ToString();
-
-            if (TryParseToNumber && Decimal.TryParse(valueString, NumberStyles.Any, mappingData.SourceCultureSettings, out var parsedValue))
+            decimal parsedValue = 0;
+            if (TryParseToNumber && Decimal.TryParse(valueString, NumberStyles.Any, mappingData.SourceCultureSettings, out parsedValue))
             {
                 if (ConvertToString)
                     return parsedValue.ToString(mappingData.DestinationCultureSettings);

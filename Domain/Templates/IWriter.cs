@@ -1,7 +1,7 @@
 ﻿namespace VideoVault.Domain.Templates
 {
-    internal interface IWriter
+    public interface IWriter
     {
-        public void Write();
+        public void Write(int row, int column, string value);
     }
 }

@@ -1,6 +1,12 @@
-﻿namespace VideoVault.Domain.Templates
+﻿using System;
+using System.Collections.Generic;
+using NPOI.HPSF;
+using VideoVault.Domain.DataSource;
+
+namespace VideoVault.Domain.Templates
 {
-    internal interface ITemplateCell
+    public interface ITemplateCell
     {
+        void Export(int row, int column, List<IDataSource> dataSources, IWriter writer);
     }
 }

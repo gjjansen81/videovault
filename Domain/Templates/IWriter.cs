@@ -2,6 +2,6 @@
 {
     public interface IWriter
     {
-        public void Write(int row, int column, string value);
+        public void WriteCell(int row, int column, string value);
     }
 }

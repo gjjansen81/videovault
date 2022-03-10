@@ -18,7 +18,7 @@ public class TemplateCell : ITemplateCell
 
         foreach (var value in values)
         {
-            writer.Write(row, column, value.ToString());
+            writer.WriteCell(row, column, value.ToString());
         }
     }
 }

@@ -16,13 +16,11 @@ public class Template : ITemplate
         {
             dataSource.Resolve(mappingData);
         }
-
-        foreach (var row in Table)
+        writer.CreateWorkbook();
+        foreach (var sheet in Sheets)
         {
-            foreach (var cell in row.Value)
-            {
-                cell.Value.Export(row.Key, cell.Key, DataSources, writer);
-            }
+            var exportData = new ExportData();
+            sheet.Export(writer, DataSources, exportData);
         }
     }
 }

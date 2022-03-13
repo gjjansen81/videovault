@@ -29,57 +29,15 @@ namespace VideoVault.Domain.Mapper
             return result;
         }
 
-        protected void ConsolidateResolvedResults(dynamic result, ref Dictionary<string, dynamic> resolvedValues)
+        protected void ConsolidateResolvedResults(dynamic result, ref List<dynamic> resolvedValues)
         {
-            if (result is KeyValuePair<string, dynamic>)
+            if (result is List<dynamic>)
             {
-                if (!resolvedValues.ContainsKey(result.Key))
-                {
-                    resolvedValues[result.Key] = result.Value;
-                }
-                else if (resolvedValues.TryGetValue(result.Key, out dynamic resolvedValue) && resolvedValue == null)
-                {
-                    resolvedValues[result.Key] = result.Value;
-                }
+                resolvedValues.AddRange(result);        
             }
-            else if (result is List<dynamic>)
+            else
             {
-                foreach (var item in result)
-                {
-                    if (item is KeyValuePair<string, dynamic>)
-                    {
-                        if (!resolvedValues.ContainsKey(item.Key))
-                        {
-                            resolvedValues[item.Key] = item.Value;
-                        }
-                        else if (resolvedValues.TryGetValue(item.Key, out dynamic resolvedValue) && resolvedValue == null)
-                        {
-                            resolvedValues[item.Key] = item.Value;
-                        }
-                    }
-                    else if (item is Dictionary<string, dynamic>)
-                    {
-                        foreach (var subItem in item)
-                        {
-                            if (!resolvedValues.ContainsKey(subItem.Key))
-                            {
-                                resolvedValues[subItem.Key] = subItem.Value;
-                            }
-                            else if (resolvedValues.TryGetValue(subItem.Key, out dynamic resolvedValue) && resolvedValue == null)
-                            {
-                                resolvedValues[subItem.Key] = subItem.Value;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (result?.GetType() == typeof(Dictionary<string, dynamic>))
-            {
-                foreach (var item in (Dictionary<string, dynamic>)result)
-                {
-                    if (!resolvedValues.ContainsKey(item.Key))
-                        resolvedValues[item.Key] = item.Value;
-                }
+                resolvedValues.Add(result);
             }
         }
 

@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using VideoVault.Domain;
-using VideoVault.Domain.Mapper;
 
 namespace Domain.Test
 {

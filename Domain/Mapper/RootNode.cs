@@ -10,7 +10,7 @@ namespace VideoVault.Domain.Mapper
 
         protected override dynamic ResolveChildren(MappingData mappingData)
         {
-            var results = new Dictionary<string, dynamic>();
+            var results = new List<dynamic>();
             foreach (var child in Children)
             {
                 var resolvedChild = child.Resolve(mappingData);

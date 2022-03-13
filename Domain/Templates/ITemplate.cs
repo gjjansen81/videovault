@@ -5,7 +5,7 @@ namespace VideoVault.Domain.Templates
 {
     public interface ITemplate
     {
-        Dictionary<int, Dictionary<int, ITemplateCell>> Table { get; set; }
+        List<ISheetTemplate> Sheets { get; set; }
         List<IDataSource> DataSources { get; set; }
 
         public void Export(MappingData mappingData, IWriter writer);

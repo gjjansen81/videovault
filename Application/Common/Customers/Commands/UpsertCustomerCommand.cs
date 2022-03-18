@@ -22,7 +22,7 @@ namespace VideoVault.Application.Common.Customers.Commands
 
         public async Task<CustomerDto> Handle(UpsertCustomerCommand request, CancellationToken cancellationToken)
         {
-            return await _customerService.UpsertCustomerAsync(request.Customer);
+            return await _customerService.UpsertAsync(request.Customer);
         }
     }
 }

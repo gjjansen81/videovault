@@ -7,11 +7,11 @@ namespace VideoVault.Application.Common.Interfaces
 {
     public interface IUserService
     {
-        Task<List<UserDto>> GetUsersAsync();
-        Task<UserDto> GetUserAsync(string userId);
+        Task<List<UserDto>> GetAsync();
+        Task<UserDto> GetSingleAsync(string userId);
         Task<string> GetUserNameAsync(string userId);
-        Task<OutputResult<UserDto>> UpsertUserAsync(UserDto user);
-        Task<Result> DeleteUserAsync(string userId);
+        Task<OutputResult<UserDto>> UpsertAsync(UserDto user);
+        Task<Result> DeleteAsync(string userId);
         Task<OutputResult<AuthenticationDto>> AuthenticateAsync(string userName, string password);
         Task<Result> SetPasswordAsync(string userId, string newPassword);
         Task<List<UserDto>> GetUsersOfCustomerAsync(int customerId);

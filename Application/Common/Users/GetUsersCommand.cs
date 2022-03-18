@@ -25,7 +25,7 @@ namespace VideoVault.Application.Common.Users
         {
             if (request.CustomerId > 0)
                 return await Task.FromResult(await _userService.GetUsersOfCustomerAsync(request.CustomerId));
-            return await _userService.GetUsersAsync();
+            return await _userService.GetAsync();
         }
     }
 }

@@ -2,26 +2,26 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VideoVault.Application.Common.Customers.Commands;
 using VideoVault.Application.Common.Models;
+using VideoVault.Application.Common.Templates.Commands;
 
 namespace VideoVault.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     [Authorize]
-    public class CustomerController : ApiController
+    public class TemplateController : ApiController
     {
         [HttpPost]
-        public async Task<ActionResult<CustomerDto>> Create(UpsertCustomerCommand command)
+        public async Task<ActionResult<TemplateDto>> Create(UpsertTemplateCommand command)
         {
             return await Mediator.Send(command);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CustomerDto>> Update(int id, UpsertCustomerCommand command)
+        public async Task<ActionResult<TemplateDto>> Update(int id, UpsertTemplateCommand command)
         {
-            if (id != command.Customer.Id)
+            if (id != command.Template.Id)
             {
                 return BadRequest();
             }
@@ -32,13 +32,13 @@ namespace VideoVault.WebApi.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<List<CustomerDto>>> Get()
+        public async Task<ActionResult<List<TemplateDto>>> Get()
         {
             return await Mediator.Send(new GetTemplatesCommand { });
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<ActionResult<CustomerDto>> GetById(int id)
+        public async Task<ActionResult<TemplateDto>> GetById(int id)
         {
             return await Mediator.Send(new GetTemplateCommand { Id = id });
         }

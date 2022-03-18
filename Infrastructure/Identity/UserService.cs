@@ -31,12 +31,12 @@ namespace Infrastructure.Identity
             _context = context;
         }
 
-        public async Task<List<UserDto>> GetUsersAsync()
+        public async Task<List<UserDto>> GetAsync()
         {
             return _mapper.Map<List<UserDto>>(await _userManager.Users.ToListAsync());
         }
 
-        public async Task<UserDto> GetUserAsync(string userId)
+        public async Task<UserDto> GetSingleAsync(string userId)
         {
             return _mapper.Map<UserDto>(await _userManager.Users.FirstAsync(u => u.Id == userId));
         }
@@ -48,7 +48,7 @@ namespace Infrastructure.Identity
             return user.UserName;
         }
 
-        public async Task<OutputResult<UserDto>> UpsertUserAsync(UserDto user)
+        public async Task<OutputResult<UserDto>> UpsertAsync(UserDto user)
         {
             var applicationUser = _mapper.Map<ApplicationUser>(user);
 
@@ -67,7 +67,7 @@ namespace Infrastructure.Identity
             return result.ToApplicationResult(user);
         }
 
-        public async Task<Result> DeleteUserAsync(string userId)
+        public async Task<Result> DeleteAsync(string userId)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 

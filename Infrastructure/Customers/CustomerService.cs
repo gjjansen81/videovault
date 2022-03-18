@@ -22,19 +22,19 @@ namespace Infrastructure.Customers
             _mapper = mapper;
         }
 
-        public async Task<List<CustomerDto>> GetCustomersAsync()
+        public async Task<List<CustomerDto>> GetAsync()
         {
             return _mapper.Map<List<CustomerDto>>(await _context.Customers.ToListAsync());
         }
 
-        public async Task<CustomerDto> GetCustomerAsync(int id)
+        public async Task<CustomerDto> GetSingleAsync(int id)
         {
             return _mapper.Map<CustomerDto>(await _context.Customers
                 .Include( a => a.Address)
                 .FirstOrDefaultAsync(x => x.Id ==id));
         }
 
-        public async Task<CustomerDto> UpsertCustomerAsync(CustomerDto customerDto)
+        public async Task<CustomerDto> UpsertAsync(CustomerDto customerDto)
         {
             var customer = _mapper.Map<Customer>(customerDto);
             Customer entity;
@@ -59,7 +59,7 @@ namespace Infrastructure.Customers
             return _mapper.Map<CustomerDto>(entity);
         }
 
-        public async Task DeleteCustomerAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
             if (entity != null)

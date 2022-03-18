@@ -9,7 +9,7 @@ namespace VideoVault.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+ //   [Authorize]
     public class WeatherForecastController : ApiController
     {
         private static readonly string[] Summaries = new[]

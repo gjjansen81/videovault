@@ -6,12 +6,12 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Customers.Commands
 {
-    public class GetCustomerCommand : IRequest<CustomerDto>
+    public class GetTemplateCommand : IRequest<CustomerDto>
     {
         public int Id { get; set; }
     }
 
-    public class GetCustomerCommandHandler : IRequestHandler<GetCustomerCommand, CustomerDto>
+    public class GetCustomerCommandHandler : IRequestHandler<GetTemplateCommand, CustomerDto>
     {
         private readonly ICustomerService _customerService;
 
@@ -20,9 +20,9 @@ namespace VideoVault.Application.Common.Customers.Commands
             _customerService = customerService;
         }
 
-        public async Task<CustomerDto> Handle(GetCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CustomerDto> Handle(GetTemplateCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(await _customerService.GetCustomerAsync(request.Id));
+            return await Task.FromResult(await _customerService.GetSingleAsync(request.Id));
         }
     }
 }

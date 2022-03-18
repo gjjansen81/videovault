@@ -1,0 +1,77 @@
+﻿@page "/Templates/Edit/{Id:int}"
+@page "/Templates/Edit/"
+@using VideoVault.WebApi
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Components.Tab
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
+@inject ITemplateClient TemplateService
+@inject IStringLocalizer<App> L
+@inject NavigationManager NavigationManager
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+
+        <TabControl>
+            <TabPage Text=@L["TEMPLATES_EDIT_TAB_GENERAL"]>
+
+                <h1>@L["TEMPLATES_EDIT_TAB_GENERAL_TITLE"]</h1>
+
+                <EditForm Model="@Template" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group d-none">
+                        <label>@L["TEMPLATES_EDIT_TAB_GENERAL_ID"]</label>
+                        <InputNumber @bind-Value="Template.Id" TValue="int" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>@L["TEMPLATES_EDIT_TAB_GENERAL_NAME"]</label>
+                        <InputText @bind-Value="Template.Name" class="form-control" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>@L["TEMPLATES_EDIT_TAB_GENERAL_CREATEDON"]</label>
+                        <InputDate @bind-Value="Template.CreatedOn" TValue="DateTimeOffset?" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                </EditForm>
+            </TabPage>
+        </TabControl>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public TemplateDto Template { get; set; }
+ 
+    protected override async Task OnInitializedAsync()
+    {
+        Template = new TemplateDto()
+        {
+        };
+        
+        try {
+            if (Id > 0)
+            {
+                Template = await TemplateService.GetByIdAsync(Id);
+            }
+        }
+        catch (ApiException)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
+    }
+}

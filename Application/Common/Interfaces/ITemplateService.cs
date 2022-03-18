@@ -4,11 +4,11 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Interfaces
 {
-    public interface ICustomerService
+    public interface ITemplateService
     {
-        Task<List<CustomerDto>> GetAsync();
-        Task<CustomerDto> GetSingleAsync(int id);
-        Task<CustomerDto> UpsertAsync(CustomerDto customer);
+        Task<List<TemplateDto>> GetAsync();
+        Task<TemplateDto> GetSingleAsync(int id);
+        Task<TemplateDto> UpsertAsync(TemplateDto customer);
         Task DeleteAsync(int id);
     }
 }

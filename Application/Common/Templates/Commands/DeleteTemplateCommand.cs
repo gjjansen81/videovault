@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using VideoVault.Application.Common.Interfaces;
 
-namespace VideoVault.Application.Common.Customers.Commands
+namespace VideoVault.Application.Common.Templates.Commands
 {
     public class DeleteTemplateCommand : IRequest<bool>
     {
@@ -12,16 +12,16 @@ namespace VideoVault.Application.Common.Customers.Commands
 
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteTemplateCommand, bool>
     {
-        private readonly ICustomerService _customerService;
+        private readonly ITemplateService _templateService;
 
-        public DeleteCustomerCommandHandler(ICustomerService customerService)
+        public DeleteCustomerCommandHandler(ITemplateService templateService)
         {
-            _customerService = customerService;
+            _templateService = templateService;
         }
 
         public async Task<bool> Handle(DeleteTemplateCommand request, CancellationToken cancellationToken)
         {
-            await _customerService.DeleteAsync(request.Id);
+            await _templateService.DeleteAsync(request.Id);
             return true;
         }
     }

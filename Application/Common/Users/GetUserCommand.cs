@@ -23,7 +23,7 @@ namespace VideoVault.Application.Common.Users
 
         public async Task<UserDto> Handle(GetUserCommand request, CancellationToken cancellationToken)
         { 
-            return await Task.FromResult(await _userService.GetUserAsync(request.Id.ToString()));
+            return await Task.FromResult(await _userService.GetSingleAsync(request.Id.ToString()));
         }
     }
 }

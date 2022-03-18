@@ -1,0 +1,49 @@
+﻿@page "/Templates/List"
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+@using VideoVault.WebApi
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
+@inject ITemplateClient TemplateService
+@inject NavigationManager NavigationManager
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+        <h1>Templates</h1>
+        <Grid Items="templates" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
+            <GridColumn TRowData="TemplateDto" Expression="c => c.Id" />
+            <GridColumn TRowData="TemplateDto" Expression="c => c.Name" />
+            <GridColumn TRowData="TemplateDto">
+                <a href="/Templates/edit/@context.Id">edit</a>
+            </GridColumn>
+        </Grid>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<TemplateDto> templates;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            templates = (await TemplateService.GetAsync()).ToList();
+        }
+        catch (ApiException e)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if (firstRender)
+        {
+            // Do work to load page data and set properties
+        }
+    }
+}

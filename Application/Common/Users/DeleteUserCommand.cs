@@ -21,7 +21,7 @@ namespace VideoVault.Application.Common.Users
 
         public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            await _userService.DeleteUserAsync(request.Id.ToString());
+            await _userService.DeleteAsync(request.Id.ToString());
             return true;
         }
     }

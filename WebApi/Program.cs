@@ -30,7 +30,8 @@ namespace VideoVault.WebApi
                     }
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                 }
 
                 catch (Exception ex)

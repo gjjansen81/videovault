@@ -73,5 +73,9 @@
     private async Task HandleValidSubmit()
     {
         Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
+        if (Template.Id > 0)
+        {
+            NavigationManager.NavigateTo($"Templates/List/");
+        }
     }
 }

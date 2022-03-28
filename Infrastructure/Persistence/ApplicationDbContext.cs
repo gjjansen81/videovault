@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,7 +56,30 @@ namespace Infrastructure.Persistence
                 }
             }
 
+            ConvertDateTimesToUniversalTime();
+
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public void ConvertDateTimesToUniversalTime()
+        {
+            var modifiedEntities = ChangeTracker.Entries<AuditableEntity>()
+                .Where(e => (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted)).ToList();
+         
+            foreach (var entry in modifiedEntities)
+            {
+                foreach (var prop in entry.Properties)
+                {
+                    if (prop.Metadata.ClrType == typeof(DateTime) && prop.CurrentValue != null)
+                    {
+                        prop.Metadata.FieldInfo?.SetValue(entry.Entity, DateTime.SpecifyKind((DateTime)prop.CurrentValue, DateTimeKind.Utc));
+                    }
+                    else if (prop.Metadata.ClrType == typeof(DateTime?) && prop?.CurrentValue != null)
+                    {
+                        prop.Metadata.FieldInfo?.SetValue(entry.Entity, DateTime.SpecifyKind(((DateTime?)prop.CurrentValue).Value, DateTimeKind.Utc));
+                    }
+                }
+            }
         }
 
         public async Task BeginTransactionAsync()

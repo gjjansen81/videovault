@@ -1,21 +1,23 @@
 ﻿@page "/Customers/List"
 @using System.Net
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Localization
 @using VideoVault.WebApi
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.Grid
 
 @inject ICustomerClient CustomerService
+@inject IStringLocalizer<App> L
 @inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
-        <h1>Users</h1>
+        <h1>@L["GENERAL_CUSTOMERS_TITLE"]</h1>
         <Grid Items="customers" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
             <GridColumn TRowData="CustomerDto" Expression="c => c.Id" />
             <GridColumn TRowData="CustomerDto" Expression="c => c.Name" />
             <GridColumn TRowData="CustomerDto">
-                <a href="/Customers/edit/@context.Id">edit</a>
+                <a href="/Customers/edit/@context.Id">@L["BUTTON_SUBMIT"]</a>
             </GridColumn>
         </Grid>
     </Authorized>

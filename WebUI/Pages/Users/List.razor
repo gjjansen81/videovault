@@ -1,11 +1,13 @@
 ﻿@page "/Users/List"
 @using System.Net
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Localization
 @using VideoVault.WebApi
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.Grid
 
 @inject IUserClient UserService
+@inject IStringLocalizer<App> L
 @inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
@@ -14,7 +16,7 @@
         <Grid Items="_users" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
             <GridColumn TRowData="UserDto" Expression="c => c.UserName" />
             <GridColumn TRowData="UserDto">
-                <a href="/Users/edit/@context.Id">edit</a>
+                <a href="/Users/edit/@context.Id">@L["GENERAL_BUTTON_EDIT"]</a>
             </GridColumn>
         </Grid>
     </Authorized>

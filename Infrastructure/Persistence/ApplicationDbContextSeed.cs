@@ -1,22 +1,30 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using NPOI.HPSF;
 
 namespace Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {
-        public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
+        public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             var defaultUser = new ApplicationUser { UserName = "Test1", Email = "administrator@localhost" };
-
             if (userManager.Users.All(u => u.UserName != defaultUser.UserName))
             {
                 await userManager.CreateAsync(defaultUser, "Test123!");
             }
+
+            var defaultSuperUserRole = new IdentityRole() { Name = "superuser", NormalizedName = "superuser", Id = Guid.NewGuid().ToString() };
+            if (roleManager.Roles.All(u => u.Name != defaultSuperUserRole.Name))
+            {
+                await roleManager.CreateAsync(defaultSuperUserRole);
+                await userManager.AddToRoleAsync(defaultUser, defaultSuperUserRole.NormalizedName);
+            }
         }
-        
+
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary

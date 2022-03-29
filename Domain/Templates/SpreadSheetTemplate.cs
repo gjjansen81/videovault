@@ -5,7 +5,7 @@ using VideoVault.Domain.DataSource;
 
 namespace VideoVault.Domain.Templates;
 
-public class Template : ITemplate
+public class SpreadSheetTemplate : ITemplate
 {
     public List<ISheetTemplate> Sheets { get; set; }
     public List<IDataSource> DataSources { get; set; }

@@ -22,7 +22,7 @@ namespace Domain.Test
 
             var guid = Guid.NewGuid();
 
-            var template = new Template
+            var template = new SpreadSheetTemplate
             {
                 Sheets = new List<ISheetTemplate>()
                 {

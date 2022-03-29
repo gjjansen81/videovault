@@ -1,0 +1,97 @@
+﻿@page "/Templates/Design/{Id:int}"
+@page "/Templates/Design/"
+@using VideoVault.WebApi
+@using System.Net
+@using System.Text.Json.Nodes
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using Newtonsoft.Json
+@using VideoVault.Domain.Templates
+@using VideoVault.WebUI.Components.Tab
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
+@inject ITemplateClient _templateService
+@inject IStringLocalizer<App> L
+@inject NavigationManager _navigationManager
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+
+        <TabControl>
+            <TabPage Text=@L["TEMPLATES_DESIGN"]>
+
+                <h1>@L["TEMPLATES_DESIGN_TITLE"]</h1>
+
+                <EditForm Model="@Template" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group d-none">
+                        <label>@L["TEMPLATES_DESIGN_SHEETNAME"]</label>
+                        <InputNumber @bind-Value="Template.Id" TValue="int" class="form-control" />
+                    </div>
+                    <div class="form-group d-none">
+                        <label>@L["TEMPLATES_DESIGN_NR_ROWS"]</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@L["TEMPLATES_DESIGN_NR_COLUMNS"]</label>
+                        <select class="form-control selectpicker" @bind="SheetIndex">
+                            <option>--select--</option>
+                            @foreach (var item in TemplateDesign.Sheets)
+                            {
+                                <option value="@item.Name">@item.Name</option> // Blazor needs to know what values it binds to!
+                            }
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                </EditForm>
+            </TabPage>
+        </TabControl>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public TemplateDto Template { get; set; }
+
+    [Parameter]
+    public int SheetIndex { get; set; }
+    
+    [Parameter]
+    public SpreadSheetTemplate TemplateDesign{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Template = new TemplateDto()
+        {
+        };
+        
+        try {
+            if (Id > 0)
+            {
+                Template = await _templateService.GetByIdAsync(Id);
+                if (Template.TemplateJson == null)
+                {
+                    TemplateDesign = new SpreadSheetTemplate();
+                }                
+                else
+                {
+                    TemplateDesign = JsonConvert.DeserializeObject<SpreadSheetTemplate>(Template.TemplateJson);
+                }
+            }
+        }
+        catch (ApiException)
+        {
+            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+    }
+}

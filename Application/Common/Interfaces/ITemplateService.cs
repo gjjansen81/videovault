@@ -8,7 +8,7 @@ namespace VideoVault.Application.Common.Interfaces
     {
         Task<List<TemplateDto>> GetAsync();
         Task<TemplateDto> GetSingleAsync(int id);
-        Task<TemplateDto> UpsertAsync(TemplateDto customer);
+        Task<TemplateDto> UpsertAsync(TemplateDto template);
         Task DeleteAsync(int id);
     }
 }

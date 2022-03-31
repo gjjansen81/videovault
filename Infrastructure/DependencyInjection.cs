@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Infrastructure.DataSources;
 using Infrastructure.Templates;
 using VideoVault.Application.Common.Interfaces;
 using IApplicationDbContext = Infrastructure.Persistence.IApplicationDbContext;
@@ -43,6 +44,7 @@ namespace Infrastructure
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<ITemplateService, TemplateService>();
+            services.AddTransient<IDataSourceService, DataSourceService>();
             //services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             services.AddAuthentication()    

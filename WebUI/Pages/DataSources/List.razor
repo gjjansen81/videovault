@@ -1,0 +1,54 @@
+﻿@page "/DataSources/List"
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Localization
+@using VideoVault.WebApi
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
+@inject IDataSourceClient DataSourceService
+@inject IStringLocalizer<App> L
+@inject NavigationManager NavigationManager
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+        <h1>@L["DATASOURCES_GENERAL_TITLE"]</h1>
+        <Grid Items="_dataSources" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
+            <GridColumn TRowData="TemplateDto" Expression="c => c.Id" />
+            <GridColumn TRowData="TemplateDto" Expression="c => c.Name" />
+            <GridColumn TRowData="TemplateDto">
+                <a href="/DataSources/edit/@context.Guid">@L["BUTTON_EDIT"]</a>
+            </GridColumn>
+            <GridColumn TRowData="TemplateDto">
+                <a href="/DataSources/design/@context.Guid">@L["BUTTON_DESIGN"]</a>
+            </GridColumn>
+        </Grid>
+        <a href="/DataSources/edit/">@L["BUTTON_ADD"]</a>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<DataSourceDto> _dataSources;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _dataSources = (await DataSourceService.GetAsync()).ToList();
+        }
+        catch (ApiException e)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if (firstRender)
+        {
+            // Do work to load page data and set properties
+        }
+    }
+}

@@ -1,5 +1,5 @@
-﻿@page "/Templates/Edit/{Id:int}"
-@page "/Templates/Edit/"
+﻿@page "/DataSources/Edit/{Id:int}"
+@page "/DataSources/Edit/"
 @using VideoVault.WebApi
 @using System.Net
 @using Microsoft.AspNetCore.WebUtilities
@@ -9,7 +9,7 @@
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.Grid
 
-@inject ITemplateClient TemplateService
+@inject IDataSourceClient DataSourceService
 @inject IStringLocalizer<App> L
 @inject NavigationManager NavigationManager
 
@@ -17,20 +17,20 @@
     <Authorized Context="Auth">
 
         <TabControl>
-            <TabPage Text=@L["TEMPLATES_EDIT_TAB_GENERAL"]>
+            <TabPage Text=@L["DATASOURCES_EDIT_TAB_GENERAL"]>
 
-                <h1>@L["TEMPLATES_EDIT_TAB_GENERAL_TITLE"]</h1>
+                <h1>@L["DATASOURCES_EDIT_TAB_GENERAL_TITLE"]</h1>
 
-                <EditForm Model="@Template" OnValidSubmit="@HandleValidSubmit">
+                <EditForm Model="@DataSource" OnValidSubmit="@HandleValidSubmit">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
                     <div class="form-group d-none">
-                        <label>@L["TEMPLATES_EDIT_TAB_GENERAL_ID"]</label>
-                        <InputNumber @bind-Value="Template.Id" TValue="int" class="form-control" />
+                        <label>@L["DATASOURCES_EDIT_TAB_GENERAL_ID"]</label>
+                        <InputNumber @bind-Value="DataSource.Guid" TValue="Guid" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>@L["TEMPLATES_EDIT_TAB_GENERAL_NAME"]</label>
-                        <InputText @bind-Value="Template.Name" class="form-control" />
+                        <label>@L["DATASOURCES_EDIT_TAB_GENERAL_NAME"]</label>
+                        <InputText @bind-Value="DataSource.Name" class="form-control" />
                     </div>
                     
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
@@ -42,21 +42,21 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public Guid Guid { get; set; }
 
     [Parameter]
-    public TemplateDto Template { get; set; }
+    public DataSourceDto DataSource { get; set; }
  
     protected override async Task OnInitializedAsync()
     {
-        Template = new TemplateDto()
+        DataSource = new DataSourceDto()
         {
         };
         
         try {
-            if (Id > 0)
+            if (Guid != Guid.Empty)
             {
-                Template = await TemplateService.GetByIdAsync(Id);
+                DataSource = await DataSourceService.GetByIdAsync(Guid.ToString());
             }
         }
         catch (ApiException)
@@ -67,10 +67,10 @@
 
     private async Task HandleValidSubmit()
     {
-        Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
-        if (Template.Id > 0)
+        DataSource = await DataSourceService.CreateAsync(new UpsertDataSourceCommand() { DataSource = DataSource });
+        if (DataSource.Guid != Guid.Empty)
         {
-            NavigationManager.NavigateTo($"Templates/List/");
+            NavigationManager.NavigateTo($"DataSources/List/");
         }
     }
 }

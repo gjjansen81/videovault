@@ -16,6 +16,8 @@ namespace VideoVault.WebUI.ClientApp
                 .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
             services.AddHttpClient<IUserClient, UserClient>(client => client.BaseAddress = new Uri(baseUrl))
                 .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
+            services.AddHttpClient<IDataSourceClient, DataSourceClient>(client => client.BaseAddress = new Uri(baseUrl))
+                .AddHttpMessageHandler<AuthorizationHeaderHandler>(); // This handler is on the inside, closest to the request.
             return services;
 
         }

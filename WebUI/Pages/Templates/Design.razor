@@ -7,7 +7,6 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Extensions.Localization
 @using Newtonsoft.Json
-@using VideoVault.Domain.Templates
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.Grid
@@ -38,9 +37,9 @@
                         <label>@L["TEMPLATES_DESIGN_NR_COLUMNS"]</label>
                         <select class="form-control selectpicker" @bind="SheetIndex">
                             <option>--select--</option>
-                            @foreach (var item in TemplateDesign.Sheets)
+                            foreach (var item in TemplateDesign.Sheets)
                             {
-                                <option value="@item.Name">@item.Name</option> // Blazor needs to know what values it binds to!
+                                <option value="item.Name">item.Name</option> // Blazor needs to know what values it binds to!
                             }
                         </select>
                     </div>
@@ -61,28 +60,17 @@
 
     [Parameter]
     public int SheetIndex { get; set; }
-    
-    [Parameter]
-    public SpreadSheetTemplate TemplateDesign{ get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Template = new TemplateDto()
         {
         };
-        
+
         try {
             if (Id > 0)
             {
                 Template = await _templateService.GetByIdAsync(Id);
-                if (Template.TemplateJson == null)
-                {
-                    TemplateDesign = new SpreadSheetTemplate();
-                }                
-                else
-                {
-                    TemplateDesign = JsonConvert.DeserializeObject<SpreadSheetTemplate>(Template.TemplateJson);
-                }
             }
         }
         catch (ApiException)
@@ -91,7 +79,8 @@
         }
     }
 
-    private async Task HandleValidSubmit()
+    private Task HandleValidSubmit()
     {
+        return Task.FromResult(true);
     }
 }

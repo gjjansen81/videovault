@@ -7,7 +7,7 @@ using VideoVault.Domain.ValidationRules;
 
 namespace VideoVault.Domain.Mapper
 {
-    public abstract class MappingNode
+    public abstract class MappingNode : IMappingNode
     {
         public List<MappingNode> Children { get; set; } = new List<MappingNode>();
         public List<IValidationRule> ValidationRules { get; set; } = new List<IValidationRule>();

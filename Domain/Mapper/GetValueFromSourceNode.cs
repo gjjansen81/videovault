@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
@@ -6,11 +7,20 @@ namespace VideoVault.Domain.Mapper
 {
     public class GetValueFromSourceNode : MappingNode
     {
+        [Description("The coordinate of the field of which to get the value")]
         public ICoordinate Coordinate { get; set; }
         //public bool ForceUseSource { get; set; } = false;
+        
+        [Description("Try and parse it to a number")]
         public bool TryParseToNumber { get; set; } = true;
+
+        [Description("Convert to value to string")] 
         public bool ConvertToString { get; set; } = false;
+        
+        [Description("Trim the value")]
         public bool Trim { get; set; } = false;
+
+        [Description("Get coordinate from on a mapping node")] 
         public MappingNode PropertyNode { get; set; }
 
         protected override dynamic ResolveChildren(MappingData mappingData)

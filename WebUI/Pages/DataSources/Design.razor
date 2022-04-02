@@ -1,0 +1,69 @@
+﻿@page "/DataSources/Design/{Id:guid}"
+@page "/DataSources/Design/"
+@using VideoVault.WebApi
+@using System.Net
+@using System.Text.Json.Nodes
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
+@using Newtonsoft.Json
+@using VideoVault.WebUI.Components.Tab
+@using VideoVault.WebUI.Services
+@using VideoVault.WebUI.Components.Grid
+
+@inject IDataSourceClient _dataSourceService
+@inject IStringLocalizer<App> L
+@inject NavigationManager _navigationManager
+
+<AuthorizeView roles="superuser">
+    <Authorized Context="Auth">
+
+        <TabControl>
+            <TabPage Text=@L["DATASOURCES_DESIGN"]>
+
+                <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
+
+                <EditForm Model="@DataSource" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    
+                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                </EditForm>
+            </TabPage>
+        </TabControl>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public DataSourceDto DataSource { get; set; }
+
+    [Parameter]
+    public int SheetIndex { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataSource = new DataSourceDto()
+        {
+        };
+
+        try {
+            if (Id != Guid.Empty)
+            {
+                DataSource = await _dataSourceService.GetByIdAsync(Id.ToString());
+            }
+        }
+        catch (ApiException)
+        {
+            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+        }
+    }
+
+    private Task HandleValidSubmit()
+    {
+        return Task.FromResult(true);
+    }
+}

@@ -19,6 +19,8 @@ namespace VideoVault.Application.Common.Mappings
             CreateMap<UserDto, User>();
             CreateMap<Template, TemplateDto>();
             CreateMap<TemplateDto, Template>();
+            CreateMap<DataSource, DataSourceDto>();
+            CreateMap<DataSourceDto, DataSource>();
             //ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
         }
     

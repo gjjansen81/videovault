@@ -14,12 +14,12 @@
     <Authorized Context="Auth">
         <h1>@L["DATASOURCES_GENERAL_TITLE"]</h1>
         <Grid Items="_dataSources" class="table table-bordered" RowClass='(row, index) => index%2 == 1 ? "table-success" : ""'>
-            <GridColumn TRowData="TemplateDto" Expression="c => c.Id" />
-            <GridColumn TRowData="TemplateDto" Expression="c => c.Name" />
-            <GridColumn TRowData="TemplateDto">
+            <GridColumn TRowData="DataSourceDto" Expression="c => c.Guid" />
+            <GridColumn TRowData="DataSourceDto" Expression="c => c.Name" />
+            <GridColumn TRowData="DataSourceDto">
                 <a href="/DataSources/edit/@context.Guid">@L["BUTTON_EDIT"]</a>
             </GridColumn>
-            <GridColumn TRowData="TemplateDto">
+            <GridColumn TRowData="DataSourceDto">
                 <a href="/DataSources/design/@context.Guid">@L["BUTTON_DESIGN"]</a>
             </GridColumn>
         </Grid>

@@ -1,4 +1,4 @@
-﻿@page "/DataSources/Edit/{Id:int}"
+﻿@page "/DataSources/Edit/{Id:guid}"
 @page "/DataSources/Edit/"
 @using VideoVault.WebApi
 @using System.Net
@@ -24,10 +24,6 @@
                 <EditForm Model="@DataSource" OnValidSubmit="@HandleValidSubmit">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
-                    <div class="form-group d-none">
-                        <label>@L["DATASOURCES_EDIT_TAB_GENERAL_ID"]</label>
-                        <InputNumber @bind-Value="DataSource.Guid" TValue="Guid" class="form-control" />
-                    </div>
                     <div class="form-group">
                         <label>@L["DATASOURCES_EDIT_TAB_GENERAL_NAME"]</label>
                         <InputText @bind-Value="DataSource.Name" class="form-control" />
@@ -42,7 +38,7 @@
 
 @code {
     [Parameter]
-    public Guid Guid { get; set; }
+    public Guid Id { get; set; }
 
     [Parameter]
     public DataSourceDto DataSource { get; set; }
@@ -54,9 +50,9 @@
         };
         
         try {
-            if (Guid != Guid.Empty)
+            if (Id != Guid.Empty)
             {
-                DataSource = await DataSourceService.GetByIdAsync(Guid.ToString());
+                DataSource = await DataSourceService.GetByIdAsync(Id.ToString());
             }
         }
         catch (ApiException)

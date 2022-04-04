@@ -26,7 +26,16 @@
                 <EditForm Model="@DataSource" OnValidSubmit="@HandleValidSubmit">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
-                    
+                    <div class="form-group">
+                        <label>@L["DATASOURCES_DESIGN_NR_COLUMNS"]</label>
+                        <select class="form-control selectpicker" @bind="SelectedNode">
+                            <option>--select--</option>
+                            foreach (var node in AvailableNodes)
+                            {
+                                <option value="node.FullName">node.Name</option> // Blazor needs to know what values it binds to!
+                            }
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
                 </EditForm>
             </TabPage>
@@ -39,10 +48,12 @@
     public Guid Id { get; set; }
 
     [Parameter]
-    public DataSourceDto DataSource { get; set; }
+    public DataSourceDto DataSource{ get; set; }
+    public MappingNodeDto CurrentNode { get; set; }
+    public List<MappingNodeDto> AvailableNodes { get; set; }
 
     [Parameter]
-    public int SheetIndex { get; set; }
+    public string SelectedNode { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,8 +63,10 @@
 
         try {
             if (Id != Guid.Empty)
-            {
+            {   
                 DataSource = await _dataSourceService.GetByIdAsync(Id.ToString());
+                CurrentNode = DataSource.RootNode;
+                AvailableNodes = (await _dataSourceService.GetMappingNodesAsync()).ToList();
             }
         }
         catch (ApiException)

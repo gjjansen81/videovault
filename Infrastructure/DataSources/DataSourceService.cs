@@ -76,6 +76,7 @@ namespace Infrastructure.DataSources
                 .Where(p => type.IsAssignableFrom(p))
                 .Where(p => p.Name != "IMappingNode" && p.Name != "MappingNode");
 
+            var nodes = new List<MappingNodeDto>();
             foreach (var mappingClass in mappingClasses)
             {
                 var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
@@ -86,27 +87,29 @@ namespace Infrastructure.DataSources
                 if (properties == null)
                     continue;
 
-                var parameters = new List<MappingNodeParameter>();
+                var parameters = new List<MappingNodeParameterDto>();
                 foreach (var property in properties)
                 {
                     DescriptionAttribute descriptionAttribute = (DescriptionAttribute)property.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
                     if(descriptionAttribute == null)
                         continue;
 
-                    parameters.Add(new MappingNodeParameter()
+                    parameters.Add(new MappingNodeParameterDto()
                     {
                         Name = property.Name,
                         Description = descriptionAttribute.Description,
                         DateType = property.PropertyType
                     });
                 }
-                GetMappingNodes().Add(new MappingNodeDto()
-                {
 
+                nodes.Add(new MappingNodeDto()
+                {
+                    Name = mappingClass.Name,
+                    FullName = mappingClass.FullName,
+                    Parameters = parameters
                 });
             }
 
-            var nodes = new List<MappingNodeDto>();
             return nodes;
         }
     }

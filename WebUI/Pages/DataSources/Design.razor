@@ -30,9 +30,9 @@
                         <label>@L["DATASOURCES_DESIGN_NR_COLUMNS"]</label>
                         <select class="form-control selectpicker" @bind="SelectedNode">
                             <option>--select--</option>
-                            foreach (var node in AvailableNodes)
+                            @foreach (var node in AvailableNodes)
                             {
-                                <option value="node.FullName">node.Name</option> // Blazor needs to know what values it binds to!
+                                <option value="@node.FullName">@node.FriendlyName</option> // Blazor needs to know what values it binds to!
                             }
                         </select>
                     </div>
@@ -50,7 +50,7 @@
     [Parameter]
     public DataSourceDto DataSource{ get; set; }
     public MappingNodeDto CurrentNode { get; set; }
-    public List<MappingNodeDto> AvailableNodes { get; set; }
+    public List<MappingNodeDto> AvailableNodes { get; set; } = new List<MappingNodeDto>();
 
     [Parameter]
     public string SelectedNode { get; set; }
@@ -64,7 +64,7 @@
         try {
             if (Id != Guid.Empty)
             {   
-                DataSource = await _dataSourceService.GetByIdAsync(Id.ToString());
+                DataSource = await _dataSourceService.GetByIdAsync(Id);
                 CurrentNode = DataSource.RootNode;
                 AvailableNodes = (await _dataSourceService.GetMappingNodesAsync()).ToList();
             }

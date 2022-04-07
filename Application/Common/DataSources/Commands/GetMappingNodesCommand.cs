@@ -14,16 +14,16 @@ namespace VideoVault.Application.Common.DataSources.Commands
 
     public class GetMappingNodesCommandHandler : IRequestHandler<GetMappingNodesCommand, List<MappingNodeDto>>
     {
-        private readonly IDataSourceService _DataSourceService;
+        private readonly IDataSourceService _dataSourceService;
 
-        public GetMappingNodesCommandHandler(IDataSourceService DataSourceService)
+        public GetMappingNodesCommandHandler(IDataSourceService dataSourceService)
         {
-            _DataSourceService = DataSourceService;
+            _dataSourceService = dataSourceService;
         }
 
         public async Task<List<MappingNodeDto>> Handle(GetMappingNodesCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_DataSourceService.GetMappingNodes());
+            return await Task.FromResult(_dataSourceService.GetMappingNodes());
         }
     }
 }

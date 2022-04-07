@@ -38,7 +38,7 @@
 
 @code {
     [Parameter]
-    public Guid Id { get; set; }
+    public Guid Guid { get; set; }
 
     [Parameter]
     public DataSourceDto DataSource { get; set; }
@@ -50,9 +50,9 @@
         };
         
         try {
-            if (Id != Guid.Empty)
+            if (Guid != Guid.Empty)
             {
-                DataSource = await DataSourceService.GetByIdAsync(Id.ToString());
+                DataSource = await DataSourceService.GetByIdAsync(Guid);
             }
         }
         catch (ApiException)

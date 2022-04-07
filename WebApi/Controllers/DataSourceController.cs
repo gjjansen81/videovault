@@ -38,13 +38,13 @@ namespace VideoVault.WebApi.Controllers
             return await Mediator.Send(new GetDataSourcesCommand { });
         }
 
-        [HttpGet("[action]/{id}")]
+        [HttpGet("[action]/{guid}")]
         public async Task<ActionResult<DataSourceDto>> GetById(Guid guid)
         {
             return await Mediator.Send(new GetDataSourceCommand { Guid = guid });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{guid}")]
         public async Task<ActionResult> Delete(Guid guid)
         {
             await Mediator.Send(new DeleteDataSourceCommand { Guid = guid });

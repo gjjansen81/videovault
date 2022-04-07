@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Entities;
+using VideoVault.Domain.Enums;
 using VideoVault.Domain.Mapper;
 
 namespace Infrastructure.DataSources
@@ -82,7 +83,11 @@ namespace Infrastructure.DataSources
                 var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
                 if(assemblyQualifiedName == null) 
                     continue;
-                
+
+                DescriptionAttribute nodeDescription = (DescriptionAttribute)mappingClass.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
+                if (nodeDescription == null)
+                    continue; 
+
                 var properties = Type.GetType(assemblyQualifiedName)?.GetProperties();
                 if (properties == null)
                     continue;
@@ -98,7 +103,7 @@ namespace Infrastructure.DataSources
                     {
                         Name = property.Name,
                         Description = descriptionAttribute.Description,
-                        DateType = property.PropertyType
+                        DateType = ConvertTypeToDataType(property.PropertyType)
                     });
                 }
 
@@ -106,11 +111,39 @@ namespace Infrastructure.DataSources
                 {
                     Name = mappingClass.Name,
                     FullName = mappingClass.FullName,
+                    FriendlyName = nodeDescription.Description,
                     Parameters = parameters
                 });
             }
 
             return nodes;
+        }
+
+        private DataType ConvertTypeToDataType(Type type)
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                //case TypeCode.Byte:
+                //case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                    return DataType.Int;
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return DataType.Double;
+                case TypeCode.String:
+                    return DataType.String;
+                case TypeCode.DateTime:
+                    return DataType.DateTime;
+                default:
+                    return DataType.Unknown;
+            }
+
         }
     }
 }

@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace VideoVault.Domain.Mapper
 {
+    [Description("Value - from another source")]
     public class GetValueFromSourceNode : MappingNode
     {
         [Description("The coordinate of the field of which to get the value")]

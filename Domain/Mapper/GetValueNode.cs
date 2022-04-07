@@ -2,6 +2,7 @@
 
 namespace VideoVault.Domain.Mapper
 {
+    [Description("Value - constant")]
     public class GetValueNode : MappingNode
     {
         [Description("The value")]

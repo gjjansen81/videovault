@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using VideoVault.Application.Common.Attributes;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Entities;
@@ -99,10 +100,13 @@ namespace Infrastructure.DataSources
                     if(descriptionAttribute == null)
                         continue;
 
+                    var placeholderAttribute = (PlaceholderAttribute)property.GetCustomAttributes(typeof(PlaceholderAttribute), true).FirstOrDefault();
+
                     parameters.Add(new MappingNodeParameterDto()
                     {
                         Name = property.Name,
                         Description = descriptionAttribute.Description,
+                        Placeholder = placeholderAttribute?.Placeholder,
                         DateType = ConvertTypeToDataType(property.PropertyType)
                     });
                 }

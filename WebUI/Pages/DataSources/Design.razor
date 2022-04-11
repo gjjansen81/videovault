@@ -9,7 +9,7 @@
 @using Newtonsoft.Json
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Services
-@using VideoVault.WebUI.Components.Grid
+@using VideoVault.WebUI.Components.MappingModal
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -38,6 +38,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
                 </EditForm>
+                @if (ShowModal)
+                {
+                    <MappingModal Node="CurrentNode"></MappingModal>
+                }
             </TabPage>
         </TabControl>
     </Authorized>
@@ -77,6 +81,10 @@
 
     private Task HandleValidSubmit()
     {
+        ShowModal = true;
         return Task.FromResult(true);
     }
+
+    public bool ShowModal { get; set; }
+
 }

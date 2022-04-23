@@ -4,38 +4,63 @@
 @using VideoVault.WebUI.Components.Tab
 @inject IStringLocalizer<App> L
 
-<div class="modal fade show d-block" id="mappingModal" tabindex="-1" role="dialog">  
-    <div class="modal-dialog" role="document">  
-        <div class="modal-content">  
-            <div class="modal-header">  
-                <h5 class="modal-title" id="titleLabel">@Node.FriendlyName</h5>  
-                <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">  
-                    <span aria-hidden="true">×</span>  
-                </button>  
-                </div>  
-                <div class="modal-body">  
-                <EditForm Model="@Node" OnValidSubmit="@HandleValidSubmit">  
-                    <DataAnnotationsValidator />  
-                    <ValidationSummary />  
-                    @foreach (var parameter in Node.Parameters)
-                    {
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" id="mappingModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">@Node.FriendlyName</h5>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@Node" OnValidSubmit="@HandleValidSubmit">
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary/>
+                        @foreach (var parameter in Node.Parameters)
+                        {
                         @* Use @key to help the diff algorithm when updating the collection *@
-                        <label for="@parameter.Name">@parameter.Description: </label>  
-                        <InputText id="@parameter.Name" class="form-control" @bind-Value="@parameter.Value" placeholder="@parameter.Placeholder"></InputText>  
-                        <ValidationMessage For="@(() => Node.Name)" />  
-                    }
-                    <button type="submit" class="btn btn-primary">@L["Save"]</button>  
-                    <a class="btn btn-outline-primary" @onclick="@Close">Close</a>  
-                </EditForm>  
-            </div>  
-        </div>  
-    </div>  
-</div>
+                            <label for="@parameter.Name">@parameter.Description: </label>
+                          @*  @if (parameter.DateType == DataType.Bool)
+                            {
+                                <InputCheckbox id="@parameter.Name" class="form-control" checked="@parameter.Value?.Equals("1")" ValueChanged="value => parameter.Value = (value ? 1 : 0 )"></InputCheckbox>
+                            }
+                            else if (parameter.DateType == DataType.Int)
+                            {
+                                <InputText type="number" id="@parameter.Name" class="form-control" Value="@parameter.Value?.ToString()" ValueChanged="value => parameter.Value = Convert.ToUInt32(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
+                            }
+                            else if( parameter.DateType == DataType.Double)
+                            {
+                                <InputText type="number" id="@parameter.Name" class="form-control" Value="@parameter.Value?.ToString()" ValueChanged="value => parameter.Value = Convert.ToDouble(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
+                            }
+                            else*@ if (parameter.DateType == DataType.DateTime)
+                            {
+                                <InputText type="date" id="@parameter.Name" class="form-control" Value="@parameter.Value." ValueChanged="value => parameter.SetValue(value) = DateTime.Parse(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.SetValue(value))"></InputText>
+                            }
+                            else
+                            {
+                                <InputText id="@parameter.Name" class="form-control" @bind-Value="@parameter.Value" placeholder="@parameter.Placeholder"></InputText>
+                            }
+                            <ValidationMessage For="@(() => Node.Name)"/>
+                        }
+                        <button type="submit" class="btn btn-primary">@L["Save"]</button>
+                        <a class="btn btn-outline-primary" @onclick="@Close">Close</a>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @code {
 
     // Next line is needed so we are able to add <TabPage> components inside
     [Parameter]
     public MappingNodeDto Node { get; set; }
+
+    [Parameter]
+    public bool IsVisible{ get; set; }
 
     private void HandleValidSubmit()
     {
@@ -48,7 +73,7 @@
 
     private void Close()
     {
-        throw new NotImplementedException();
+        IsVisible = false;
     }
-
 }
+    

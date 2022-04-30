@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.Domain.Entities
 @using VideoVault.WebUI.Components.Tab
+@using System.Linq.Expressions
 @inject IStringLocalizer<App> L
 
 @if (IsVisible)
@@ -23,9 +24,13 @@
                         {
                         @* Use @key to help the diff algorithm when updating the collection *@
                             <label for="@parameter.Name">@parameter.Description: </label>
-                          @*  @if (parameter.DateType == DataType.Bool)
+                            if (parameter.DateType == DataType.Bool)
                             {
-                                <InputCheckbox id="@parameter.Name" class="form-control" checked="@parameter.Value?.Equals("1")" ValueChanged="value => parameter.Value = (value ? 1 : 0 )"></InputCheckbox>
+                                <ParameterInputBoolean Parameter="parameter"></ParameterInputBoolean>
+                            }
+                          @* if (parameter.DateType == DataType.Bool)
+                            {
+                                <InputCheckbox id="@parameter.Name" class="form-control" checked="@parameter.Value?.Equals("1")" ValueChanged="@" ValueExpression="@( () => parameter.Value.Equals("1"))"></InputCheckbox>
                             }
                             else if (parameter.DateType == DataType.Int)
                             {
@@ -35,13 +40,15 @@
                             {
                                 <InputText type="number" id="@parameter.Name" class="form-control" Value="@parameter.Value?.ToString()" ValueChanged="value => parameter.Value = Convert.ToDouble(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
                             }
-                            else*@ if (parameter.DateType == DataType.DateTime)
+                            else* @ if (parameter.DateType == DataType.DateTime)
                             {
-                                <InputText type="date" id="@parameter.Name" class="form-control" Value="@parameter.Value." ValueChanged="value => parameter.SetValue(value) = DateTime.Parse(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.SetValue(value))"></InputText>
+                                <InputText type="date" id="@parameter.Name" class="form-control" Value="@parameter.Value" ValueChanged="value => parameter.Value = value" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
                             }
+                             <InputText id="@parameter.Name" class="form-control" @bind-Value="@parameter.Value" placeholder="@parameter.Placeholder"></InputText>
+                               *@
                             else
                             {
-                                <InputText id="@parameter.Name" class="form-control" @bind-Value="@parameter.Value" placeholder="@parameter.Placeholder"></InputText>
+                                <ParameterInputText Parameter="parameter"></ParameterInputText>
                             }
                             <ValidationMessage For="@(() => Node.Name)"/>
                         }
@@ -60,7 +67,9 @@
     public MappingNodeDto Node { get; set; }
 
     [Parameter]
-    public bool IsVisible{ get; set; }
+    public bool IsVisible { get; set; }
+
+    private bool _booleanProperty { get; set; }
 
     private void HandleValidSubmit()
     {
@@ -74,6 +83,21 @@
     private void Close()
     {
         IsVisible = false;
+    }
+
+    private void ConvertToBool(MappingNodeParameterDto parameter, bool value)
+    {
+        parameter.Value = value ? "1" : "0";
+    }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private Task OnCheckChanged(bool val)
+    {
+        //var password = e?.Value?.ToString();
+        return Task.CompletedTask;
+       // return ValueChanged.InvokeAsync(password);
     }
 }
     

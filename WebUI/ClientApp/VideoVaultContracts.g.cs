@@ -355,7 +355,7 @@ namespace VideoVault.WebApi
         public DataType DateType { get; set; }
 
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public IValue Value { get; set; }
+        public string Value { get; set; }
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -393,25 +393,6 @@ namespace VideoVault.WebApi
         String = 4,
 
         DateTime = 5,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public abstract partial class IValue
-    {
-
-        public string ToJson()
-        {
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
-
-        }
-        public static IValue FromJson(string data)
-        {
-
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<IValue>(data, new Newtonsoft.Json.JsonSerializerSettings());
-
-        }
 
     }
 

@@ -144,6 +144,8 @@ namespace Infrastructure.DataSources
                     return DataType.String;
                 case TypeCode.DateTime:
                     return DataType.DateTime;
+                case TypeCode.Boolean:
+                    return DataType.Bool;
                 default:
                     return DataType.Unknown;
             }

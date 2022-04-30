@@ -1,0 +1,9 @@
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+
+<InputText id="@Parameter.Name" class="form-control" @bind-Value="@Parameter.Value" placeholder="@Parameter.Placeholder"></InputText>
+@code {
+    [Parameter]
+    public MappingNodeParameterDto Parameter{ get; set; }
+}
+    

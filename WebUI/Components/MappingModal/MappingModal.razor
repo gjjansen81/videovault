@@ -68,9 +68,7 @@
 
     [Parameter]
     public bool IsVisible { get; set; }
-
-    private bool _booleanProperty { get; set; }
-
+    
     private void HandleValidSubmit()
     {
         //Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
@@ -83,21 +81,6 @@
     private void Close()
     {
         IsVisible = false;
-    }
-
-    private void ConvertToBool(MappingNodeParameterDto parameter, bool value)
-    {
-        parameter.Value = value ? "1" : "0";
-    }
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-
-    private Task OnCheckChanged(bool val)
-    {
-        //var password = e?.Value?.ToString();
-        return Task.CompletedTask;
-       // return ValueChanged.InvokeAsync(password);
     }
 }
     

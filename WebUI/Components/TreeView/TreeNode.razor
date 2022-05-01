@@ -1,0 +1,22 @@
+﻿@typeparam TRowData
+
+<li>
+                        
+    <span @onclick="@(()=>SpanToggle(Pitem))" class="@_caretcss[Convert.ToInt32(@GetPropertyValue(Pitem, Id))]"></span>
+                        
+    <ul class="@_nestedcss[Convert.ToInt32(@GetPropertyValue(Pitem, Id))]"></ul>
+</Li>
+
+@code {
+
+    // Add the column to the parent Grid component.
+    // OnInitialized is called only once in the component lifecycle
+    protected override void OnInitialized()
+    {
+    }
+
+    protected override void OnParametersSet()
+    {
+    }
+
+}

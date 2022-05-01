@@ -11,7 +11,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="titleLabel">@Node.FriendlyName</h5>
+                    <h5 class="modal-title" id="titleLabel">@L[Node.FriendlyName]</h5>
                     <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -23,29 +23,19 @@
                         @foreach (var parameter in Node.Parameters)
                         {
                         @* Use @key to help the diff algorithm when updating the collection *@
-                            <label for="@parameter.Name">@parameter.Description: </label>
+                            <label for="@parameter.Name">@L[parameter.Description]: </label>
                             if (parameter.DateType == DataType.Bool)
                             {
                                 <ParameterInputBoolean Parameter="parameter"></ParameterInputBoolean>
                             }
-                          @* if (parameter.DateType == DataType.Bool)
-                            {
-                                <InputCheckbox id="@parameter.Name" class="form-control" checked="@parameter.Value?.Equals("1")" ValueChanged="@" ValueExpression="@( () => parameter.Value.Equals("1"))"></InputCheckbox>
-                            }
                             else if (parameter.DateType == DataType.Int)
                             {
-                                <InputText type="number" id="@parameter.Name" class="form-control" Value="@parameter.Value?.ToString()" ValueChanged="value => parameter.Value = Convert.ToUInt32(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
+                                <ParameterInputInteger Parameter="parameter"></ParameterInputInteger>
                             }
-                            else if( parameter.DateType == DataType.Double)
+                            else if (parameter.DateType == DataType.DateTime)
                             {
-                                <InputText type="number" id="@parameter.Name" class="form-control" Value="@parameter.Value?.ToString()" ValueChanged="value => parameter.Value = Convert.ToDouble(value)" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
+                                <ParameterInputDateTime Parameter="parameter"></ParameterInputDateTime>
                             }
-                            else* @ if (parameter.DateType == DataType.DateTime)
-                            {
-                                <InputText type="date" id="@parameter.Name" class="form-control" Value="@parameter.Value" ValueChanged="value => parameter.Value = value" placeholder="@parameter.Placeholder" ValueExpression="@( () => parameter.Value.ToString())"></InputText>
-                            }
-                             <InputText id="@parameter.Name" class="form-control" @bind-Value="@parameter.Value" placeholder="@parameter.Placeholder"></InputText>
-                               *@
                             else
                             {
                                 <ParameterInputText Parameter="parameter"></ParameterInputText>
@@ -65,10 +55,14 @@
     // Next line is needed so we are able to add <TabPage> components inside
     [Parameter]
     public MappingNodeDto Node { get; set; }
-
+    
     [Parameter]
     public bool IsVisible { get; set; }
-    
+  
+    [Parameter] 
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+    // Invoke the EventCallback to update the parent component' private field visible with the new value.
+
     private void HandleValidSubmit()
     {
         //Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
@@ -81,6 +75,7 @@
     private void Close()
     {
         IsVisible = false;
+        IsVisibleChanged.InvokeAsync(IsVisible);
     }
 }
     

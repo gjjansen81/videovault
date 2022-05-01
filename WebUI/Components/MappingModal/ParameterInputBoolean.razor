@@ -1,18 +1,18 @@
 ﻿@using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
 
-<InputCheckbox id="Parameter.Name" class="form-control" ValueChanged="@(b => OnCheckChanged(b))" ValueExpression="@(() => _booleanProperty)"></InputCheckbox>
+<InputCheckbox id="Parameter.Name" class="form-control" ValueChanged="@(OnCheckChanged)" ValueExpression="@(() => Property)"></InputCheckbox>
 @code {
 
     // Next line is needed so we are able to add <TabPage> components inside
     [Parameter]
     public MappingNodeParameterDto Parameter{ get; set; }
 
-    private bool _booleanProperty { get; set; }
+    private bool Property { get; set; }
     
-    private Task OnCheckChanged(bool val)
+    private Task OnCheckChanged(bool value)
     {
-        Parameter.Value = val ? "1" : "0";
+        Parameter.Value = value;
         return Task.CompletedTask;
     }
 }

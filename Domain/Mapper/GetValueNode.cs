@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel;
+using VideoVault.Domain.Common.Attributes;
 
 namespace VideoVault.Domain.Mapper
 {
-    [Description("Value - constant")]
+    [Configurable]
     public class GetValueNode : MappingNode
     {
-        [Description("The value")]
+        [Configurable]
         public string Value { get; set; }
-
-        [Description("The boolean")]
-        public bool TestCheck{ get; set; }
+        
         protected override dynamic ResolveChildren(MappingData mappingData)
         {
             return Value;

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using VideoVault.Application.Common.Attributes;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
+using VideoVault.Domain.Common.Attributes;
 using VideoVault.Domain.Entities;
 using VideoVault.Domain.Enums;
 using VideoVault.Domain.Mapper;
@@ -39,7 +39,7 @@ namespace Infrastructure.DataSources
         }
 
         public async Task<DataSourceDto> UpsertAsync(DataSourceDto dataSourceDto)
-        {
+        {   
             var dataSource = _mapper.Map<DataSource>(dataSourceDto);
             DataSource entity;
             if (dataSource.Guid != Guid.Empty)
@@ -85,9 +85,11 @@ namespace Infrastructure.DataSources
                 if(assemblyQualifiedName == null) 
                     continue;
 
-                DescriptionAttribute nodeDescription = (DescriptionAttribute)mappingClass.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
-                if (nodeDescription == null)
-                    continue; 
+                var nodeConfigurableAttribute = (ConfigurableAttribute)mappingClass.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
+                if (nodeConfigurableAttribute == null)
+                    continue;
+                
+                var nodeDescription = $"{mappingClass.FullName?.Replace(".", "_")}_description";
 
                 var properties = Type.GetType(assemblyQualifiedName)?.GetProperties();
                 if (properties == null)
@@ -96,17 +98,19 @@ namespace Infrastructure.DataSources
                 var parameters = new List<MappingNodeParameterDto>();
                 foreach (var property in properties)
                 {
-                    DescriptionAttribute descriptionAttribute = (DescriptionAttribute)property.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
-                    if(descriptionAttribute == null)
+                    var configurableAttribute = (ConfigurableAttribute)property.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
+                    if(configurableAttribute == null)
                         continue;
 
-                    var placeholderAttribute = (PlaceholderAttribute)property.GetCustomAttributes(typeof(PlaceholderAttribute), true).FirstOrDefault();
+                    var key = property.DeclaringType?.FullName?.Replace(".", "_") ?? string.Empty;
+                    var description = $"{key}_{property.Name}_description";
+                    var placeholder = $"{key}_{property.Name}_placeholder";
 
                     parameters.Add(new MappingNodeParameterDto()
                     {
                         Name = property.Name,
-                        Description = descriptionAttribute.Description,
-                        Placeholder = placeholderAttribute?.Placeholder,
+                        Description = description.ToUpper(),
+                        Placeholder = placeholder.ToUpper(),
                         DateType = ConvertTypeToDataType(property.PropertyType)
                     });
                 }
@@ -115,7 +119,7 @@ namespace Infrastructure.DataSources
                 {
                     Name = mappingClass.Name,
                     FullName = mappingClass.FullName,
-                    FriendlyName = nodeDescription.Description,
+                    FriendlyName = nodeDescription.ToUpper(),
                     Parameters = parameters
                 });
             }

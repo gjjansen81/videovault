@@ -32,16 +32,15 @@
                             <option>--select--</option>
                             @foreach (var node in AvailableNodes)
                             {
-                                <option value="@node.FullName">@node.FriendlyName</option> // Blazor needs to know what values it binds to!
+                                <option value="@node.FullName">@L[node.FriendlyName]</option> // Blazor needs to know what values it binds to!
                             }
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
                 </EditForm>
-                @if (ShowModal)
-                {
-                    <MappingModal Node="CurrentNode" IsVisible="ShowModal"></MappingModal>
-                }
+                
+                <MappingModal Node="CurrentNode" @bind-IsVisible="ShowModal"></MappingModal>
+            
             </TabPage>
         </TabControl>
     </Authorized>

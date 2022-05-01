@@ -2,26 +2,27 @@
 using System.ComponentModel;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using VideoVault.Domain.Common.Attributes;
 
 namespace VideoVault.Domain.Mapper
 {
-    [Description("Value - from another source")]
+    [Configurable]
     public class GetValueFromSourceNode : MappingNode
     {
-        [Description("The coordinate of the field of which to get the value")]
+        [Configurable]
         public ICoordinate Coordinate { get; set; }
         //public bool ForceUseSource { get; set; } = false;
-        
-        [Description("Try and parse it to a number")]
+
+        [Configurable]
         public bool TryParseToNumber { get; set; } = true;
 
-        [Description("Convert to value to string")] 
+        [Configurable]
         public bool ConvertToString { get; set; } = false;
-        
-        [Description("Trim the value")]
+
+        [Configurable]
         public bool Trim { get; set; } = false;
 
-        [Description("Get coordinate from on a mapping node")] 
+        [Configurable]
         public MappingNode PropertyNode { get; set; }
 
         protected override dynamic ResolveChildren(MappingData mappingData)

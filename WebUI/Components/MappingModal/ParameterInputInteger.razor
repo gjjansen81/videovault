@@ -1,0 +1,19 @@
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+<InputText type="number" id="Parameter.Name" class="form-control" ValueChanged="@(OnValueChanged)" ValueExpression="@(() => Property)" placeholder="@L[Parameter.Placeholder]"></InputText>
+
+@code {
+    [Parameter]
+    public MappingNodeParameterDto Parameter{ get; set; }
+
+    private string Property { get; set; }
+    
+    private Task OnValueChanged(string value)
+    {
+        Parameter.Value = DateTime.Parse(value);
+        return Task.CompletedTask;
+    }
+}
+    

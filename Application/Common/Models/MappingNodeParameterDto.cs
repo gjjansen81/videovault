@@ -7,7 +7,7 @@ public class MappingNodeParameterDto
 {
     public string Name { get; set; }
     public DataType DateType { get; set; }
-    public string Value { get; set; }
+    public dynamic Value { get; set; }
     public string Description { get; set; }
     public string Placeholder { get; set; }
 }

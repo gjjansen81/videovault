@@ -1,13 +1,25 @@
-﻿@typeparam TRowData
-
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
 <li>
                         
-    <span @onclick="@(()=>SpanToggle(Pitem))" class="@_caretcss[Convert.ToInt32(@GetPropertyValue(Pitem, Id))]"></span>
+    <span @onclick="@(()=>SpanToggle(Node))">@L[Node.FriendlyName]</span>
                         
-    <ul class="@_nestedcss[Convert.ToInt32(@GetPropertyValue(Pitem, Id))]"></ul>
+    <ul>
+    @if (Node.Children != null) 
+    {
+        foreach (var node in Node.Children)
+        {
+            <TreeNode Node="node"></TreeNode>
+        }
+    }
+    </ul>
+    
 </Li>
 
 @code {
+    [Parameter]
+    public MappingNodeDto Node { get; set; }
 
     // Add the column to the parent Grid component.
     // OnInitialized is called only once in the component lifecycle
@@ -17,6 +29,11 @@
 
     protected override void OnParametersSet()
     {
+    }
+
+    private void SpanToggle(MappingNodeDto node)
+    {
+        throw new NotImplementedException();
     }
 
 }

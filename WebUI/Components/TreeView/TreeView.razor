@@ -1,4 +1,7 @@
-﻿@typeparam TRowData
+﻿@using Microsoft.Extensions.Localization
+@using VideoVault.WebApi
+
+@inject IStringLocalizer<App> L
 @*
     <CascadingValue> allows descendant components (defined in ChildContent) to receive the specified value.
     Child components need to declare a cascading parameter with the same type as "Value" (i.e. Grid<TRowData>).
@@ -13,57 +16,28 @@
 <CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
 
 @* Render the table *@
-<table @attributes="@TableAttributes">
-    <thead>
-        <tr>
-            @foreach (var column in columns)
-            {
-                @column.HeaderTemplate
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            if (Items != null)
-            {
-                var index = 0;
-                foreach (var item in Items)
-                {
-                    @* Use @key to help the diff algorithm when updating the collection *@
-                    <tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
-                        @foreach (var column in columns)
-                        {
-                            @column.CellTemplate(item)
-                        }
-                    </tr>
-                }
-            }
+<div>
+    @if (RootNode != null && RootNode.Children != null) 
+    {
+        foreach (var node in RootNode.Children)
+        {
+            <TreeNode Node="node"></TreeNode>
         }
-    </tbody>
-</table>
+    }
+</div>
 
 @code {
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> TableAttributes { get; set; }
 
     [Parameter]
-    public ICollection<TRowData> Items { get; set; }
+    public MappingNodeDto RootNode { get; set; } 
 
-    // This fragment should contains all the GridColumn
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    [Parameter]
-    public Func<TRowData, int, string> RowClass { get; set; }
-
-    private readonly List<GridColumn<TRowData>> columns = new List<GridColumn<TRowData>>();
-
-    // GridColumn uses this method to add a column
-    internal void AddColumn(GridColumn<TRowData> column)
+    protected override async Task OnInitializedAsync()
     {
-        columns.Add(column);
     }
-
+    
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)

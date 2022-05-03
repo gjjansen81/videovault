@@ -1,7 +1,7 @@
 ﻿@using Microsoft.Extensions.Localization
 @using VideoVault.WebApi
 
-@inject IStringLocalizer<App> L
+@inject IStringLocalizer<App> L 
 @*
     <CascadingValue> allows descendant components (defined in ChildContent) to receive the specified value.
     Child components need to declare a cascading parameter with the same type as "Value" (i.e. Grid<TRowData>).
@@ -12,17 +12,87 @@
     IsFixed="true" indicates that "Value" will not change. This is a
     performance optimization that allows the framework to skip setting up
     change notifications.
+<link href="TreeView.css" rel="stylesheet" type="text/css" />
 *@
-<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
+<style>
+    
+/*css reference W3schools. "with small modification."*/
+/* css begin*/
+    .parentUl li ul {
+        border-left: dotted 2px black;
+        height: fit-content;
+        border-start-end-radius: 2px;
+    }
+    
+    ul, .parentUl {
+        list-style-type: none;
+    }
+
+    .parentUl ul li {
+        position: relative;
+    }
+    /*
+    .parentUl ul li:before {
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: -40px;
+        width: 40px;
+        height: 1px;
+        border-bottom: dotted 2px black;
+    }*/
+
+    .parentUl {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .caret {
+        cursor: pointer;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none;
+    }
+
+    .caret::before {
+        content: "\25B6";
+        color: black;
+        display: inline-block;
+        margin-right: 6px;
+        transition: all 0.45s;
+    }
+
+    .caret-down::before {
+        /*-ms-transform: rotate(60deg); /* IE 9 * /
+        -webkit-transform: rotate(60deg); /* Safari * /
+        transform: rotate(60deg);*/
+        transition: all 0.45s; 
+    }
+
+    .nested {
+        display: none;
+        transition: all 0.45s;
+    }
+
+    .active {
+        display: block;
+        transition: all 0.45s;
+    }
+
+
+</style>
 
 @* Render the table *@
 <div>
     @if (RootNode != null && RootNode.Children != null) 
     {
-        foreach (var node in RootNode.Children)
-        {
-            <TreeNode Node="node"></TreeNode>
-        }
+        <ul class="parentUl">
+            @foreach (var node in RootNode.Children)
+            {
+                <TreeNode Node="node"></TreeNode>
+            }
+        </ul>
     }
 </div>
 

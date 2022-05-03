@@ -1,11 +1,14 @@
 ﻿@using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<App> L
-<li>
+
+@*<link href="TreeView.css" rel="stylesheet" type="text/css" />*@
+
+<li class="fa fa-folder">
                         
     <span @onclick="@(()=>SpanToggle(Node))">@L[Node.FriendlyName]</span>
                         
-    <ul>
+    <ul hidden="@HideChildren">
     @if (Node.Children != null) 
     {
         foreach (var node in Node.Children)
@@ -16,7 +19,6 @@
     </ul>
     
 </Li>
-
 @code {
     [Parameter]
     public MappingNodeDto Node { get; set; }
@@ -33,7 +35,9 @@
 
     private void SpanToggle(MappingNodeDto node)
     {
-        throw new NotImplementedException();
+        HideChildren = !HideChildren;
     }
+
+    private bool HideChildren { get; set; }
 
 }

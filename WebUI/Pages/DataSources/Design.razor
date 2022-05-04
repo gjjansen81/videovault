@@ -1,16 +1,9 @@
 ﻿@page "/DataSources/Design/{Id:guid}"
 @page "/DataSources/Design/"
 @using VideoVault.WebApi
-@using System.Net
-@using System.Text.Json.Nodes
-@using Microsoft.AspNetCore.WebUtilities
-@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Extensions.Localization
-@using Newtonsoft.Json
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
-@using VideoVault.WebUI.Services
-@using VideoVault.WebUI.Components.MappingModal
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -41,7 +34,6 @@
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
                 </EditForm>
                 
-                <MappingModal Node="CurrentNode" @bind-IsVisible="ShowModal"></MappingModal>
             
             </TabPage>
         </TabControl>
@@ -142,9 +134,7 @@
     private Task HandleValidSubmit()
     {
         CurrentNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
-        ShowModal = true;
         return Task.FromResult(true);
     }
 
-    private bool ShowModal { get; set; }
 }

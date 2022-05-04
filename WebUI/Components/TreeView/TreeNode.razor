@@ -1,27 +1,38 @@
 ﻿@using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Components.TreeView
+@using VideoVault.WebUI.Components.MappingModal
+
 @inject IStringLocalizer<App> L
 
-@*<link href="TreeView.css" rel="stylesheet" type="text/css" />*@
+<li class="node">
+    <span class="node-label" @onclick="@(SpanToggle)">
+        <span class="fa @IconClass" ></span>
+        <span>@L[Node.FriendlyName]</span>
+    </span>                        
+    <span class="node-label l-3 fa fa-plus-square-o" @onclick="@(OnShowNewNodeModal)"></span>
 
-<li class="fa fa-folder">
-                        
-    <span @onclick="@(()=>SpanToggle(Node))">@L[Node.FriendlyName]</span>
-                        
     <ul hidden="@HideChildren">
-    @if (Node.Children != null) 
-    {
-        foreach (var node in Node.Children)
+        @if (HasChildren) 
         {
-            <TreeNode Node="node"></TreeNode>
+            foreach (var node in Node.Children)
+            {
+                <TreeNode Node="node"></TreeNode>
+            }
         }
-    }
     </ul>
-    
 </Li>
+
+<MappingModal Node="Node" @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></MappingModal>
+
 @code {
     [Parameter]
     public MappingNodeDto Node { get; set; }
+    
+    private string IconClass => HasChildren ? (HideChildren ? "fa-folder-o" : "fa-folder-open-o") : "fa-file-code-o";
+    private bool HideChildren { get; set; }
+    private bool HasChildren => Node.Children != null;
+    private bool ShowNewNodeModal { get; set; }
 
     // Add the column to the parent Grid component.
     // OnInitialized is called only once in the component lifecycle
@@ -33,11 +44,13 @@
     {
     }
 
-    private void SpanToggle(MappingNodeDto node)
+    private void SpanToggle()
     {
         HideChildren = !HideChildren;
     }
-
-    private bool HideChildren { get; set; }
-
+    
+    private void OnShowNewNodeModal()
+    {        
+        ShowNewNodeModal = true;
+    }
 }

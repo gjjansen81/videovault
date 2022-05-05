@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Common.Attributes;
@@ -34,8 +35,17 @@ namespace Infrastructure.DataSources
 
         public async Task<DataSourceDto> GetSingleAsync(Guid guid)
         {
-            return _mapper.Map<DataSourceDto>(await _context.DataSources
-                .FirstOrDefaultAsync(x => x.Guid ==guid));
+            var dataSource = await _context.DataSources.FirstOrDefaultAsync(x => x.Guid == guid);
+            
+            var dataSourceDto = _mapper.Map<DataSourceDto>(dataSource);
+           /*TODO
+            if(!string.IsNullOrWhiteSpace(dataSource?.Mapper))
+                dataSourceDto.RootNode = JsonConvert.DeserializeObject<MappingNodeDto>(dataSource.Mapper);
+            else
+                dataSourceDto.RootNode = JsonConvert.DeserializeObject<MappingNodeDto>(new RootNode());
+           */
+            return dataSourceDto;
+            
         }
 
         public async Task<DataSourceDto> UpsertAsync(DataSourceDto dataSourceDto)

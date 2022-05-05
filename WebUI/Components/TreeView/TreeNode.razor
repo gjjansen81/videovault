@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.TreeView
 @using VideoVault.WebUI.Components.MappingModal
+@using VideoVault.WebUI.Components.AddNodeModal
 
 @inject IStringLocalizer<App> L
 
@@ -17,32 +18,31 @@
         {
             foreach (var node in Node.Children)
             {
-                <TreeNode Node="node"></TreeNode>
+                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                    <TreeNode Node="node"></TreeNode>
+                </CascadingValue>
             }
         }
     </ul>
 </Li>
 
-<MappingModal Node="Node" @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></MappingModal>
-
+@*<MappingModal Node="Node" @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></MappingModal>*@
+<CascadingValue Value="@Node" Name="Node">
+    <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+        <AddNodeModal @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></AddNodeModal>
+    </CascadingValue>
+</CascadingValue>
 @code {
     [Parameter]
     public MappingNodeDto Node { get; set; }
     
+    [CascadingParameter(Name="AvailableNodes")]
+    public List<MappingNodeDto> AvailableNodes { get; set; } 
+
     private string IconClass => HasChildren ? (HideChildren ? "fa-folder-o" : "fa-folder-open-o") : "fa-file-code-o";
-    private bool HideChildren { get; set; }
+    private bool HideChildren { get; set; } 
     private bool HasChildren => Node.Children != null;
     private bool ShowNewNodeModal { get; set; }
-
-    // Add the column to the parent Grid component.
-    // OnInitialized is called only once in the component lifecycle
-    protected override void OnInitialized()
-    {
-    }
-
-    protected override void OnParametersSet()
-    {
-    }
 
     private void SpanToggle()
     {
@@ -53,4 +53,5 @@
     {        
         ShowNewNodeModal = true;
     }
+    
 }

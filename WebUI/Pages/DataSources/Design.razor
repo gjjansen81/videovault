@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
+@using Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -17,23 +18,9 @@
 
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
                 
-                <TreeView RootNode="RootNode"></TreeView>
-                <EditForm Model="@DataSource" OnValidSubmit="@HandleValidSubmit">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <div class="form-group">
-                        <label>@L["DATASOURCES_DESIGN_NR_COLUMNS"]</label>
-                        <select class="form-control selectpicker" @bind="SelectedNode">
-                            <option>--select--</option>
-                            @foreach (var node in AvailableNodes)
-                            {
-                                <option value="@node.FullName">@L[node.FriendlyName]</option> // Blazor needs to know what values it binds to!
-                            }
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
-                </EditForm>
-                
+                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                    <TreeView RootNode="RootNode"></TreeView>
+                </CascadingValue>
             
             </TabPage>
         </TabControl>
@@ -45,24 +32,40 @@
     public Guid Id { get; set; }
 
     [Parameter]
-    public DataSourceDto DataSource{ get; set; }
+    public DataSourceDto DataSource { get; set; } = new DataSourceDto();
+
     private MappingNodeDto RootNode { get; set; }
     private MappingNodeDto CurrentNode { get; set; }
-    public List<MappingNodeDto> AvailableNodes { get; set; } = new List<MappingNodeDto>();
+    public List<MappingNodeDto> AvailableNodes = new List<MappingNodeDto>();
 
     [Parameter]
     public string SelectedNode { get; set; }
 
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        try
+        {
+            await base.SetParametersAsync(parameters);
+
+            AvailableNodes = (await _dataSourceService.GetMappingNodesAsync()).ToList();
+            StateHasChanged();
+
+        }
+        catch (ApiException)
+        {
+            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        DataSource = new DataSourceDto()
-        {
-        };
-
         try {
             if (Id != Guid.Empty)
             {   
                 DataSource = await _dataSourceService.GetByIdAsync(Id);
+                RootNode = DataSource.RootNode;
+                    ;
+                /*
                 RootNode = new MappingNodeDto()
                 {
                     FriendlyName = "Parent 1",
@@ -122,7 +125,7 @@
                         }
                     }
                 };
-                AvailableNodes = (await _dataSourceService.GetMappingNodesAsync()).ToList();
+                */
             }
         }
         catch (ApiException)
@@ -137,4 +140,16 @@
         return Task.FromResult(true);
     }
 
+    @**@
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+    // The first render will instantiate the GridColumn defined in the ChildContent.
+    // GridColumn calls AddColumn during its initialization. This means that until
+    // the first render is completed, the columns collection is empty.
+    // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
+            StateHasChanged();
+        }
+    }
 }

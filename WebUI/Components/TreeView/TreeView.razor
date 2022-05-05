@@ -90,7 +90,9 @@
         <ul class="parentUl">
             @foreach (var node in RootNode.Children)
             {
-                <TreeNode Node="node"></TreeNode>
+                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                    <TreeNode Node="node"></TreeNode>
+                </CascadingValue>
             }
         </ul>
     }
@@ -99,24 +101,8 @@
 @code {
 
     [Parameter]
-    public MappingNodeDto RootNode { get; set; } 
+    public MappingNodeDto RootNode { get; set; }
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-    }
-    
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // The first render will instantiate the GridColumn defined in the ChildContent.
-            // GridColumn calls AddColumn during its initialization. This means that until
-            // the first render is completed, the columns collection is empty.
-            // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
-            StateHasChanged();
-        }
-    }
+    [CascadingParameter(Name = "AvailableNodes")]
+    public List<MappingNodeDto> AvailableNodes { get; set; }
 }

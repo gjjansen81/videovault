@@ -1,0 +1,67 @@
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" id="mappingModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">@L["ADDNODEMODAL_TITLE"]</h5>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="Node" OnValidSubmit="@HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group">
+                            <label>@L["DATASOURCES_DESIGN_NR_COLUMNS"]</label>
+                            <select class="form-control selectpicker" @bind="SelectedNode">
+                                <option>--select--</option>
+                                @foreach (var node in AvailableNodes)
+                                {
+                                    <option value="@node.FullName">@L[node.FriendlyName]</option> // Blazor needs to know what values it binds to!
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    
+    [CascadingParameter(Name="AvailableNodes")]
+    public List<MappingNodeDto> AvailableNodes { get; set; } 
+
+    [CascadingParameter(Name="Node")]
+    public MappingNodeDto Node { get; set; } 
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+  
+    [Parameter] 
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+    // Invoke the EventCallback to update the parent component' private field visible with the new value.
+
+    private string SelectedNode { get; set; }
+    
+    private void HandleValidSubmit()
+    {
+        var newNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
+        Node.Children.Add(newNode);
+        Close();
+    }
+
+    private void Close()
+    {
+        IsVisible = false;
+        IsVisibleChanged.InvokeAsync(IsVisible);
+    }
+}
+    

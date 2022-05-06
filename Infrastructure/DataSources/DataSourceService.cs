@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
@@ -127,6 +129,7 @@ namespace Infrastructure.DataSources
 
                 nodes.Add(new MappingNodeDto()
                 {
+                    AssemblyName = mappingClass.Assembly.FullName,
                     Name = mappingClass.Name,
                     FullName = mappingClass.FullName,
                     FriendlyName = nodeDescription.ToUpper(),
@@ -163,7 +166,28 @@ namespace Infrastructure.DataSources
                 default:
                     return DataType.Unknown;
             }
+        }
 
+        //TODO
+        public MappingNode ConvertToMappingNodes(MappingNodeDto mappingNodeDto)
+        {
+            ObjectHandle handle = Activator.CreateInstance(mappingNodeDto.AssemblyName, mappingNodeDto.FullName);
+            MappingNode node = (MappingNode)handle.Unwrap();
+            Type t = node.GetType();
+            foreach (var parameter in mappingNodeDto.Parameters)
+            {
+                PropertyInfo prop = t.GetProperty(parameter.Name);
+                if (prop != null)
+                    prop.SetValue(node, parameter.Value);
+            }
+
+            node.Children = new List<MappingNode>();
+            foreach (var child in mappingNodeDto.Children)
+            {
+                var childNode = ConvertToMappingNodes(child);
+                node.Children.Add(childNode);
+            }
+            return node;
         }
     }
 }

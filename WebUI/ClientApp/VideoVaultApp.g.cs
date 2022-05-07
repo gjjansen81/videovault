@@ -882,10 +882,10 @@ namespace VideoVault.WebApi
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MappingNodeDto>> GetMappingNodesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MappingNodeDto>> GetAvailableMappingNodesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("DataSource/GetMappingNodes");
+            urlBuilder_.Append("DataSource/GetAvailableMappingNodes");
 
             var client_ = _httpClient;
             var disposeClient_ = false;

@@ -40,12 +40,15 @@ namespace Infrastructure.DataSources
             var dataSource = await _context.DataSources.FirstOrDefaultAsync(x => x.Guid == guid);
             
             var dataSourceDto = _mapper.Map<DataSourceDto>(dataSource);
-           /*TODO
-            if(!string.IsNullOrWhiteSpace(dataSource?.Mapper))
-                dataSourceDto.RootNode = JsonConvert.DeserializeObject<MappingNodeDto>(dataSource.Mapper);
-            else
-                dataSourceDto.RootNode = JsonConvert.DeserializeObject<MappingNodeDto>(new RootNode());
-           */
+
+            var rootNode = new RootNode();
+            if (!string.IsNullOrWhiteSpace(dataSource?.Mapper))
+            {
+                rootNode = JsonConvert.DeserializeObject<RootNode>(dataSource.Mapper);
+            }
+
+            dataSourceDto.RootNode = ConvertToMappingNodeDto(rootNode);
+           
             return dataSourceDto;
             
         }
@@ -101,7 +104,7 @@ namespace Infrastructure.DataSources
             return nodes;
         }
 
-        private MappingNodeDto InstantiateMappingNodeDto(Type mappingClass, bool onlyConfigurableAttributes = false, MappingNode mappingNode = null)
+        private MappingNodeDto InstantiateMappingNodeDto(Type mappingClass, bool onlyConfigurableAttributes = true, MappingNode mappingNode = null)
         {
             var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
             if (assemblyQualifiedName == null)

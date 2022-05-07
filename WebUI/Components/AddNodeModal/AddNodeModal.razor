@@ -61,6 +61,7 @@
     private void Close()
     {
         IsVisible = false;
+        SelectedNode = null;
         IsVisibleChanged.InvokeAsync(IsVisible);
     }
 }

@@ -8,20 +8,20 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.DataSources.Commands
 {
-    public class GetMappingNodesCommand : IRequest<List<MappingNodeDto>>
+    public class GetAvailableMappingNodesCommand : IRequest<List<MappingNodeDto>>
     {
     }
 
-    public class GetMappingNodesCommandHandler : IRequestHandler<GetMappingNodesCommand, List<MappingNodeDto>>
+    public class GetAvailableMappingNodesCommandHandler : IRequestHandler<GetAvailableMappingNodesCommand, List<MappingNodeDto>>
     {
         private readonly IDataSourceService _dataSourceService;
 
-        public GetMappingNodesCommandHandler(IDataSourceService dataSourceService)
+        public GetAvailableMappingNodesCommandHandler(IDataSourceService dataSourceService)
         {
             _dataSourceService = dataSourceService;
         }
 
-        public async Task<List<MappingNodeDto>> Handle(GetMappingNodesCommand request, CancellationToken cancellationToken)
+        public async Task<List<MappingNodeDto>> Handle(GetAvailableMappingNodesCommand request, CancellationToken cancellationToken)
         {
             return await Task.FromResult(_dataSourceService.GetAvailableMappingNodes());
         }

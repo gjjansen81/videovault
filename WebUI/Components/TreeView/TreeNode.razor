@@ -41,7 +41,7 @@
 
     private string IconClass => HasChildren ? (HideChildren ? "fa-folder-o" : "fa-folder-open-o") : "fa-file-code-o";
     private bool HideChildren { get; set; } 
-    private bool HasChildren => Node.Children != null;
+    private bool HasChildren => Node.Children?.Count != 0;
     private bool ShowNewNodeModal { get; set; }
 
     private void SpanToggle()

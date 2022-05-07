@@ -53,9 +53,9 @@ namespace VideoVault.WebApi.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<List<MappingNodeDto>>> GetMappingNodes()
+        public async Task<ActionResult<List<MappingNodeDto>>> GetAvailableMappingNodes()
         {
-            return await Mediator.Send(new GetMappingNodesCommand { });
+            return await Mediator.Send(new GetAvailableMappingNodesCommand { });
         }
     }
 }

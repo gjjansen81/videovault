@@ -9,6 +9,6 @@ namespace VideoVault.Application.Common.Models
         public string FullName { get; set; }
         public string FriendlyName { get; set; }
         public List<MappingNodeParameterDto> Parameters { get; set; }
-        public List<MappingNodeDto> Children{ get; set; }
+        public List<MappingNodeDto> Children { get; set; } = new List<MappingNodeDto>();
     }
 }   

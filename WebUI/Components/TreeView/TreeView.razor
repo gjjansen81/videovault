@@ -85,15 +85,12 @@
 
 @* Render the table *@
 <div>
-    @if (RootNode != null && RootNode.Children != null) 
+    @if (RootNode != null) 
     {
         <ul class="parentUl">
-            @foreach (var node in RootNode.Children)
-            {
-                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeNode Node="node"></TreeNode>
-                </CascadingValue>
-            }
+            <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                <TreeNode Node="RootNode"></TreeNode>
+            </CascadingValue>
         </ul>
     }
 </div>

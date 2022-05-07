@@ -47,9 +47,8 @@
         {
             await base.SetParametersAsync(parameters);
 
-            AvailableNodes = (await _dataSourceService.GetMappingNodesAsync()).ToList();
+            AvailableNodes = (await _dataSourceService.GetAvailableMappingNodesAsync()).ToList();
             StateHasChanged();
-
         }
         catch (ApiException)
         {

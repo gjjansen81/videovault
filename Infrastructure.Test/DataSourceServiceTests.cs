@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using AutoMapper;
 using Infrastructure.DataSources;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Org.BouncyCastle.Utilities.Zlib;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using VideoVault.Application.Common.Mappings;
-using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Mapper;
 
 namespace Infrastructure.Test

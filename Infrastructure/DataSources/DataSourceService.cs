@@ -174,12 +174,7 @@ namespace Infrastructure.DataSources
 
             return node;
         }
-
-        private MappingNodeDto InstantiateMappingNodeDto(MappingNode mappingNode)
-        {
-            return InstantiateMappingNodeDto(mappingNode.GetType(), false, mappingNode);
-        }
-
+        
         private DataType ConvertTypeToDataType(Type type)
         {
             switch (Type.GetTypeCode(type))

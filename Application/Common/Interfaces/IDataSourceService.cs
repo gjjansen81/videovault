@@ -11,6 +11,6 @@ namespace VideoVault.Application.Common.Interfaces
         Task<DataSourceDto> GetSingleAsync(Guid guid);
         Task<DataSourceDto> UpsertAsync(DataSourceDto dataSource);
         Task DeleteAsync(Guid guid);
-        List<MappingNodeDto> GetMappingNodes();
+        List<MappingNodeDto> GetAvailableMappingNodes();
     }
 }

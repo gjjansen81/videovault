@@ -82,7 +82,7 @@ namespace Infrastructure.DataSources
                 _context.DataSources.Remove(entity);
         }
 
-        public List<MappingNodeDto> GetMappingNodes()
+        public List<MappingNodeDto> GetAvailableMappingNodes()
         {
             var type = typeof(IMappingNode);
             var mappingClasses = AppDomain.CurrentDomain.GetAssemblies()
@@ -93,51 +93,91 @@ namespace Infrastructure.DataSources
             var nodes = new List<MappingNodeDto>();
             foreach (var mappingClass in mappingClasses)
             {
-                var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
-                if(assemblyQualifiedName == null) 
-                    continue;
-
-                var nodeConfigurableAttribute = (ConfigurableAttribute)mappingClass.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
-                if (nodeConfigurableAttribute == null)
-                    continue;
-                
-                var nodeDescription = $"{mappingClass.FullName?.Replace(".", "_")}_description";
-
-                var properties = Type.GetType(assemblyQualifiedName)?.GetProperties();
-                if (properties == null)
-                    continue;
-
-                var parameters = new List<MappingNodeParameterDto>();
-                foreach (var property in properties)
-                {
-                    var configurableAttribute = (ConfigurableAttribute)property.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
-                    if(configurableAttribute == null)
-                        continue;
-
-                    var key = property.DeclaringType?.FullName?.Replace(".", "_") ?? string.Empty;
-                    var description = $"{key}_{property.Name}_description";
-                    var placeholder = $"{key}_{property.Name}_placeholder";
-
-                    parameters.Add(new MappingNodeParameterDto()
-                    {
-                        Name = property.Name,
-                        Description = description.ToUpper(),
-                        Placeholder = placeholder.ToUpper(),
-                        DateType = ConvertTypeToDataType(property.PropertyType)
-                    });
-                }
-
-                nodes.Add(new MappingNodeDto()
-                {
-                    AssemblyName = mappingClass.Assembly.FullName,
-                    Name = mappingClass.Name,
-                    FullName = mappingClass.FullName,
-                    FriendlyName = nodeDescription.ToUpper(),
-                    Parameters = parameters
-                });
+                var node = InstantiateMappingNodeDto(mappingClass);
+                if(node != null)
+                    nodes.Add(node);
             }
 
             return nodes;
+        }
+
+        private MappingNodeDto InstantiateMappingNodeDto(Type mappingClass, bool onlyConfigurableAttributes = false, MappingNode mappingNode = null)
+        {
+            var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
+            if (assemblyQualifiedName == null)
+                return null;
+
+            if (onlyConfigurableAttributes)
+            {
+                var nodeConfigurableAttribute = (ConfigurableAttribute)mappingClass.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
+                if (nodeConfigurableAttribute == null)
+                    return null;
+            }
+
+            var nodeDescription = $"{mappingClass.FullName?.Replace(".", "_")}_description";
+
+            var properties = Type.GetType(assemblyQualifiedName)?.GetProperties();
+            if (properties == null)
+                return null;
+
+            var parameters = new List<MappingNodeParameterDto>();
+            foreach (var property in properties)
+            {
+                var configurableAttribute = (ConfigurableAttribute)property.GetCustomAttributes(typeof(ConfigurableAttribute), true).FirstOrDefault();
+                if (configurableAttribute == null)
+                    continue;
+
+                var key = property.DeclaringType?.FullName?.Replace(".", "_") ?? string.Empty;
+                var description = $"{key}_{property.Name}_description";
+                var placeholder = $"{key}_{property.Name}_placeholder";
+
+                parameters.Add(new MappingNodeParameterDto()
+                {
+                    Name = property.Name,
+                    Description = description.ToUpper(),
+                    Placeholder = placeholder.ToUpper(),
+                    Value = (mappingNode != null) ? property.GetValue(mappingNode) : null,
+                    DateType = ConvertTypeToDataType(property.PropertyType)
+                });
+            }
+
+            return new MappingNodeDto()
+            {
+                AssemblyName = mappingClass.Assembly.FullName,
+                Name = mappingClass.Name,
+                FullName = mappingClass.FullName,
+                FriendlyName = nodeDescription.ToUpper(),
+                Parameters = parameters
+            };
+        }
+        
+        public MappingNodeDto ConvertToMappingNodeDto(MappingNode mappingNode)
+        {
+            var mappingClass = mappingNode.GetType();
+            var node = InstantiateMappingNodeDto(mappingClass, false, mappingNode);
+
+            if (string.IsNullOrWhiteSpace(mappingClass.AssemblyQualifiedName))
+            {
+                return node;
+            }
+
+            if (mappingNode.Children.Any())
+            {
+                node.Children = new List<MappingNodeDto>();
+                foreach (var mappingNodeChild in mappingNode.Children)
+                {
+                    var child = ConvertToMappingNodeDto(mappingNodeChild);
+                    if (child != null)
+                        node.Children.Add(child);
+                }
+            }
+
+            return node;
+        }
+
+        private MappingNodeDto InstantiateMappingNodeDto(MappingNode mappingNode)
+        {
+            return InstantiateMappingNodeDto(mappingNode.GetType(), false, mappingNode);
         }
 
         private DataType ConvertTypeToDataType(Type type)
@@ -168,7 +208,6 @@ namespace Infrastructure.DataSources
             }
         }
 
-        //TODO
         public MappingNode ConvertToMappingNodes(MappingNodeDto mappingNodeDto)
         {
             ObjectHandle handle = Activator.CreateInstance(mappingNodeDto.AssemblyName, mappingNodeDto.FullName);
@@ -181,12 +220,16 @@ namespace Infrastructure.DataSources
                     prop.SetValue(node, parameter.Value);
             }
 
-            node.Children = new List<MappingNode>();
-            foreach (var child in mappingNodeDto.Children)
+            if (mappingNodeDto.Children != null)
             {
-                var childNode = ConvertToMappingNodes(child);
-                node.Children.Add(childNode);
+                node.Children = new List<MappingNode>();
+                foreach (var child in mappingNodeDto.Children)
+                {
+                    var childNode = ConvertToMappingNodes(child);
+                    node.Children.Add(childNode);
+                }
             }
+
             return node;
         }
     }

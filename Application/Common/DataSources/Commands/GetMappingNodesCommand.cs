@@ -23,7 +23,7 @@ namespace VideoVault.Application.Common.DataSources.Commands
 
         public async Task<List<MappingNodeDto>> Handle(GetMappingNodesCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_dataSourceService.GetMappingNodes());
+            return await Task.FromResult(_dataSourceService.GetAvailableMappingNodes());
         }
     }
 }

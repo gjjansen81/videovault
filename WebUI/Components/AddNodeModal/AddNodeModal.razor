@@ -54,7 +54,12 @@
     private void HandleValidSubmit()
     {
         var newNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
-        Node.Children.Add(newNode);
+        if (newNode != null)
+        {
+            //TODO CREATE CLONE?
+            newNode.Guid = Guid.NewGuid();
+            Node.Children.Add(newNode);
+        }
         Close();
     }
 

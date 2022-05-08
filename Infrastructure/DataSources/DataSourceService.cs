@@ -150,7 +150,8 @@ namespace Infrastructure.DataSources
                 Name = mappingClass.Name,
                 FullName = mappingClass.FullName,
                 FriendlyName = nodeDescription.ToUpper(),
-                Parameters = parameters
+                Parameters = parameters,
+                Guid = mappingNode?.Guid ?? Guid.NewGuid()
             };
         }
         

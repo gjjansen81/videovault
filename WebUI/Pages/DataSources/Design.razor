@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
+@using VideoVault.WebUI.Components.TreeViewTest
 @using Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 @inject IDataSourceClient _dataSourceService
@@ -19,9 +20,15 @@
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
                 
                 <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                    <TreeViewTest RootNode="RootNode"></TreeViewTest>
+                </CascadingValue>
+                <h1>--------</h1>
+                <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
+                
+                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
                     <TreeView RootNode="RootNode"></TreeView>
                 </CascadingValue>
-            
+
             </TabPage>
         </TabControl>
     </Authorized>
@@ -64,7 +71,7 @@
                 DataSource = await _dataSourceService.GetByIdAsync(Id);
                 RootNode = DataSource.RootNode;
                     ;
-                /*
+                /** /
                 RootNode = new MappingNodeDto()
                 {
                     FriendlyName = "Parent 1",
@@ -124,8 +131,9 @@
                         }
                     }
                 };
-                */
+                /**/
             }
+            await base.OnInitializedAsync();
         }
         catch (ApiException)
         {

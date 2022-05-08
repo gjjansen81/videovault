@@ -9,6 +9,8 @@ namespace VideoVault.Domain.Mapper
 {
     public abstract class MappingNode : IMappingNode
     {
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
         public List<MappingNode> Children { get; set; } = new List<MappingNode>();
         public List<IValidationRule> ValidationRules { get; set; } = new List<IValidationRule>();
         protected abstract dynamic ResolveChildren(MappingData mappingData);

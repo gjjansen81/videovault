@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VideoVault.Application.Common.Models
 {
     public class MappingNodeDto
     {
+        public Guid Guid { get; set; } 
         public string Name { get; set; }
         public string? AssemblyName { get; set; }
         public string FullName { get; set; }

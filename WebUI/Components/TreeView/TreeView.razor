@@ -1,5 +1,7 @@
 ﻿@using Microsoft.Extensions.Localization
 @using VideoVault.WebApi
+    @using Microsoft.AspNetCore.Components
+@using VideoVault.WebUI.Components.AddNodeModal
 
 @inject IStringLocalizer<App> L 
 @*
@@ -64,7 +66,7 @@
     }
 
     .node::before {
-       /* -ms-transform: rotate(60deg); /* IE 9 * /
+        /* -ms-transform: rotate(60deg); /* IE 9 * /
        -webkit-transform: rotate(60deg); /* Safari * /
        /*transform: rotate(60deg);*/
         transition: all 0.45s; 
@@ -83,23 +85,46 @@
 
 </style>
 
+<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
+
 @* Render the table *@
 <div>
     @if (RootNode != null) 
     {
         <ul class="parentUl">
             <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                <TreeNode Node="RootNode"></TreeNode>
+                <TreeNode Node="RootNode" OnShowNewNodeModalClicked="()=>OnShowNewNodeModal(SelectedNode)"></TreeNode>
             </CascadingValue>
         </ul>
     }
 </div>
 
+@*<MappingModal Node="Node" @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></MappingModal>*@
+<CascadingValue Value="@SelectedNode" Name="Node">
+    <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+        <AddNodeModal @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></AddNodeModal>
+    </CascadingValue>
+</CascadingValue>
 @code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 
     [Parameter]
     public MappingNodeDto RootNode { get; set; }
+    
+    [Parameter]
+    public MappingNodeDto SelectedNode { get; set; }
 
     [CascadingParameter(Name = "AvailableNodes")]
     public List<MappingNodeDto> AvailableNodes { get; set; }
+
+    private bool ShowNewNodeModal { get; set; }
+    
+    public string SelectedNewNode { get; set; }
+    
+    private void OnShowNewNodeModal(MappingNodeDto selectedNode)
+    {
+        SelectedNode = selectedNode;
+        ShowNewNodeModal = true;
+    }
 }

@@ -4,18 +4,7 @@
 @using VideoVault.WebUI.Components.AddNodeModal
 
 @inject IStringLocalizer<App> L 
-@*
-    <CascadingValue> allows descendant components (defined in ChildContent) to receive the specified value.
-    Child components need to declare a cascading parameter with the same type as "Value" (i.e. Grid<TRowData>).
-    This allows GridColumn to get the Grid instance by using a CascadingParameter
 
-        [CascadingParameter]public Grid<TRowData> OwnerGrid { get; set; }
-
-    IsFixed="true" indicates that "Value" will not change. This is a
-    performance optimization that allows the framework to skip setting up
-    change notifications.
-<link href="TreeView.css" rel="stylesheet" type="text/css" />
-*@
 <style>
     
 /*css reference W3schools. "with small modification."*/
@@ -84,31 +73,24 @@
 
 
 </style>
-
-<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
-
-@* Render the table *@
+<h1>ttttest</h1>
 <div>
     @if (RootNode != null) 
     {
         <ul class="parentUl">
             <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                <TreeNode Node="RootNode" OnShowNewNodeModalClicked="()=>OnShowNewNodeModal(RootNode)"></TreeNode>
+                <TreeNode Node="RootNode" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)"></TreeNode>
             </CascadingValue>
         </ul>
     }
 </div>
 
-@*<MappingModal Node="Node" @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></MappingModal>*@
 <CascadingValue Value="@SelectedNode" Name="Node">
     <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
         <AddNodeModal @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></AddNodeModal>
     </CascadingValue>
 </CascadingValue>
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
     [Parameter]
     public MappingNodeDto RootNode { get; set; }
     
@@ -122,9 +104,9 @@
     
     public string SelectedNewNode { get; set; }
     
-    private void OnShowNewNodeModal(MappingNodeDto selectedNode)
+    private void OnShowNewNodeModalCallback(MappingNodeDto node)
     {
-        SelectedNode = selectedNode;
+        SelectedNode = node;
         ShowNewNodeModal = true;
     }
 }

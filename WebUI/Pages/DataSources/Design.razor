@@ -4,8 +4,6 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
-@using VideoVault.WebUI.Components.TreeViewTest
-@using Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -18,13 +16,7 @@
             <TabPage Text=@L["DATASOURCES_DESIGN"]>
 
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
-                
-                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeViewTest RootNode="RootNode"></TreeViewTest>
-                </CascadingValue>
-                <h1>--------</h1>
-                <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
-                
+
                 <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
                     <TreeView RootNode="RootNode"></TreeView>
                 </CascadingValue>
@@ -42,7 +34,6 @@
     public DataSourceDto DataSource { get; set; } = new DataSourceDto();
 
     private MappingNodeDto RootNode { get; set; }
-    private MappingNodeDto CurrentNode { get; set; }
     public List<MappingNodeDto> AvailableNodes = new List<MappingNodeDto>();
 
     [Parameter]
@@ -70,68 +61,6 @@
             {   
                 DataSource = await _dataSourceService.GetByIdAsync(Id);
                 RootNode = DataSource.RootNode;
-                    ;
-                /** /
-                RootNode = new MappingNodeDto()
-                {
-                    FriendlyName = "Parent 1",
-                    Children = new List<MappingNodeDto>()
-                    {
-                        new MappingNodeDto()
-                        {
-                            FriendlyName = "Child1 L1",
-                            Children = new List<MappingNodeDto>()
-                            {
-                                new MappingNodeDto()
-                                {
-                                    FriendlyName = "Child1 L2",
-                                    Children = new List<MappingNodeDto>()
-                                    {
-                                        new MappingNodeDto()
-                                        {
-                                            FriendlyName = "Child1 L3",
-                                        },
-                                        new MappingNodeDto()
-                                        {
-                                            FriendlyName = "Child2 L3",
-                                        }
-                                    }
-                                },
-                                new MappingNodeDto()
-                                {
-                                    FriendlyName = "Child2 L2",
-                                    Children = new List<MappingNodeDto>()
-                                    {
-                                        new MappingNodeDto()
-                                        {
-                                            FriendlyName = "Child3 L3",
-                                        },
-                                        new MappingNodeDto()
-                                        {
-                                            FriendlyName = "Child4 L3",
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        new MappingNodeDto()
-                        {
-                            FriendlyName = "Child2 L1",
-                            Children = new List<MappingNodeDto>()
-                            {
-                                new MappingNodeDto()
-                                {
-                                    FriendlyName = "Child3 L2",
-                                },
-                                new MappingNodeDto()
-                                {
-                                    FriendlyName = "Child4 L2",
-                                }
-                            }
-                        }
-                    }
-                };
-                /**/
             }
             await base.OnInitializedAsync();
         }
@@ -143,19 +72,18 @@
 
     private Task HandleValidSubmit()
     {
-        CurrentNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
+       // CurrentNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
         return Task.FromResult(true);
     }
 
-    @**@
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-    // The first render will instantiate the GridColumn defined in the ChildContent.
-    // GridColumn calls AddColumn during its initialization. This means that until
-    // the first render is completed, the columns collection is empty.
-    // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
+            // The first render will instantiate the GridColumn defined in the ChildContent.
+            // GridColumn calls AddColumn during its initialization. This means that until
+            // the first render is completed, the columns collection is empty.
+            // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
             StateHasChanged();
         }
     }

@@ -49,15 +49,18 @@
     public EventCallback<bool> IsVisibleChanged { get; set; }
 
     private string SelectedNewNode { get; set; }
-    
+
     private void HandleValidSubmit()
     {
-        var newNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNewNode));
-        if (newNode != null)
+        var selectedNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNewNode));
+        if (selectedNode != null)
         {
-            //TODO CREATE CLONE?
-            newNode.Guid = Guid.NewGuid();
-            Node.Children.Add(newNode);
+            var newNode = selectedNode.Clone();
+            if (newNode != null)
+            {
+                newNode.Guid = Guid.NewGuid();
+                Node.Children.Add(newNode);
+            }
         }
         Close();
     }

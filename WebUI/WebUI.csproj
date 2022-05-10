@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Components\TreeView\TreeView.css" />
+    <None Remove="Components\TreeView\TreeView.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Components\TreeView\TreeView.css" />
+    <Content Include="Components\TreeView\TreeView.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

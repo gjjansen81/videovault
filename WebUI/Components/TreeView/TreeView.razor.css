@@ -1,29 +1,23 @@
-﻿h1 {
-    color: brown;
-    font-family: Tahoma, Geneva, Verdana, sans-serif;
-}
-
-
-.parentUl li ul {
+﻿::deep .parentUl li ul {
     border-left: dotted 2px black;
     height: fit-content;
     border-start-end-radius: 2px;
 }
 
-ul, .parentUl {
+::deep ul, .parentUl {
     list-style-type: none;
 }
 
-.parentUl ul li {
+::deep .parentUl ul li {
     position: relative;
 }
 
-.parentUl {
+::deep .parentUl {
     margin: 0;
     padding: 0;
 }
     
-.node-label {
+::deep .node-label {
     cursor: pointer;
     -webkit-user-select: none; /* Safari 3.1+ */
     -moz-user-select: none; /* Firefox 2+ */
@@ -33,22 +27,22 @@ ul, .parentUl {
     font-weight: normal;
 }
 
-.node::before {
+::deep .node::before {
     display: inline-block;
     margin-right: 6px;
     transition: all 0.45s;
 }
 
-.node::before {
-    transition: all 0.45s; 
+::deep .node::before {
+    transition: all 0.45s;
 }
 
-.nested {
+::deep .nested {
     display: none;
     transition: all 0.45s;
 }
 
-.active {
+::deep .active {
     display: block;
     transition: all 0.45s;
 }

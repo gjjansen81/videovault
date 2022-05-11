@@ -1,7 +1,6 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using VideoVault.Application.Common.Customers.Commands;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 
@@ -14,16 +13,16 @@ namespace VideoVault.Application.Common.DataSources.Commands
 
     public class UpsertDataSourceCommandHandler : IRequestHandler<UpsertDataSourceCommand, DataSourceDto>
     {
-        private readonly IDataSourceService _DataSourceService;
+        private readonly IDataSourceService _dataSourceService;
 
-        public UpsertDataSourceCommandHandler(IDataSourceService DataSourceService)
+        public UpsertDataSourceCommandHandler(IDataSourceService dataSourceService)
         {
-            _DataSourceService = DataSourceService;
+            _dataSourceService = dataSourceService;
         }
 
         public async Task<DataSourceDto> Handle(UpsertDataSourceCommand request, CancellationToken cancellationToken)
         {
-            return await _DataSourceService.UpsertAsync(request.DataSource);
+            return await _dataSourceService.UpsertAsync(request.DataSource);
         }
     }
 }

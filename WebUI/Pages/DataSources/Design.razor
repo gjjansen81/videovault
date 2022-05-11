@@ -16,11 +16,13 @@
             <TabPage Text=@L["DATASOURCES_DESIGN"]>
 
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
-
-                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeView RootNode="RootNode"></TreeView>
-                </CascadingValue>
-
+                
+                <EditForm Model="DataSource" OnValidSubmit="@HandleValidSubmit">
+                    <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                        <TreeView RootNode="RootNode"></TreeView>
+                    </CascadingValue>
+                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                </EditForm>
             </TabPage>
         </TabControl>
     </Authorized>
@@ -70,10 +72,9 @@
         }
     }
 
-    private Task HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-       // CurrentNode = AvailableNodes.FirstOrDefault(x => x.FullName.Equals(SelectedNode));
-        return Task.FromResult(true);
+        DataSource = await _dataSourceService.UpdateAsync(Id, new UpsertDataSourceCommand() { DataSource = DataSource });
     }
 
     protected override void OnAfterRender(bool firstRender)

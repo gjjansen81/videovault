@@ -56,6 +56,10 @@ namespace Infrastructure.DataSources
         public async Task<DataSourceDto> UpsertAsync(DataSourceDto dataSourceDto)
         {   
             var dataSource = _mapper.Map<DataSource>(dataSourceDto);
+            var mappingNodes = ConvertToMappingNodes(dataSourceDto.RootNode);
+
+            dataSource.Mapper = ConvertToJson(mappingNodes);
+
             DataSource entity;
             if (dataSource.Guid != Guid.Empty)
             {
@@ -75,7 +79,34 @@ namespace Infrastructure.DataSources
             }
 
             await _context.CommitTransactionAsync();
-            return _mapper.Map<DataSourceDto>(entity);
+            var updatedDataSource = _mapper.Map<DataSourceDto>(entity);
+            if (entity?.Mapper != null)
+            {
+                var mappingNode = ConvertFromJson(entity.Mapper);
+                updatedDataSource.RootNode = ConvertToMappingNodeDto(mappingNode);
+            }
+
+            return updatedDataSource;
+        }
+
+        private string ConvertToJson(MappingNode mappingNodes)
+        {
+            var settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(mappingNodes, settings);
+        }
+
+        private MappingNode ConvertFromJson(string mappingConfiguration)
+        {
+            var settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<RootNode>(mappingConfiguration, settings);
         }
 
         public async Task DeleteAsync(Guid guid)

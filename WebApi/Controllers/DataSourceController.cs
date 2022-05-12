@@ -27,9 +27,7 @@ namespace VideoVault.WebApi.Controllers
                 return BadRequest();
             }
 
-            await Mediator.Send(command);
-
-            return NoContent();
+            return await Mediator.Send(command);
         }
 
         [HttpGet("[action]")]

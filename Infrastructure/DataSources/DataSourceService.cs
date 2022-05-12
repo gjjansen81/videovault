@@ -69,7 +69,7 @@ namespace Infrastructure.DataSources
                 // Validate entity is not null
                 if (entity != null)
                 {
-                    entity = dataSource;
+                    _context.Entry(entity).CurrentValues.SetValues(dataSource);
                     //entity.Name = customer.Name;
                 }
             }

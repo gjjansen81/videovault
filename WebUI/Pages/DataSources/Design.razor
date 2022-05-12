@@ -74,7 +74,7 @@
 
     private async Task HandleValidSubmit()
     {
-        DataSource = await _dataSourceService.UpdateAsync(Id, new UpsertDataSourceCommand() { DataSource = DataSource });
+        var dataSource = await _dataSourceService.UpdateAsync(Id, new UpsertDataSourceCommand() { DataSource = DataSource });
     }
 
     protected override void OnAfterRender(bool firstRender)

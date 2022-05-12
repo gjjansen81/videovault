@@ -45,8 +45,7 @@ namespace Infrastructure.Templates
                 // Validate entity is not null
                 if (entity != null)
                 {
-                    entity = template;
-                    //entity.Name = customer.Name;
+                    _context.Entry(entity).CurrentValues.SetValues(template);
                 }
             }
             else

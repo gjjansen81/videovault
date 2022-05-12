@@ -100,5 +100,23 @@ namespace Infrastructure.Test
             Assert.IsTrue(child2.Value.Equals("B2"));
         }
 
+        [TestMethod]
+        public void GetSingleAsync()
+        {
+            var result = null;
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Children.Count == 1);
+            Assert.IsTrue(result.Children[0].Children.Count == 2);
+
+            Assert.IsTrue(result.FullName.Contains("RootNode"));
+            Assert.IsTrue(!result.Children.Any(x => x.FullName.Contains("GetValueNode")));
+            Assert.IsTrue(result.Children.All(x => x.FullName.Contains("ConcatNode")));
+            Assert.IsTrue(result.Children.First().Children.All(x => x.FullName.Contains("GetValueNode")));
+            var child1 = result.Children.First().Children[0].Parameters.Where(x => x.Name.Equals("Value", StringComparison.InvariantCultureIgnoreCase)).ToList().First();
+            var child2 = result.Children.First().Children[1].Parameters.Where(x => x.Name.Equals("Value", StringComparison.InvariantCultureIgnoreCase)).ToList().First();
+            Assert.IsTrue(child1.Value.Equals("A1"));
+            Assert.IsTrue(child2.Value.Equals("B2"));
+        }
+
     }
 }

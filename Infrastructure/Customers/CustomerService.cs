@@ -46,7 +46,7 @@ namespace Infrastructure.Customers
                 // Validate entity is not null
                 if (entity != null)
                 {
-                    entity = customer;
+                    _context.Entry(entity).CurrentValues.SetValues(customer);
                     //entity.Name = customer.Name;
                 }
             }

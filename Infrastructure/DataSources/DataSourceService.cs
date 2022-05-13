@@ -1,15 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
-using AutoMapper;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Common.Attributes;
@@ -44,7 +42,7 @@ namespace Infrastructure.DataSources
             var rootNode = new RootNode();
             if (!string.IsNullOrWhiteSpace(dataSource?.Mapper))
             {
-                rootNode = JsonConvert.DeserializeObject<RootNode>(dataSource.Mapper);
+                rootNode = ConvertFromJson(dataSource.Mapper);
             }
 
             dataSourceDto.RootNode = ConvertToMappingNodeDto(rootNode);
@@ -89,24 +87,24 @@ namespace Infrastructure.DataSources
             return updatedDataSource;
         }
 
-        private string ConvertToJson(MappingNode mappingNodes)
+        public string ConvertToJson(MappingNode mappingNodes)
         {
             var settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
 
-            return Newtonsoft.Json.JsonConvert.SerializeObject(mappingNodes, settings);
+            return JsonConvert.SerializeObject(mappingNodes, settings);
         }
 
-        private MappingNode ConvertFromJson(string mappingConfiguration)
+        public RootNode ConvertFromJson(string mappingConfiguration)
         {
             var settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<RootNode>(mappingConfiguration, settings);
+            return JsonConvert.DeserializeObject<RootNode>(mappingConfiguration, settings);
         }
 
         public async Task DeleteAsync(Guid guid)
@@ -245,9 +243,45 @@ namespace Infrastructure.DataSources
             Type t = node.GetType();
             foreach (var parameter in mappingNodeDto.Parameters)
             {
+                if(parameter.Value == null)
+                    continue;
+
                 PropertyInfo prop = t.GetProperty(parameter.Name);
                 if (prop != null)
-                    prop.SetValue(node, parameter.Value);
+                {
+                    switch (parameter.DateType)
+                    {
+                        case DataType.Bool:
+                        {
+                            bool.TryParse(parameter.Value?.Lower(), out bool value);
+                            prop.SetValue(node, value);
+                            break;
+                        }
+                        case DataType.Int:
+                        {
+                            int.TryParse(parameter.Value?.Lower(), out int value);
+                            prop.SetValue(node, value);
+                            break;
+                        }
+                        case DataType.Double:
+                        {
+                            double.TryParse(parameter.Value?.Lower(), out double value);
+                            prop.SetValue(node, value);
+                            break;
+                        }
+                        case DataType.DateTime:
+                        {
+                            DateTime.TryParse(parameter.Value?.Lower(), out DateTime value);
+                            prop.SetValue(node, value);
+                            break;
+                        }
+                        case DataType.String:
+                        {
+                            prop.SetValue(node, parameter.Value);
+                            break;
+                        }
+                    }
+                }
             }
 
             if (mappingNodeDto.Children != null)

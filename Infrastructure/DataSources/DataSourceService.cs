@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Common.Attributes;
@@ -247,44 +248,11 @@ namespace Infrastructure.DataSources
                 PropertyInfo prop = t.GetProperty(parameter.Name);
                 if (prop == null)
                     continue;
-
+                
                 if (parameter.Value == null)
                     continue;
                 
                 prop.SetValue(node, parameter.Value);
-                /*
-                switch (parameter.DateType)
-                {
-                    case DataType.Bool:
-                    {
-                        bool.TryParse(parameter.Value, out bool value);
-                        prop.SetValue(node, value);
-                        break;
-                    }
-                    case DataType.Int:
-                    {
-                        int.TryParse(parameter.Value, out int value);
-                        prop.SetValue(node, value);
-                        break;
-                    }
-                    case DataType.Double:
-                    {
-                        double.TryParse(parameter.Value, out double value);
-                        prop.SetValue(node, value);
-                        break;
-                    }
-                    case DataType.DateTime:
-                    {
-                        DateTime.TryParse(parameter.Value, out DateTime value);
-                        prop.SetValue(node, value);
-                        break;
-                    }
-                    case DataType.String:
-                    {
-                        prop.SetValue(node, parameter.Value);
-                        break;
-                    }
-                }*/
             }
 
             if (mappingNodeDto.Children != null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using VideoVault.Domain.Enums;
 
 namespace VideoVault.Application.Common.Models;
@@ -31,30 +32,67 @@ public class MappingNodeParameterDto
         }
         set
         {
-            if (value == null)
-                _value = null;
-
-            switch (DateType)
+            if (value is System.Text.Json.JsonElement jsonElement)
             {
-                case DataType.Bool:
-                    _value = (bool?) value;
-                    break;
-                case DataType.Int:
-                    _value = (int?) value;
-                    break;
-                case DataType.Double:
-                    _value = (double?) value;
-                    break;
-                case DataType.DateTime:
-                    _value = (DateTime?)value;
-                    break;
-                case DataType.String:
-                    _value = (string) value;
-                    break;
-                default:
-                    _value = value; 
-                    break;
+                ExtractFromJsonElement(jsonElement);
             }
+            else
+            {
+                ExtractFromDynamic(value);
+            }
+        }
+    }
+
+    private void ExtractFromDynamic(dynamic value)
+    {
+        if (value == null)
+            _value = null;
+
+        switch (DateType)
+        {
+            case DataType.Bool:
+                _value = (bool?)value;
+                break;
+            case DataType.Int:
+                _value = (int?)value;
+                break;
+            case DataType.Double:
+                _value = (double?)value;
+                break;
+            case DataType.DateTime:
+                _value = (DateTime?)value;
+                break;
+            case DataType.String:
+                _value = (string)value;
+                break;
+            default:
+                _value = value;
+                break;
+        }
+    }
+
+    private void ExtractFromJsonElement(JsonElement jsonElement)
+    {
+        switch (DateType)
+        {
+            case DataType.Bool:
+                _value = jsonElement.GetBoolean();
+                break;
+            case DataType.Int:
+                _value = jsonElement.GetInt32();
+                break;
+            case DataType.Double:
+                _value = jsonElement.GetDouble();
+                break;
+            case DataType.DateTime:
+                _value = jsonElement.GetDateTime();
+                break;
+            case DataType.String:
+                _value = jsonElement.GetString();
+                break;
+            default:
+                _value = jsonElement;
+                break;
         }
     }
 

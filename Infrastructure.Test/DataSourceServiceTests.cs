@@ -29,10 +29,12 @@ namespace Infrastructure.Test
                         {
                             Value = "A1"
                         },
-
                         new GetValueNode()
                         {
                             Value = "B2"
+                        },
+                        new GetValueFromSourceNode()
+                        {
                         }
                     }
                 }
@@ -63,15 +65,22 @@ namespace Infrastructure.Test
         {
             _context?.Dispose();
         }
-
+            
         [TestMethod]
         public void GetAvailableMappingNodesTests()
         {
-            var result = _dataSourceService.GetAvailableMappingNodes();
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count > 2);
-            Assert.IsTrue(result.Any(x => x.FullName.Contains("GetValueNode")));
-            Assert.IsTrue(!result.Any(x => x.FullName.Contains("RootNode")));
+            try
+            {
+                var result = _dataSourceService.GetAvailableMappingNodes();
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.Count > 2);
+                Assert.IsTrue(result.Any(x => x.FullName.Contains("GetValueNode")));
+                Assert.IsTrue(!result.Any(x => x.FullName.Contains("RootNode")));
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         [TestMethod]
@@ -82,9 +91,10 @@ namespace Infrastructure.Test
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Children.Count == 1);
-            Assert.IsTrue(result.Children.First().Children.Count == 2);
+            Assert.IsTrue(result.Children.First().Children.Count == 3);
             Assert.IsTrue(result.Children.Any(x => x is ConcatNode));
-            Assert.IsTrue(result.Children.First().Children.All(x => x is GetValueNode));
+            Assert.IsTrue(result.Children.First().Children.Where(x => x is GetValueNode).ToList().Count() == 2);
+            Assert.IsTrue(result.Children.First().Children.Where(x => x is GetValueFromSourceNode).ToList().Count() == 1);
         }
 
         [TestMethod]
@@ -110,7 +120,29 @@ namespace Infrastructure.Test
         public void ConvertFromJsonTest()
         {
       //      var mapper = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"2a8d6fdc-61d5-4eee-a6f2-0fec678094cd\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueFromSourceNode,VideoVault.Domain\",\"Coordinate\":null,\"TryParseToNumber\":false,\"ConvertToString\":false,\"Trim\":false,\"PropertyNode\":null,\"Guid\":\"f9167ccd-4743-4cf6-bc18-7567466d1e9b\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
-            var mapper = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"c650d95e-0104-4af3-802a-a1fcd4ff19ef\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueNode, VideoVault.Domain\",\"Value\":\"true\",\"Guid\":\"e9847af5-27d0-432a-aa25-70ee5e6a21b3\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
+            var mapper1 = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"c650d95e-0104-4af3-802a-a1fcd4ff19ef\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueNode, VideoVault.Domain\",\"Value\":\"true\",\"Guid\":\"e9847af5-27d0-432a-aa25-70ee5e6a21b3\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
+            var mapper = @"{""Name"": null,
+
+                                ""Entity"": 0,
+                                ""Destination"": null,
+                                ""Guid"": ""2a8d6fdc-61d5-4eee-a6f2-0fec678094cd"",
+                                ""Children"": [
+
+                                {
+                                    ""$type"": ""VideoVault.Domain.Mapper.GetValueFromSourceNode, VideoVault.Domain"",
+                                    ""Coordinate"": null,
+                                    ""TryParseToNumber"": false,
+                                    ""ConvertToString"": false,
+                                    ""Trim"": false,
+                                    ""PropertyNode"": null,
+                                    ""Guid"": ""f9167ccd-4743-4cf6-bc18-7567466d1e9b"",
+                                    ""Children"": [],
+                                    ""ValidationRules"": []
+
+                                }
+                                ],
+                                ""ValidationRules"": []
+                            }";
             try
             {
                 var mappingNode = _dataSourceService.ConvertFromJson(mapper);
@@ -130,9 +162,12 @@ namespace Infrastructure.Test
             {
                 Children = new List<MappingNode>()
                 {
+                    new GetValueFromSourceNode()
+                    {
+                    },
                     new GetValueNode()
                     {
-                        Value = "true"
+                        Value = "testA"
                     }
                 }
             };

@@ -163,13 +163,14 @@ namespace Infrastructure.DataSources
                 var description = $"{key}_{property.Name}_description";
                 var placeholder = $"{key}_{property.Name}_placeholder";
 
+                var type = property.PropertyType;
                 parameters.Add(new MappingNodeParameterDto()
                 {
                     Name = property.Name,
                     Description = description.ToUpper(),
                     Placeholder = placeholder.ToUpper(),
-                    Value = (mappingNode != null) ? property.GetValue(mappingNode) : null,
-                    DateType = ConvertTypeToDataType(property.PropertyType)
+                    DateType = ConvertTypeToDataType(property.PropertyType),
+                    Value = (mappingNode != null) ? property.GetValue(mappingNode) : null
                 });
             }
 
@@ -243,45 +244,47 @@ namespace Infrastructure.DataSources
             Type t = node.GetType();
             foreach (var parameter in mappingNodeDto.Parameters)
             {
-                if(parameter.Value == null)
+                PropertyInfo prop = t.GetProperty(parameter.Name);
+                if (prop == null)
                     continue;
 
-                PropertyInfo prop = t.GetProperty(parameter.Name);
-                if (prop != null)
+                if (parameter.Value == null)
+                    continue;
+                
+                prop.SetValue(node, parameter.Value);
+                /*
+                switch (parameter.DateType)
                 {
-                    switch (parameter.DateType)
+                    case DataType.Bool:
                     {
-                        case DataType.Bool:
-                        {
-                            bool.TryParse(parameter.Value?.Lower(), out bool value);
-                            prop.SetValue(node, value);
-                            break;
-                        }
-                        case DataType.Int:
-                        {
-                            int.TryParse(parameter.Value?.Lower(), out int value);
-                            prop.SetValue(node, value);
-                            break;
-                        }
-                        case DataType.Double:
-                        {
-                            double.TryParse(parameter.Value?.Lower(), out double value);
-                            prop.SetValue(node, value);
-                            break;
-                        }
-                        case DataType.DateTime:
-                        {
-                            DateTime.TryParse(parameter.Value?.Lower(), out DateTime value);
-                            prop.SetValue(node, value);
-                            break;
-                        }
-                        case DataType.String:
-                        {
-                            prop.SetValue(node, parameter.Value);
-                            break;
-                        }
+                        bool.TryParse(parameter.Value, out bool value);
+                        prop.SetValue(node, value);
+                        break;
                     }
-                }
+                    case DataType.Int:
+                    {
+                        int.TryParse(parameter.Value, out int value);
+                        prop.SetValue(node, value);
+                        break;
+                    }
+                    case DataType.Double:
+                    {
+                        double.TryParse(parameter.Value, out double value);
+                        prop.SetValue(node, value);
+                        break;
+                    }
+                    case DataType.DateTime:
+                    {
+                        DateTime.TryParse(parameter.Value, out DateTime value);
+                        prop.SetValue(node, value);
+                        break;
+                    }
+                    case DataType.String:
+                    {
+                        prop.SetValue(node, parameter.Value);
+                        break;
+                    }
+                }*/
             }
 
             if (mappingNodeDto.Children != null)

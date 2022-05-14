@@ -2,6 +2,7 @@
 @page "/DataSources/Design/"
 @using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
+@using NPOI.OpenXmlFormats.Wordprocessing
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
 
@@ -16,19 +17,28 @@
             <TabPage Text=@L["DATASOURCES_DESIGN"]>
 
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
-                
-                <EditForm Model="DataSource" OnValidSubmit="@HandleValidSubmit">
-                    <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                        <TreeView RootNode="RootNode"></TreeView>
-                    </CascadingValue>
-                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
-                </EditForm>
+                <ErrorBoundary>
+                    <ChildContent>
+                        <EditForm Model="DataSource" OnValidSubmit="@HandleValidSubmit">
+                            <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                                <TreeView RootNode="RootNode"></TreeView>
+                            </CascadingValue>
+                            <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                        </EditForm>
+                    </ChildContent>
+                    <ErrorContent>
+                        <p class="alert alert-danger">An error occurred while editing data source. Exception: @Exception.Message</p>
+                    </ErrorContent>
+                </ErrorBoundary>
+               
             </TabPage>
         </TabControl>
     </Authorized>
 </AuthorizeView>
 
 @code {
+    private Exception Exception { get; set; }
+    
     [Parameter]
     public Guid Id { get; set; }
 
@@ -58,9 +68,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try {
+        try
+        {
             if (Id != Guid.Empty)
-            {   
+            {
                 DataSource = await _dataSourceService.GetByIdAsync(Id);
                 RootNode = DataSource.RootNode;
             }
@@ -69,6 +80,11 @@
         catch (ApiException)
         {
             _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+        }
+        catch (Exception e)
+        {
+            Exception = e;
+            throw;
         }
     }
 

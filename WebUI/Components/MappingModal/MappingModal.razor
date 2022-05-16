@@ -1,5 +1,7 @@
 ﻿@using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Components.MappingForm;
+
 @inject IStringLocalizer<App> L
 
 @if (IsVisible)
@@ -14,34 +16,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="@Node" OnValidSubmit="@HandleValidSubmit">
-                        <DataAnnotationsValidator/>
-                        <ValidationSummary/>
-                        @foreach (var parameter in Node.Parameters)
-                        {
-                        @* Use @key to help the diff algorithm when updating the collection *@
-                            <label for="@parameter.Name">@L[parameter.Description]: </label>
-                            if (parameter.DateType == DataType.Bool)
-                            {
-                                <ParameterInputBoolean Parameter="parameter"></ParameterInputBoolean>
-                            }
-                            else if (parameter.DateType == DataType.Int)
-                            {
-                                <ParameterInputInteger Parameter="parameter"></ParameterInputInteger>
-                            }
-                            else if (parameter.DateType == DataType.DateTime)
-                            {
-                                <ParameterInputDateTime Parameter="parameter"></ParameterInputDateTime>
-                            }
-                            else
-                            {
-                                <ParameterInputText Parameter="parameter"></ParameterInputText>
-                            }
-                            <ValidationMessage For="@(() => Node.Name)"/>
-                        }
-                        <button type="submit" class="btn btn-primary">@L["Save"]</button>
-                        <a class="btn btn-outline-primary" @onclick="@Close">Close</a>
-                    </EditForm>
+                    <MappingForm Node="Node"></MappingForm>
+                    <a class="btn btn-outline-primary" @onclick="@Close">Close</a>
                 </div>
             </div>
         </div>
@@ -59,16 +35,7 @@
     [Parameter] 
     public EventCallback<bool> IsVisibleChanged { get; set; }
     // Invoke the EventCallback to update the parent component' private field visible with the new value.
-
-    private void HandleValidSubmit()
-    {
-        //Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
-        //if (Template.Id > 0)
-        {
-          //  NavigationManager.NavigateTo($"Templates/List/");
-        }
-    }
-
+    
     private void Close()
     {
         IsVisible = false;

@@ -6,11 +6,11 @@
 @inject IStringLocalizer<App> L
 
 <li class="node">
-    <span class="node-label" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")>
-        <span class="fa @IconClass" ></span>
-        <span>@L[Node.FriendlyName]</span>
+    <span class="node-label @(SelectedNode == Node ? "alert alert-primary p-0" : "")">
+        <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
+        <span @onclick="@(OnSetAsSelectedAsync)" @key=@($"select_{Node.Guid}")>@L[Node.FriendlyName]</span>
     </span>                        
-    <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModal" @onclick:stopPropagation="true" @key=@($"add_{Node.Guid}")></span>
+    <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModalAsync" @key=@($"add_{Node.Guid}")></span>
 
     <ul hidden="@HideChildren">
         @if (HasChildren) 
@@ -18,7 +18,7 @@
             foreach (var child in Node.Children)
             {
                 <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeNode Node="child" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)" @key=child></TreeNode>
+                    <TreeNode Node="child" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallbackAsync)" OnSetAsSelected="@(OnSetAsSelectedCallbackAsync)" @key=child></TreeNode>
                 </CascadingValue>
             }
         }
@@ -31,6 +31,12 @@
     
     [CascadingParameter(Name="AvailableNodes")]
     public List<MappingNodeDto> AvailableNodes { get; set; } 
+
+    [CascadingParameter(Name="SelectedNode")]
+    public MappingNodeDto SelectedNode { get; set; } 
+
+    [Parameter]
+    public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
   
     [Parameter]
     public EventCallback<MappingNodeDto> OnShowNewNodeModalClicked { get; set; }
@@ -39,14 +45,24 @@
     private bool HideChildren { get; set; } 
     private bool HasChildren => Node.Children?.Count != 0;
     
-    private async Task OnShowNewNodeModalCallback(MappingNodeDto node)
+    private async Task OnShowNewNodeModalCallbackAsync(MappingNodeDto node)
     {
         await OnShowNewNodeModalClicked.InvokeAsync(node);
     }
 
-    private async Task OnShowNewNodeModal()
+    private async Task OnShowNewNodeModalAsync()
     {
         await OnShowNewNodeModalClicked.InvokeAsync(Node);
+    }
+    
+    private async Task OnSetAsSelectedCallbackAsync(MappingNodeDto node)
+    {
+        await OnSetAsSelected.InvokeAsync(node);
+    }
+
+    private async Task OnSetAsSelectedAsync()
+    {
+        await OnSetAsSelected.InvokeAsync(Node);
     }
 
     private void SpanToggle()

@@ -8,8 +8,10 @@
     @if (RootNode != null) 
     {
         <ul class="parentUl">
-            <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                <TreeNode Node="RootNode" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)"></TreeNode>
+            <CascadingValue Value="@SelectedNode" Name="SelectedNode" IsFixed="true">
+                <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                    <TreeNode Node="RootNode" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)" OnSetAsSelected="@(OnSetAsSelectedCallback)"></TreeNode>
+                </CascadingValue>
             </CascadingValue>
         </ul>
     }
@@ -24,11 +26,14 @@
     [Parameter]
     public MappingNodeDto RootNode { get; set; }
     
-    [Parameter]
+    [CascadingParameter(Name = "SelectedNode")]
     public MappingNodeDto SelectedNode { get; set; }
 
     [CascadingParameter(Name = "AvailableNodes")]
     public List<MappingNodeDto> AvailableNodes { get; set; }
+    
+    [Parameter]
+    public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
 
     private bool ShowNewNodeModal { get; set; }
     
@@ -38,5 +43,11 @@
     {
         SelectedNode = node;
         ShowNewNodeModal = true;
+    }
+
+    private void OnSetAsSelectedCallback(MappingNodeDto node)
+    {
+        SelectedNode = node;
+        OnSetAsSelected.InvokeAsync(node);
     }
 }

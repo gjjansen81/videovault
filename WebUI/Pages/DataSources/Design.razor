@@ -2,9 +2,9 @@
 @page "/DataSources/Design/"
 @using VideoVault.WebApi
 @using Microsoft.Extensions.Localization
-@using NPOI.OpenXmlFormats.Wordprocessing
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
+@using VideoVault.WebUI.Components.MappingForm
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -20,17 +20,34 @@
                 <ErrorBoundary>
                     <ChildContent>
                         <EditForm Model="DataSource" OnValidSubmit="@HandleValidSubmit">
-                            <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                                <TreeView RootNode="RootNode"></TreeView>
-                            </CascadingValue>
-                            <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td scope="row" class="border-right">
+                                        <CascadingValue Value="@SelectedNode" Name="SelectedNode" IsFixed="true">
+                                            <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
+                                                <TreeView RootNode="RootNode" OnSetAsSelected="@(OnSetAsSelectedCallback)"></TreeView>
+                                            </CascadingValue>
+                                        </CascadingValue>
+                                    </td>
+                                    <td scope="row">
+                                        <MappingForm Node="SelectedNode"></MappingForm>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">
+                                        <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </EditForm>
                     </ChildContent>
                     <ErrorContent>
                         <p class="alert alert-danger">An error occurred while editing data source. Exception: @Exception.Message</p>
                     </ErrorContent>
                 </ErrorBoundary>
-               
+
             </TabPage>
         </TabControl>
     </Authorized>
@@ -46,11 +63,10 @@
     public DataSourceDto DataSource { get; set; } = new DataSourceDto();
 
     private MappingNodeDto RootNode { get; set; }
+    private MappingNodeDto SelectedNode { get; set; }
+    
     public List<MappingNodeDto> AvailableNodes = new List<MappingNodeDto>();
-
-    [Parameter]
-    public string SelectedNode { get; set; }
-
+    
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         try
@@ -103,5 +119,11 @@
             // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
             StateHasChanged();
         }
+    }
+
+    private void OnSetAsSelectedCallback(MappingNodeDto node)
+    {
+        SelectedNode = node;
+        //Show properties
     }
 }

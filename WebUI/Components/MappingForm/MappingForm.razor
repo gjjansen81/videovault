@@ -1,0 +1,61 @@
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+@if(Node != null)
+{
+    <EditForm Model="@Node" OnValidSubmit="@HandleValidSubmit" Context="mappingFormContext">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <table class="table">
+            <tbody>
+
+                @foreach (var parameter in Node.Parameters)
+                {
+                    @* Use @key to help the diff algorithm when updating the collection *@
+                    <tr>
+                        <td scope="row">
+                            <label for="@parameter.Name">@L[parameter.Description]: </label>
+                        </td>
+                        <td>
+                            @if (parameter.DateType == DataType.Bool)
+                            {
+                            <ParameterInputBoolean Parameter="parameter"></ParameterInputBoolean>
+                            }
+                            else if (parameter.DateType == DataType.Int)
+                            {
+                            <ParameterInputInteger Parameter="parameter"></ParameterInputInteger>
+                            }
+                            else if (parameter.DateType == DataType.DateTime)
+                            {
+                            <ParameterInputDateTime Parameter="parameter"></ParameterInputDateTime>
+                            }
+                            else
+                            {
+                            <ParameterInputText Parameter="parameter"></ParameterInputText>
+                            }
+                        </td>
+                        <td>
+                            <ValidationMessage For="@(() => Node.Name)"/>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </EditForm>
+}
+@code {
+
+    // Next line is needed so we are able to add <TabPage> components inside
+    [Parameter]
+    public MappingNodeDto Node { get; set; }
+    
+    private void HandleValidSubmit()
+    {
+        //Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
+        //if (Template.Id > 0)
+        {
+          //  NavigationManager.NavigateTo($"Templates/List/");
+        }
+    }
+}

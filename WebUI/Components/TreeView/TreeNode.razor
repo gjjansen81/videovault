@@ -6,7 +6,7 @@
 @inject IStringLocalizer<App> L
 
 <li class="node">
-    <span class="node-label @(SelectedNode == Node ? "alert alert-primary p-0" : "")">
+    <span class="node-label @(SelectedNode == Node ? "alert-primary" : "")">
         <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
         <span @onclick="@(OnSetAsSelectedAsync)" @key=@($"select_{Node.Guid}")>@L[Node.FriendlyName]</span>
     </span>                        

@@ -2,21 +2,16 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<App> L
 
-@*
-    <InputText id="@Parameter.Name" class="form-control" @bind-Value="@Parameter.Value" placeholder="@Parameter.Placeholder"></InputText>
-*@
-<InputText type="text" id="Parameter.Name" class="form-control" ValueChanged="@(OnValueChanged)" ValueExpression="@(() => Property)" placeholder="@L[Parameter.Placeholder]"></InputText>
+<InputText type="text" id="Parameter.Name" class="form-control" @bind-Value="Property" placeholder="@L[Parameter.Placeholder]"></InputText>
 
 @code {
     [Parameter] 
     public MappingNodeParameterDto Parameter{ get; set; }
 
-    private string Property { get; set; }
-    
-    private Task OnValueChanged(string value)
+    private string Property
     {
-        Parameter.Value = value;
-        return Task.CompletedTask;
+        get => Parameter.Value?.ToString(); 
+        set => Parameter.Value = value;
     }
 }
     

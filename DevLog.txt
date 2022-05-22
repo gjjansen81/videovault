@@ -1,0 +1,18 @@
+Wishlist
+ - Add additional mapping nodes 
+ - Add group to datasources
+	- Group CRUD
+ - Create template editor
+ - Upload documents
+	- Document CRUD
+ - Extend datasource editor to provide input file to test mapping
+ - If necessary
+	- Defer file generation to microservice
+ - Improve styling
+
+ - Move node creation in addnodemodal to a node factory
+
+ Now
+ - Datasource:
+	- Delete node
+	- Move node

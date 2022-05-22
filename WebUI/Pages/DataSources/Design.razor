@@ -5,6 +5,7 @@
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Components.TreeView
 @using VideoVault.WebUI.Components.MappingForm
+@using VideoVault.WebUI.Components.CustomErrorBoundary
 
 @inject IDataSourceClient _dataSourceService
 @inject IStringLocalizer<App> L
@@ -17,7 +18,7 @@
             <TabPage Text=@L["DATASOURCES_DESIGN"]>
 
                 <h1>@L["DATASOURCES_DESIGN_TITLE"]</h1>
-                <ErrorBoundary>
+                <CustomErrorBoundary>
                     <ChildContent>
                         <EditForm Model="DataSource" OnValidSubmit="@HandleValidSubmit">
                             <table class="table">
@@ -43,10 +44,7 @@
                             </table>
                         </EditForm>
                     </ChildContent>
-                    <ErrorContent>
-                        <p class="alert alert-danger">An error occurred while editing data source. Exception: @Exception?.Message</p>
-                    </ErrorContent>
-                </ErrorBoundary>
+                </CustomErrorBoundary>
 
             </TabPage>
         </TabControl>
@@ -124,6 +122,5 @@
     private void OnSetAsSelectedCallback(MappingNodeDto node)
     {
         SelectedNode = node;
-        //Show properties
     }
 }

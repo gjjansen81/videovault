@@ -2,6 +2,7 @@
 @using VideoVault.WebApi
 @using Microsoft.AspNetCore.Components
 @using VideoVault.WebUI.Components.AddNodeModal
+@using VideoVault.WebUI.Components.ConfirmModal
 
 @inject IStringLocalizer<App> L 
 <div>
@@ -10,7 +11,12 @@
         <ul class="parentUl">
             <CascadingValue Value="@SelectedNode" Name="SelectedNode" IsFixed="true">
                 <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeNode Node="RootNode" OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)" OnSetAsSelected="@(OnSetAsSelectedCallback)"></TreeNode>
+                    <TreeNode Node="RootNode"
+                              OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)"
+                              OnConfirmationRequired="@(OnConfirmationRequiredCallback)"
+                              OnSetAsSelected="@(OnSetAsSelectedCallback)">
+
+                    </TreeNode>
                 </CascadingValue>
             </CascadingValue>
         </ul>
@@ -22,6 +28,14 @@
         <AddNodeModal @bind-IsVisible="ShowNewNodeModal" @bind-IsVisible:event="IsVisibleChanged"></AddNodeModal>
     </CascadingValue>
 </CascadingValue>
+
+<ConfirmModal @bind-IsVisible="ShowConfirmModal"
+              @bind-IsVisible:event="IsVisibleChanged"
+              Title="ConfirmTitle"
+              Message="ConfirmMessage"
+              OnConfirm="OnConfirmCallback">
+</ConfirmModal>
+
 @code {
     [Parameter]
     public MappingNodeDto RootNode { get; set; }
@@ -33,10 +47,22 @@
     public List<MappingNodeDto> AvailableNodes { get; set; }
     
     [Parameter]
+    public string ConfirmTitle { get; set; }
+
+    [Parameter]
+    public string ConfirmMessage { get; set; }
+    
+    [Parameter]
+    public EventCallback OnConfirmCallback { get; set; }
+
+    [Parameter]
     public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
+    
+    [Parameter]
+    public EventCallback<(string, string, Func<MappingNodeDto>)> OnConfirmationRequiredCallback{ get; set; }
 
     private bool ShowNewNodeModal { get; set; }
-    
+    private bool ShowConfirmModal { get; set; }
     public string SelectedNewNode { get; set; }
     
     private void OnShowNewNodeModalCallback(MappingNodeDto node)
@@ -49,5 +75,13 @@
     {
         SelectedNode = node;
         OnSetAsSelected.InvokeAsync(node);
+    }
+    
+    private void OnConfirmationRequired(string title, string message, EventCallback onConfirm)
+    {
+        ConfirmTitle = title;
+        ConfirmMessage = message;
+        OnConfirmCallback = onConfirm;
+        ShowConfirmModal = true;
     }
 }

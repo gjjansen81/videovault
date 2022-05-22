@@ -11,9 +11,9 @@
     </div>
 
     <div class="content px-4">
+        @Body
         <ErrorBoundary @ref="_errorBoundary">
             <ChildContent>
-                @Body
             </ChildContent>
             <ErrorContent>
                 <p class="alert alert-danger">Nothing to see here right now. Sorry!</p>

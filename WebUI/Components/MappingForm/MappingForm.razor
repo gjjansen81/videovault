@@ -2,14 +2,25 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<App> L
 
-@if(Node != null)
+@if (Node == null || Node.Parameters.Count == 0)
+{
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>
+                    <span>@L["MAPPINGFORM_NOTHINGTOCONFIGURE"]</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
 {
     <EditForm Model="@Node" OnValidSubmit="@HandleValidSubmit" Context="mappingFormContext">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         <table class="table">
             <tbody>
-
                 @foreach (var parameter in Node.Parameters)
                 {
                     @* Use @key to help the diff algorithm when updating the collection *@

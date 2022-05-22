@@ -11,7 +11,15 @@
 ::deep .parentUl ul li {
     position: relative;
 }
-
+::deep .parentUl ul li:before {
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: -40px;
+        width: 40px;
+        height: 1px;
+        border-bottom: dotted 2px black;
+}
 ::deep .parentUl {
     margin: 0;
     padding: 0;

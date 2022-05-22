@@ -1,0 +1,60 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+@if (IsVisible)
+{
+    <div class="modal fade show d-block" id="mappingModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">@Title</h5>
+                    <button type="button" class="close" @onclick="@Cancel" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>@Message</label>
+                    </div>
+                    <button class="btn btn-secondary" @onclick="@Cancel">@L["BUTTON_CANCEL"]</button>
+                    <button class="btn btn-primary" @onclick="@Confirm">@L["BUTTON_CONFIRM"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Message { get; set; } 
+
+    [Parameter] 
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+    
+    [Parameter] 
+    public EventCallback OnConfirm { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Title = @L["CONFIRM_TITLE"];
+        Message = @L["CONFIRM_MESSAGE"];
+    }
+
+    private void Cancel()
+    {
+        IsVisible = false;
+        //IsVisibleChanged.InvokeAsync(false);
+    }
+
+    private async Task Confirm()
+    {
+        await OnConfirm.InvokeAsync();
+        //await IsVisibleChanged.InvokeAsync(true);
+    }
+}

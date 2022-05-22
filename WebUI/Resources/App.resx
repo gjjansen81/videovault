@@ -165,6 +165,9 @@
   <data name="CUSTOMERS_EDIT_TAB_USERS_TITLE" xml:space="preserve">
     <value>Users</value>
   </data>
+  <data name="MAPPINGFORM_NOTHINGTOCONFIGURE" xml:space="preserve">
+    <value>Nothing to configure</value>
+  </data>
   <data name="USERS_EDIT_TAB_GENERAL_EMAILADDRESS" xml:space="preserve">
     <value>E-mail address</value>
   </data>

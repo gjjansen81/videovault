@@ -16,3 +16,6 @@ Wishlist
  - Datasource:
 	- Delete node
 	- Move node
+
+Issue:
+ - How to use confirmation modal ???

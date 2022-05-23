@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.TreeView
 @using VideoVault.WebUI.Components.MappingModal
+@using VideoVault.WebUI.Models
 
 @inject IStringLocalizer<App> L
 
@@ -46,10 +47,10 @@
     public EventCallback<MappingNodeDto> OnShowNewNodeModalClicked { get; set; }
     
     [Parameter]
-    public EventCallback<(string, string, Func<MappingNodeDto>)> OnConfirmationRequired{ get; set; }
+    public EventCallback<ConfirmationArgumentsModel> OnConfirmationRequired { get; set; }
     
     [Parameter]
-    public EventCallback<MappingNodeDto> OnNodeDeleted{ get; set; }
+    public EventCallback<MappingNodeDto> OnNodeDeleted { get; set; }
 
     private string IconClass => HasChildren ? (HideChildren ? "fa-folder-o" : "fa-folder-open-o") : "fa-file-code-o";
     private bool HideChildren { get; set; } 
@@ -70,9 +71,9 @@
         await OnSetAsSelected.InvokeAsync(node);
     }
     
-    private async Task OnConfirmationRequiredCallback()
+    private async Task OnConfirmationRequiredCallback(ConfirmationArgumentsModel confirmationArguments)
     {
-        await OnConfirmationRequired.InvokeAsync();
+        await OnConfirmationRequired.InvokeAsync(confirmationArguments);
     }
 
     private async Task OnSetAsSelectedAsync()
@@ -85,19 +86,22 @@
         HideChildren = !HideChildren;
     }
 
-    private Task OnNodeDeletedCallbackAsync(MappingNodeDto node)
+    private async Task OnNodeDeletedCallbackAsync(MappingNodeDto node)
     {
-        void DeleteNode(MappingNodeDto node)
+        bool DeleteNode()
         {
             Node.Children.Remove(node);
+            return true;
         };
 
-        OnConfirmationRequired.InvokeAsync(("Delete this node?", "Are tiy sye?", () => DeleteNode));
+        await OnConfirmationRequired.InvokeAsync(new ConfirmationArgumentsModel()
+        {
+            Title = "Delete this node?",
+            Message = "Are tiy sye?",
+            OnConfirm = DeleteNode
+        });
         //Node.Children.Remove(node);
-        return Task.CompletedTask;
     }
-
-    
 
 
     private async Task OnDeleteNodeAsync()

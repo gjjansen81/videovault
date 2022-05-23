@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Models
 @inject IStringLocalizer<App> L
 
 @if (IsVisible)
@@ -25,20 +26,18 @@
 }
 @code {
     [Parameter]
+    public ConfirmationArgumentsModel ConfirmationArguments { get; set; }
+   
+    [Parameter]
     public bool IsVisible { get; set; }
 
-    [Parameter]
     public string Title { get; set; }
 
-    [Parameter]
     public string Message { get; set; } 
 
     [Parameter] 
     public EventCallback<bool> IsVisibleChanged { get; set; }
     
-    [Parameter] 
-    public EventCallback OnConfirm { get; set; }
-
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -52,9 +51,10 @@
         //IsVisibleChanged.InvokeAsync(false);
     }
 
-    private async Task Confirm()
+    private void Confirm()
     {
-        await OnConfirm.InvokeAsync();
+        IsVisible = false;
+        ConfirmationArguments.OnConfirm();
         //await IsVisibleChanged.InvokeAsync(true);
     }
 }

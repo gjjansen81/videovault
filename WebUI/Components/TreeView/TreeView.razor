@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components
 @using VideoVault.WebUI.Components.AddNodeModal
 @using VideoVault.WebUI.Components.ConfirmModal
+@using VideoVault.WebUI.Models
 
 @inject IStringLocalizer<App> L 
 <div>
@@ -31,9 +32,7 @@
 
 <ConfirmModal @bind-IsVisible="ShowConfirmModal"
               @bind-IsVisible:event="IsVisibleChanged"
-              Title="ConfirmTitle"
-              Message="ConfirmMessage"
-              OnConfirm="OnConfirmCallback">
+              ConfirmationArguments="ConfirmationArgumentsModel">
 </ConfirmModal>
 
 @code {
@@ -47,19 +46,13 @@
     public List<MappingNodeDto> AvailableNodes { get; set; }
     
     [Parameter]
-    public string ConfirmTitle { get; set; }
-
-    [Parameter]
-    public string ConfirmMessage { get; set; }
-    
-    [Parameter]
-    public EventCallback OnConfirmCallback { get; set; }
+    public ConfirmationArgumentsModel ConfirmArguments { get; set; }
 
     [Parameter]
     public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
     
     [Parameter]
-    public EventCallback<(string, string, Func<MappingNodeDto>)> OnConfirmationRequiredCallback{ get; set; }
+    public EventCallback<ConfirmationArgumentsModel> OnConfirmationRequiredCallback{ get; set; }
 
     private bool ShowNewNodeModal { get; set; }
     private bool ShowConfirmModal { get; set; }
@@ -77,11 +70,9 @@
         OnSetAsSelected.InvokeAsync(node);
     }
     
-    private void OnConfirmationRequired(string title, string message, EventCallback onConfirm)
+    private void OnConfirmationRequired(ConfirmationArgumentsModel args)
     {
-        ConfirmTitle = title;
-        ConfirmMessage = message;
-        OnConfirmCallback = onConfirm;
+        ConfirmArguments = args;
         ShowConfirmModal = true;
     }
 }

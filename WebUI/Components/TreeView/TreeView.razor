@@ -32,7 +32,7 @@
 
 <ConfirmModal @bind-IsVisible="ShowConfirmModal"
               @bind-IsVisible:event="IsVisibleChanged"
-              ConfirmationArguments="ConfirmationArgumentsModel">
+              ConfirmationArguments="ConfirmArguments">
 </ConfirmModal>
 
 @code {
@@ -52,7 +52,7 @@
     public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
     
     [Parameter]
-    public EventCallback<ConfirmationArgumentsModel> OnConfirmationRequiredCallback{ get; set; }
+    public EventCallback<ConfirmationArgumentsModel> OnConfirmationRequired{ get; set; }
 
     private bool ShowNewNodeModal { get; set; }
     private bool ShowConfirmModal { get; set; }
@@ -70,7 +70,7 @@
         OnSetAsSelected.InvokeAsync(node);
     }
     
-    private void OnConfirmationRequired(ConfirmationArgumentsModel args)
+    private void OnConfirmationRequiredCallback(ConfirmationArgumentsModel args)
     {
         ConfirmArguments = args;
         ShowConfirmModal = true;

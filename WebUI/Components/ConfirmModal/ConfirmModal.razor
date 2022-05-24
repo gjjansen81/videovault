@@ -8,17 +8,17 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="titleLabel">@Title</h5>
-                    <button type="button" class="close" @onclick="@Cancel" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="titleLabel">@ConfirmationArguments.Title</h5>
+                    <button type="button" class="close" @onclick="@CancelAsync" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>@Message</label>
+                        <label>@ConfirmationArguments.Message</label>
                     </div>
-                    <button class="btn btn-secondary" @onclick="@Cancel">@L["BUTTON_CANCEL"]</button>
-                    <button class="btn btn-primary" @onclick="@Confirm">@L["BUTTON_CONFIRM"]</button>
+                    <button class="btn btn-secondary" @onclick="@CancelAsync">@L["BUTTON_CANCEL"]</button>
+                    <button class="btn btn-primary" @onclick="@ConfirmAsync">@L["BUTTON_CONFIRM"]</button>
                 </div>
             </div>
         </div>
@@ -31,30 +31,19 @@
     [Parameter]
     public bool IsVisible { get; set; }
 
-    public string Title { get; set; }
-
-    public string Message { get; set; } 
-
     [Parameter] 
     public EventCallback<bool> IsVisibleChanged { get; set; }
-    
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        Title = @L["CONFIRM_TITLE"];
-        Message = @L["CONFIRM_MESSAGE"];
-    }
 
-    private void Cancel()
+    private async Task CancelAsync()
     {
         IsVisible = false;
-        //IsVisibleChanged.InvokeAsync(false);
+        await IsVisibleChanged.InvokeAsync(false);
     }
 
-    private void Confirm()
+    private async Task ConfirmAsync()
     {
         IsVisible = false;
         ConfirmationArguments.OnConfirm();
-        //await IsVisibleChanged.InvokeAsync(true);
+        await IsVisibleChanged.InvokeAsync(true);
     }
 }

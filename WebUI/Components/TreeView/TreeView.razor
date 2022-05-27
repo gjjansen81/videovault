@@ -15,7 +15,8 @@
                     <TreeNode Node="RootNode"
                               OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallback)"
                               OnConfirmationRequired="@(OnConfirmationRequiredCallback)"
-                              OnSetAsSelected="@(OnSetAsSelectedCallback)">
+                              OnSetAsSelected="@(OnSetAsSelectedCallback)"
+                              @key=RootNode>
 
                     </TreeNode>
                 </CascadingValue>

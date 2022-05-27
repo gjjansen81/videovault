@@ -6,31 +6,56 @@
 
 @inject IStringLocalizer<App> L
 
-<li class="node">
-    <span class="node-label @(SelectedNode == Node ? "alert-primary" : "")">
-        <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
-        <span @onclick="@(OnSetAsSelectedAsync)" @key=@($"select_{Node.Guid}")>@L[Node.FriendlyName]</span>
-    </span>                        
-    <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModalAsync" @key=@($"add_{Node.Guid}")></span>
-    <span class="node-label l-3 fa fa-trash-o" @onclick="OnDeleteNodeAsync" @key=@($"delete_{Node.Guid}")></span>
+<li class="node draggable" draggable="true" >
+   
+        <span class="node-label @(SelectedNode == Node ? "alert-primary" : "")">
+            <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
+            <span @onclick="@(OnSetAsSelectedAsync)" @key=@($"select_{Node.Guid}")>@L[Node.FriendlyName]</span>
+        </span>
+        <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModalAsync" @key=@($"add_{Node.Guid}")></span>
+        <span class="node-label l-3 fa fa-trash-o" @onclick="OnDeleteNodeAsync" @key=@($"delete_{Node.Guid}")></span>
+  @*  <div class="node @(_dragEnter==Node?"inserting":"")"
+         draggable="true"
+         @key=@Node?.Guid
+         id="@Node?.Guid" 
+         ondragover="event.preventDefault();"
+         ondragstart="event.dataTransfer.setData('', event.target.id);"
+         @ondragstart="@( (e) => hondragstart(e, Node))"
+         @ondrop="@( () => hondropOverAFriend(Node))"
+         @ondragenter="@( ()=> hondragenter(Node) )"
+         @ondragend="@( ()=> hondragend() )"></div>*@
     <ul hidden="@HideChildren">
-        @if (HasChildren) 
+        @if (HasChildren)
         {
             foreach (var child in Node.Children)
             {
                 <CascadingValue Value="@AvailableNodes" Name="AvailableNodes" IsFixed="true">
-                    <TreeNode Node="child" 
-                              OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallbackAsync)" 
-                              OnSetAsSelected="@(OnSetAsSelectedCallbackAsync)" 
+                    <TreeNode Node="child"
+                              ParentNode="Node"
+                              OnShowNewNodeModalClicked="@(OnShowNewNodeModalCallbackAsync)"
+                              OnSetAsSelected="@(OnSetAsSelectedCallbackAsync)"
                               OnConfirmationRequired="@(OnConfirmationRequiredCallback)"
                               OnNodeDeleted="@(OnNodeDeletedCallbackAsync)" @key=child></TreeNode>
                 </CascadingValue>
             }
         }
     </ul>
-</Li>
-
+</li>
+<div style="height: 1.5em;" 
+     ondragover="event.preventDefault();"
+     @ondrop="hondropBotton"
+     @ondragenter="hondragenterBotton"></div>
+<style>
+    .inserting
+    {
+        border-top: 1px solid black;
+        margin-top: 5px;
+    }
+</style>
 @code {
+    [Parameter]
+    public MappingNodeDto ParentNode { get; set; }
+   
     [Parameter]
     public MappingNodeDto Node { get; set; }
     
@@ -97,15 +122,65 @@
         await OnConfirmationRequired.InvokeAsync(new ConfirmationArgumentsModel()
         {
             Title = "Delete this node?",
-            Message = "Are tiy sye?",
+            Message = $"Are you sure you want to delete node '{node.FriendlyName}'?",
             OnConfirm = DeleteNode
         });
-        //Node.Children.Remove(node);
     }
-
 
     private async Task OnDeleteNodeAsync()
     {
         await OnNodeDeleted.InvokeAsync(Node);
     }
+
+    public void  hondropOverAFriend(MappingNodeDto friend)
+    {
+        _dragEnter=null;
+        if (_draggedItem == null) return;
+        if (_draggedItem == friend) return;
+        var friendposition = Siblings.IndexOf(friend);
+        Siblings.Insert(friendposition, _draggedItem!);
+        _draggedItem=null;
+    }
+    
+    public void  hondropBotton()
+    {
+        _dragEnter=null;
+        if (_draggedItem == null) return;
+        Siblings.Add(_draggedItem!);
+        _draggedItem=null;
+    }
+    
+    public void  hondragstart(DragEventArgs e, MappingNodeDto item)
+    {
+        e.DataTransfer.EffectAllowed = "move"; //does't run
+        _draggedItem = item;
+        _draggedItemPosition = Siblings.IndexOf(item);
+        Siblings.Remove(_draggedItem!);
+    }    
+    
+    public void  hondragenter(MappingNodeDto item) => _dragEnter = item;    
+    public void  hondragenterBotton() => _dragEnter = null;
+    
+    public void  hondragend()
+    {
+    // never fired IDK why
+        if (_draggedItem == null) return;        
+        _dragEnter = null;
+        Siblings.Insert(_draggedItemPosition, _draggedItem!);        
+    }
+    
+#nullable enable
+    private MappingNodeDto? _draggedItem;
+    private MappingNodeDto? _dragEnter;
+#nullable disable
+    private int _draggedItemPosition;
+
+    private List<MappingNodeDto> Siblings
+    {
+        get { return _siblings ??= ParentNode?.Children.ToList() ?? new List<MappingNodeDto>(); }
+        set => _siblings = value;
+    }
+
+    private List<MappingNodeDto> _siblings;
+
 }

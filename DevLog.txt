@@ -14,8 +14,7 @@ Wishlist
 
  Now
  - Datasource:
-	- Delete node
 	- Move node
 
 Issue:
- - How to use confirmation modal ???
+ - How to do drag and drop in tree with blazor

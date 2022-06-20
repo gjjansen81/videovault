@@ -134,7 +134,7 @@ namespace Infrastructure.DataSources
             return nodes;
         }
 
-        private MappingNodeDto InstantiateMappingNodeDto(Type mappingClass, bool onlyConfigurableAttributes = true, MappingNode mappingNode = null)
+        private MappingNodeDto InstantiateMappingNodeDto(Type mappingClass, bool onlyConfigurableAttributes = true, MappingNode mappingNode = null, int depth=0)
         {
             var assemblyQualifiedName = mappingClass.AssemblyQualifiedName;
             if (assemblyQualifiedName == null)
@@ -182,14 +182,15 @@ namespace Infrastructure.DataSources
                 FullName = mappingClass.FullName,
                 FriendlyName = nodeDescription.ToUpper(),
                 Parameters = parameters,
-                Guid = mappingNode?.Guid ?? Guid.NewGuid()
+                Guid = mappingNode?.Guid ?? Guid.NewGuid(),
+                Depth = depth
             };
         }
         
-        public MappingNodeDto ConvertToMappingNodeDto(MappingNode mappingNode)
+        public MappingNodeDto ConvertToMappingNodeDto(MappingNode mappingNode, int depth=0)
         {
             var mappingClass = mappingNode.GetType();
-            var node = InstantiateMappingNodeDto(mappingClass, false, mappingNode);
+            var node = InstantiateMappingNodeDto(mappingClass, false, mappingNode, depth);
 
             if (string.IsNullOrWhiteSpace(mappingClass.AssemblyQualifiedName))
             {
@@ -198,10 +199,11 @@ namespace Infrastructure.DataSources
 
             if (mappingNode.Children.Any())
             {
+                depth++;
                 node.Children = new List<MappingNodeDto>();
                 foreach (var mappingNodeChild in mappingNode.Children)
                 {
-                    var child = ConvertToMappingNodeDto(mappingNodeChild);
+                    var child = ConvertToMappingNodeDto(mappingNodeChild, depth);
                     if (child != null)
                         node.Children.Add(child);
                 }

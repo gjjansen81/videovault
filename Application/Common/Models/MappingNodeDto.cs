@@ -6,6 +6,7 @@ namespace VideoVault.Application.Common.Models
     public class MappingNodeDto
     {
         public Guid Guid { get; set; } 
+        public int Depth { get; set; }
         public string Name { get; set; }
         public string AssemblyName { get; set; }
         public string FullName { get; set; }

@@ -5,26 +5,27 @@
 @using VideoVault.WebUI.Models
 
 @inject IStringLocalizer<App> L
-
-<li class="node draggable" draggable="true" >
-   
+@*      ondragover="event.preventDefault();"
+         ondragstart="event.dataTransfer.setData('', event.target.id);"
+     *@  
+<li class="node dropzone draggable @(_dragEnter==Node?"inserting":"")"
+        draggable="true"
+        @key=@Node?.Guid
+        id="@Node?.Guid" 
+        @ondragstart="@( (e) => hondragstart(e, Node))"
+        @ondragenter="@( ()=> hondragenter(Node) )"
+        @ondrop="@( () => hondropOverAFriend(Node))"
+        @ondragleave="@(HandleDragLeave)"
+        @ondragend="@( hondragend )">
+       
         <span class="node-label @(SelectedNode == Node ? "alert-primary" : "")">
             <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
             <span @onclick="@(OnSetAsSelectedAsync)" @key=@($"select_{Node.Guid}")>@L[Node.FriendlyName]</span>
         </span>
         <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModalAsync" @key=@($"add_{Node.Guid}")></span>
         <span class="node-label l-3 fa fa-trash-o" @onclick="OnDeleteNodeAsync" @key=@($"delete_{Node.Guid}")></span>
-  @*  <div class="node @(_dragEnter==Node?"inserting":"")"
-         draggable="true"
-         @key=@Node?.Guid
-         id="@Node?.Guid" 
-         ondragover="event.preventDefault();"
-         ondragstart="event.dataTransfer.setData('', event.target.id);"
-         @ondragstart="@( (e) => hondragstart(e, Node))"
-         @ondrop="@( () => hondropOverAFriend(Node))"
-         @ondragenter="@( ()=> hondragenter(Node) )"
-         @ondragend="@( ()=> hondragend() )"></div>*@
     <ul hidden="@HideChildren">
+    
         @if (HasChildren)
         {
             foreach (var child in Node.Children)
@@ -41,10 +42,14 @@
         }
     </ul>
 </li>
-<div style="height: 1.5em;" 
-     ondragover="event.preventDefault();"
+@*
+    
+  
+<div style="height: 1.5em;"
+    ondragover="event.preventDefault();"
      @ondrop="hondropBotton"
      @ondragenter="hondragenterBotton"></div>
+*@ 
 <style>
     .inserting
     {
@@ -167,6 +172,10 @@
         if (_draggedItem == null) return;        
         _dragEnter = null;
         Siblings.Insert(_draggedItemPosition, _draggedItem!);        
+    }
+    private void HandleDragLeave()
+    {
+        var dropClass = "";
     }
     
 #nullable enable

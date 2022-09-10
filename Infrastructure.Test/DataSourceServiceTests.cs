@@ -41,8 +41,8 @@ namespace Infrastructure.Test
             }
         };
 
-        private DataSourceService _dataSourceService;
-        private ApplicationDbContext? _context = null;
+        private DataSourceService? _dataSourceService = null;
+        private readonly ApplicationDbContext? _context = null;
         private readonly Guid _dataSourceGuid1 = Guid.NewGuid();
 
         [TestInitialize]
@@ -71,13 +71,13 @@ namespace Infrastructure.Test
         {
             try
             {
-                var result = _dataSourceService.GetAvailableMappingNodes();
+                var result = _dataSourceService?.GetAvailableMappingNodes();
                 Assert.IsNotNull(result);
                 Assert.IsTrue(result.Count > 2);
                 Assert.IsTrue(result.Any(x => x.FullName.Contains("GetValueNode")));
                 Assert.IsTrue(!result.Any(x => x.FullName.Contains("RootNode")));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -86,8 +86,8 @@ namespace Infrastructure.Test
         [TestMethod]
         public void ConvertToMappingNodesTests()
         {
-            var rootNode = _dataSourceService.ConvertToMappingNodeDto(_testRoot);
-            var result = _dataSourceService.ConvertToMappingNodes(rootNode);
+            var rootNode = _dataSourceService?.ConvertToMappingNodeDto(_testRoot);
+            var result = _dataSourceService?.ConvertToMappingNodes(rootNode);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Children.Count == 1);
@@ -100,7 +100,7 @@ namespace Infrastructure.Test
         [TestMethod]
         public void ConvertToMappingNodeDtoTests()
         {
-            var result = _dataSourceService.ConvertToMappingNodeDto(_testRoot);
+            var result = _dataSourceService?.ConvertToMappingNodeDto(_testRoot);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Children.Count == 1);
@@ -120,7 +120,7 @@ namespace Infrastructure.Test
         public void ConvertFromJsonTest()
         {
       //      var mapper = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"2a8d6fdc-61d5-4eee-a6f2-0fec678094cd\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueFromSourceNode,VideoVault.Domain\",\"Coordinate\":null,\"TryParseToNumber\":false,\"ConvertToString\":false,\"Trim\":false,\"PropertyNode\":null,\"Guid\":\"f9167ccd-4743-4cf6-bc18-7567466d1e9b\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
-            var mapper1 = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"c650d95e-0104-4af3-802a-a1fcd4ff19ef\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueNode, VideoVault.Domain\",\"Value\":\"true\",\"Guid\":\"e9847af5-27d0-432a-aa25-70ee5e6a21b3\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
+            //var mapper1 = "{\"Name\":null,\"Entity\":0,\"Destination\":null,\"Guid\":\"c650d95e-0104-4af3-802a-a1fcd4ff19ef\",\"Children\":[{\"$type\":\"VideoVault.Domain.Mapper.GetValueNode, VideoVault.Domain\",\"Value\":\"true\",\"Guid\":\"e9847af5-27d0-432a-aa25-70ee5e6a21b3\",\"Children\":[],\"ValidationRules\":[]}],\"ValidationRules\":[]}";
             var mapper = @"{""Name"": null,
 
                                 ""Entity"": 0,
@@ -145,11 +145,11 @@ namespace Infrastructure.Test
                             }";
             try
             {
-                var mappingNode = _dataSourceService.ConvertFromJson(mapper);
+                var mappingNode = _dataSourceService?.ConvertFromJson(mapper);
 
                 Assert.IsNotNull(mappingNode);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ;
             }
@@ -171,7 +171,7 @@ namespace Infrastructure.Test
                     }
                 }
             };
-            var mapper = _dataSourceService.ConvertToJson(mappingNode);
+            var mapper = _dataSourceService?.ConvertToJson(mappingNode);
             Assert.IsNotNull(mapper);
         }
     }

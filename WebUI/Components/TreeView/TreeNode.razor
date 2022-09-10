@@ -24,7 +24,7 @@
         </span>
         <span class="node-label l-3 fa fa-plus-square-o" @onclick="OnShowNewNodeModalAsync" @key=@($"add_{Node.Guid}")></span>
         <span class="node-label l-3 fa fa-trash-o" @onclick="OnDeleteNodeAsync" @key=@($"delete_{Node.Guid}")></span>
-    <ul hidden="@HideChildren">
+    <ul hidden="@HideChildren" dropzone="move">
     
         @if (HasChildren)
         {

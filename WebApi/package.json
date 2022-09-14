@@ -4,6 +4,6 @@
   "requires": true,
   "packages": {},
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": ""
   }
 }

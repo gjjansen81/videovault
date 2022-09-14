@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using NPOI.XSSF.UserModel;
 using VideoVault.Application.Common.Mappings;
+using VideoVault.Domain;
 using VideoVault.Domain.Mapper;
 
 namespace Infrastructure.Test
@@ -35,6 +36,7 @@ namespace Infrastructure.Test
                         },
                         new GetValueFromSourceNode()
                         {
+                            Coordinate = new ExcelCoordinate("S1", 2, 3)
                         }
                     }
                 }
@@ -104,16 +106,18 @@ namespace Infrastructure.Test
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Children.Count == 1);
-            Assert.IsTrue(result.Children[0].Children.Count == 2);
+            Assert.IsTrue(result.Children[0].Children.Count == 3);
 
             Assert.IsTrue(result.FullName.Contains("RootNode"));
             Assert.IsTrue(!result.Children.Any(x => x.FullName.Contains("GetValueNode")));
             Assert.IsTrue(result.Children.All(x => x.FullName.Contains("ConcatNode")));
-            Assert.IsTrue(result.Children.First().Children.All(x => x.FullName.Contains("GetValueNode")));
+            Assert.IsTrue(result.Children.First().Children.Where(x => x.FullName.Contains("GetValueNode")).ToList().Count == 2);
             var child1 = result.Children.First().Children[0].Parameters.Where(x => x.Name.Equals("Value", StringComparison.InvariantCultureIgnoreCase)).ToList().First();
             var child2 = result.Children.First().Children[1].Parameters.Where(x => x.Name.Equals("Value", StringComparison.InvariantCultureIgnoreCase)).ToList().First();
+            var child3 = result.Children.First().Children[2].Parameters.Where(x => x.Name.Equals("Coordinate", StringComparison.InvariantCultureIgnoreCase)).ToList().First();
             Assert.IsTrue(child1.Value.Equals("A1"));
             Assert.IsTrue(child2.Value.Equals("B2"));
+            Assert.IsTrue(child3.Value.SheetName.Equals("S1"));
         }
 
         [TestMethod]

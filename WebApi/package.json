@@ -2,5 +2,8 @@
   "name": "WebApi",
   "lockfileVersion": 2,
   "requires": true,
-  "packages": {}
+  "packages": {},
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  }
 }

@@ -10,7 +10,7 @@ namespace Domain.Test
         [TestMethod]
         public void TestGetValues()
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Files\\TestData.xlsx");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\TestData.xlsx");
             var mappingSource = new ExcelMappingSource(filePath);
 
             var columnValue1 = mappingSource.GetValue(new ExcelCoordinate("Blad1", 1, 2));

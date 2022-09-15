@@ -12,7 +12,7 @@ namespace Domain.Test
         [TestMethod]
         public void TestMethod1()
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Files\\TestData.xlsx");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\TestData.xlsx");
             MappingData mappingData = new MappingData()
             {
                 Log = new Logger<GetValueFromSourceNodeTests>(new LoggerFactory()),

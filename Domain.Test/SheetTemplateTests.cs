@@ -16,8 +16,8 @@ namespace Domain.Test
         [TestMethod]
         public void TestGetValues()
         {
-            var inputFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Files\\TestData.xlsx");
-            var resultFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\Files\\TestOutput.xlsx");
+            var inputFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\TestData.xlsx");
+            var resultFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\TestOutput.xlsx");
             var mappingSource = new ExcelMappingSource(inputFilePath);
 
             var guid = Guid.NewGuid();

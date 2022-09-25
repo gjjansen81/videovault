@@ -38,6 +38,7 @@ namespace VideoVault.WebUI
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, TokenAuthenticationStateProvider>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ITreeCacheService, TreeCacheService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddScoped<IStringLocalizer<App>, StringLocalizer<App>>();
 

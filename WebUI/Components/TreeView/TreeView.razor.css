@@ -55,3 +55,24 @@
     transition: all 0.45s;
 }
 
+
+::deep .dropzone {
+}
+
+::deep .no-drop {
+}
+
+::deep .can-drop {
+}
+
+::deep .draggable {
+    cursor: grab;
+}
+
+::deep .draggable:active {
+    cursor: grabbing;
+}
+
+::deep .dragging {
+    cursor: grabbing;
+}

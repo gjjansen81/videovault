@@ -3,20 +3,24 @@
 @using VideoVault.WebUI.Components.TreeView
 @using VideoVault.WebUI.Components.MappingModal
 @using VideoVault.WebUI.Models
+@using VideoVault.WebUI.Services
 
+@inject ITreeCacheService TreeCacheService
 @inject IStringLocalizer<App> L
-@*      ondragover="event.preventDefault();"
-         ondragstart="event.dataTransfer.setData('', event.target.id);"
-     *@  
-<li class="node dropzone draggable @(_dragEnter==Node?"inserting":"")"
+
+<li class="node dropzone draggable @DropClass @(DraggingNode==Node?"inserting":"")"
         draggable="true"
         @key=@Node?.Guid
-        id="@Node?.Guid" 
-        @ondragstart="@( (e) => hondragstart(e, Node))"
-        @ondragenter="@( ()=> hondragenter(Node) )"
-        @ondrop="@( () => hondropOverAFriend(Node))"
+        id="@Node?.Guid"
+
+        @ondragstart="@( (e) => HandleDragStart(e, Node))"
+        @ondragstart:stopPropagation="true"
+        @ondragenter="@( ()=> HandleDragEnter(Node) )"
+        ondragover="event.preventDefault();" 
+        @ondrop="@( () => HandleDrop(Node))"
+        @ondrop:stopPropagation="true"
         @ondragleave="@(HandleDragLeave)"
-        @ondragend="@( hondragend )">
+        @ondragend="@( HandleDragEnd )">
        
         <span class="node-label @(SelectedNode == Node ? "alert-primary" : "")">
             <span class="fa @IconClass" @onclick="@(SpanToggle)" @key=@($"toggle_{Node.Guid}")></span>
@@ -42,14 +46,7 @@
         }
     </ul>
 </li>
-@*
     
-  
-<div style="height: 1.5em;"
-    ondragover="event.preventDefault();"
-     @ondrop="hondropBotton"
-     @ondragenter="hondragenterBotton"></div>
-*@ 
 <style>
     .inserting
     {
@@ -69,6 +66,8 @@
 
     [CascadingParameter(Name="SelectedNode")]
     public MappingNodeDto SelectedNode { get; set; } 
+    
+    public MappingNodeDto DraggingNode { get => TreeCacheService.DraggingNode; set => TreeCacheService.DraggingNode = value; }
 
     [Parameter]
     public EventCallback<MappingNodeDto> OnSetAsSelected{ get; set; }
@@ -85,7 +84,8 @@
     private string IconClass => HasChildren ? (HideChildren ? "fa-folder-o" : "fa-folder-open-o") : "fa-file-code-o";
     private bool HideChildren { get; set; } 
     private bool HasChildren => Node.Children?.Count != 0;
-    
+    private string DropClass { get; set; }
+
     private async Task OnShowNewNodeModalCallbackAsync(MappingNodeDto node)
     {
         await OnShowNewNodeModalClicked.InvokeAsync(node);
@@ -137,59 +137,46 @@
         await OnNodeDeleted.InvokeAsync(Node);
     }
 
-    public void  hondropOverAFriend(MappingNodeDto friend)
+    public void  HandleDrop(MappingNodeDto item)
     {
-        _dragEnter=null;
-        if (_draggedItem == null) return;
-        if (_draggedItem == friend) return;
-        var friendposition = Siblings.IndexOf(friend);
-        Siblings.Insert(friendposition, _draggedItem!);
-        _draggedItem=null;
-    }
+        //Handle drop
+        //Move to friendif (DraggingNode == null || DraggingNode == Node) return;
+        if (DraggingNode == null || DraggingNode == Node) return;
+
+        Node.Children.Add(DraggingNode);
     
-    public void  hondropBotton()
-    {
-        _dragEnter=null;
-        if (_draggedItem == null) return;
-        Siblings.Add(_draggedItem!);
-        _draggedItem=null;
-    }
-    
-    public void  hondragstart(DragEventArgs e, MappingNodeDto item)
+        TreeCacheService.DraggingParentNode.Children.Remove(DraggingNode);
+        DraggingNode = null;
+    }                           
+
+    public void  HandleDragStart(DragEventArgs e, MappingNodeDto item)
     {
         e.DataTransfer.EffectAllowed = "move"; //does't run
-        _draggedItem = item;
-        _draggedItemPosition = Siblings.IndexOf(item);
-        Siblings.Remove(_draggedItem!);
+        if (DraggingNode == null || DraggingNode.Depth <= item.Depth)
+        {
+            DraggingNode = item;
+            TreeCacheService.DraggingParentNode = ParentNode;
+        }
     }    
     
-    public void  hondragenter(MappingNodeDto item) => _dragEnter = item;    
-    public void  hondragenterBotton() => _dragEnter = null;
-    
-    public void  hondragend()
+    public void  HandleDragEnter(MappingNodeDto item)
     {
-    // never fired IDK why
-        if (_draggedItem == null) return;        
-        _dragEnter = null;
-        Siblings.Insert(_draggedItemPosition, _draggedItem!);        
+        //Entering drag area of element
+        //Check if we can drag our element to this element
+        if (DraggingNode == Node) return;
+
+        DropClass = DraggingNode == null ? "no-drop" : "can-drop";
     }
+
+    public void  HandleDragEnd()
+    {
+        // never fired IDK why
+    }
+
     private void HandleDragLeave()
     {
-        //var dropClass = "";
+        //Leaving drag area of element
+        //Clear style
+        DropClass = "";
     }
-    
-#nullable enable
-    private MappingNodeDto? _draggedItem;
-    private MappingNodeDto? _dragEnter;
-#nullable disable
-    private int _draggedItemPosition;
-
-    private List<MappingNodeDto> Siblings
-    {
-        get { return _siblings ??= ParentNode?.Children.ToList() ?? new List<MappingNodeDto>(); }
-        set => _siblings = value;
-    }
-
-    private List<MappingNodeDto> _siblings;
-
 }

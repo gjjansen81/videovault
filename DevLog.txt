@@ -13,8 +13,5 @@ Wishlist
  - Move node creation in addnodemodal to a node factory
 
  Now
- - Datasource:
-	- Move node
-
-Issue:
- - How to do drag and drop in tree with blazor
+ - Template design
+	

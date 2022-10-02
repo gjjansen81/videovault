@@ -28,22 +28,21 @@
                     <ValidationSummary />
                     <div class="form-group d-none">
                         <label>@L["TEMPLATES_DESIGN_SHEETNAME"]</label>
-                        <InputNumber @bind-Value="Template.Id" TValue="int" class="form-control" />
-                    </div>
-                    <div class="form-group d-none">
-                        <label>@L["TEMPLATES_DESIGN_NR_ROWS"]</label>
                     </div>
                     <div class="form-group">
-                        <label>@L["TEMPLATES_DESIGN_NR_COLUMNS"]</label>
-                        <select class="form-control selectpicker" @bind="SheetIndex">
-                            <option>--select--</option>
-                            foreach (var item in TemplateDesign.Sheets)
-                            {
-                                <option value="item.Name">item.Name</option> // Blazor needs to know what values it binds to!
-                            }
-                        </select>
-                    </div>
-                    
+                        <SheetNavigation>
+                            <TabControl>
+                                @foreach (var sheet in Template.Sheets)
+                                {
+                                    <TabPage Text=@sheet.Name>
+                                        <EditableTable height=@sheet.Rows.Max(x => x.Index)>
+
+                                        </EditableTable>
+                                    </TabPage>
+                                }
+                            </TabControl>
+                        </SheetNavigation>
+                    </div> 
                     <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
                 </EditForm>
             </TabPage>
@@ -56,14 +55,14 @@
     public int Id { get; set; }
 
     [Parameter]
-    public TemplateDto Template { get; set; }
+    public SpreadSheetTemplateDto Template { get; set; }
 
     [Parameter]
     public int SheetIndex { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Template = new TemplateDto()
+        Template = new SpreadSheetTemplateDto()
         {
         };
 

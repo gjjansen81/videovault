@@ -5,6 +5,8 @@ namespace VideoVault.Domain.Templates
 {
     public interface ITemplate
     {
+        string Name { get; }
+
         List<ISheetTemplate> Sheets { get; set; }
         List<IDataSource> DataSources { get; set; }
 

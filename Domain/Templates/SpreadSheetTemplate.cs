@@ -7,6 +7,9 @@ namespace VideoVault.Domain.Templates;
 
 public class SpreadSheetTemplate : ITemplate
 {
+    public int Id { get; set; }
+    public string Name { get; set; }
+
     public List<ISheetTemplate> Sheets { get; set; }
     public List<IDataSource> DataSources { get; set; }
 

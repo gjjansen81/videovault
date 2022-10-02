@@ -13,15 +13,15 @@ namespace VideoVault.WebApi.Controllers
     public class MapBuildingController : ApiController
     {
         [HttpPost]
-        public async Task<ActionResult<TemplateDto>> Create(UpsertTemplateCommand command)
+        public async Task<ActionResult<SpreadSheetTemplateDto>> Create(UpsertTemplateCommand command)
         {
             return await Mediator.Send(command);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TemplateDto>> Update(int id, UpsertTemplateCommand command)
+        public async Task<ActionResult<SpreadSheetTemplateDto>> Update(int id, UpsertTemplateCommand command)
         {
-            if (id != command.Template.Id)
+            if (id != command.SpreadSheetTemplate.Id)
             {
                 return BadRequest();
             }
@@ -38,7 +38,7 @@ namespace VideoVault.WebApi.Controllers
         }*/
 
         [HttpGet("[action]/{id}")]
-        public async Task<ActionResult<TemplateDto>> GetById(int id)
+        public async Task<ActionResult<SpreadSheetTemplateDto>> GetById(int id)
         {
             return await Mediator.Send(new GetTemplateCommand { Id = id });
         }

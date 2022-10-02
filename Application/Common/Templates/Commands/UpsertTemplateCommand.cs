@@ -7,12 +7,12 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Templates.Commands
 {
-    public class UpsertTemplateCommand : IRequest<TemplateDto>
+    public class UpsertTemplateCommand : IRequest<SpreadSheetTemplateDto>
     {
-        public TemplateDto Template { get; set; }
+        public SpreadSheetTemplateDto SpreadSheetTemplate { get; set; }
     }
 
-    public class UpsertTemplateCommandHandler : IRequestHandler<UpsertTemplateCommand, TemplateDto>
+    public class UpsertTemplateCommandHandler : IRequestHandler<UpsertTemplateCommand, SpreadSheetTemplateDto>
     {
         private readonly ITemplateService _templateService;
 
@@ -21,9 +21,9 @@ namespace VideoVault.Application.Common.Templates.Commands
             _templateService = templateService;
         }
 
-        public async Task<TemplateDto> Handle(UpsertTemplateCommand request, CancellationToken cancellationToken)
+        public async Task<SpreadSheetTemplateDto> Handle(UpsertTemplateCommand request, CancellationToken cancellationToken)
         {
-            return await _templateService.UpsertAsync(request.Template);
+            return await _templateService.UpsertAsync(request.SpreadSheetTemplate);
         }
     }
 }

@@ -22,20 +22,20 @@ namespace Infrastructure.Templates
             _mapper = mapper;
         }
 
-        public async Task<List<TemplateDto>> GetAsync()
+        public async Task<List<SpreadSheetTemplateDto>> GetAsync()
         {
-            return _mapper.Map<List<TemplateDto>>(await _context.Templates.ToListAsync());
+            return _mapper.Map<List<SpreadSheetTemplateDto>>(await _context.Templates.ToListAsync());
         }
 
-        public async Task<TemplateDto> GetSingleAsync(int id)
+        public async Task<SpreadSheetTemplateDto> GetSingleAsync(int id)
         {
-            return _mapper.Map<TemplateDto>(await _context.Templates
+            return _mapper.Map<SpreadSheetTemplateDto>(await _context.Templates
                 .FirstOrDefaultAsync(x => x.Id ==id));
         }
 
-        public async Task<TemplateDto> UpsertAsync(TemplateDto templateDto)
+        public async Task<SpreadSheetTemplateDto> UpsertAsync(SpreadSheetTemplateDto spreadSheetTemplateDto)
         {
-            var template = _mapper.Map<Template>(templateDto);
+            var template = _mapper.Map<Template>(spreadSheetTemplateDto);
             Template entity;
             if (template.Id != 0)
             {
@@ -54,7 +54,7 @@ namespace Infrastructure.Templates
             }
 
             await _context.CommitTransactionAsync();
-            return _mapper.Map<TemplateDto>(entity);
+            return _mapper.Map<SpreadSheetTemplateDto>(entity);
         }
 
         public async Task DeleteAsync(int id)

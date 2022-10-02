@@ -7,11 +7,11 @@ using VideoVault.Application.Common.Models;
 
 namespace VideoVault.Application.Common.Templates.Commands
 {
-    public class GetTemplatesCommand : IRequest<List<TemplateDto>>
+    public class GetTemplatesCommand : IRequest<List<SpreadSheetTemplateDto>>
     {
     }
 
-    public class GetTemplatesCommandHandler : IRequestHandler<GetTemplatesCommand, List<TemplateDto>>
+    public class GetTemplatesCommandHandler : IRequestHandler<GetTemplatesCommand, List<SpreadSheetTemplateDto>>
     {
         private readonly ITemplateService _templateService;
 
@@ -20,7 +20,7 @@ namespace VideoVault.Application.Common.Templates.Commands
             _templateService = templateService;
         }
 
-        public async Task<List<TemplateDto>> Handle(GetTemplatesCommand request, CancellationToken cancellationToken)
+        public async Task<List<SpreadSheetTemplateDto>> Handle(GetTemplatesCommand request, CancellationToken cancellationToken)
         {
             return await _templateService.GetAsync();
         }

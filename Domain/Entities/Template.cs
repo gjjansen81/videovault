@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Nodes;
 using VideoVault.Domain.Common;
 
 namespace VideoVault.Domain.Entities

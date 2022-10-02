@@ -7,7 +7,7 @@ namespace VideoVault.Application.Common.Templates.Commands
     {
         public UpsertTemplateCommandValidator()
         {
-            RuleFor(v => v.Template)
+            RuleFor(v => v.SpreadSheetTemplate)
                 .NotEmpty();
         }
     }

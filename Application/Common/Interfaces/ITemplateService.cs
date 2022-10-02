@@ -6,9 +6,9 @@ namespace VideoVault.Application.Common.Interfaces
 {
     public interface ITemplateService
     {
-        Task<List<TemplateDto>> GetAsync();
-        Task<TemplateDto> GetSingleAsync(int id);
-        Task<TemplateDto> UpsertAsync(TemplateDto template);
+        Task<List<SpreadSheetTemplateDto>> GetAsync();
+        Task<SpreadSheetTemplateDto> GetSingleAsync(int id);
+        Task<SpreadSheetTemplateDto> UpsertAsync(SpreadSheetTemplateDto spreadSheetTemplate);
         Task DeleteAsync(int id);
     }
 }

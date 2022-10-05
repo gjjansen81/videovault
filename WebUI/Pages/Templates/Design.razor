@@ -9,7 +9,7 @@
 @using Newtonsoft.Json
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Services
-@using VideoVault.WebUI.Components.Grid
+@using VideoVault.WebUI.Components.EditableTable
 
 @inject ITemplateClient _templateService
 @inject IStringLocalizer<App> L
@@ -32,13 +32,16 @@
                     <div class="form-group">
                         <SheetNavigation>
                             <TabControl>
-                                @foreach (var sheet in Template.Sheets)
+                                @if (Template.Sheets)
                                 {
-                                    <TabPage Text=@sheet.Name>
-                                        <EditableTable height=@sheet.Rows.Max(x => x.Index)>
+                                    @foreach (var sheet in Template.Sheets)
+                                    {
+                                        <TabPage Text=@sheet.Name>
+                                            <EditableTable sheet="@sheet">
 
-                                        </EditableTable>
-                                    </TabPage>
+                                            </EditableTable>
+                                        </TabPage>
+                                    }
                                 }
                             </TabControl>
                         </SheetNavigation>

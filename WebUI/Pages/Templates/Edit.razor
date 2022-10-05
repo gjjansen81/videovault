@@ -7,7 +7,6 @@
 @using Microsoft.Extensions.Localization
 @using VideoVault.WebUI.Components.Tab
 @using VideoVault.WebUI.Services
-@using VideoVault.WebUI.Components.Grid
 
 @inject ITemplateClient TemplateService
 @inject IStringLocalizer<App> L
@@ -45,11 +44,11 @@
     public int Id { get; set; }
 
     [Parameter]
-    public TemplateDto Template { get; set; }
+    public SpreadSheetTemplateDto Template { get; set; }
  
     protected override async Task OnInitializedAsync()
     {
-        Template = new TemplateDto()
+        Template = new SpreadSheetTemplateDto()
         {
         };
         
@@ -67,7 +66,7 @@
 
     private async Task HandleValidSubmit()
     {
-        Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { Template = Template });
+        Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { SpreadSheetTemplate = Template });
         if (Template.Id > 0)
         {
             NavigationManager.NavigateTo($"Templates/List/");

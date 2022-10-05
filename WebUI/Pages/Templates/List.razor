@@ -14,12 +14,12 @@
     <Authorized Context="Auth">
         <h1>@L["TEMPLATES_GENERAL_TITLE"]</h1>
         <Grid Items="templates" class="table table-bordered" RowClass='(row, index) => row.Id%2 == 1 ? "table-success" : ""'>
-            <GridColumn TRowData="TemplateDto" Expression="c => c.Id" />
-            <GridColumn TRowData="TemplateDto" Expression="c => c.Name" />
-            <GridColumn TRowData="TemplateDto">
+            <GridColumn TRowData="SpreadSheetTemplateDto" Expression="c => c.Id" />
+            <GridColumn TRowData="SpreadSheetTemplateDto" Expression="c => c.Name" />
+            <GridColumn TRowData="SpreadSheetTemplateDto">
                 <a href="/Templates/edit/@context.Id">@L["BUTTON_EDIT"]</a>
             </GridColumn>
-            <GridColumn TRowData="TemplateDto">
+            <GridColumn TRowData="SpreadSheetTemplateDto">
                 <a href="/Templates/design/@context.Id">@L["BUTTON_DESIGN"]</a>
             </GridColumn>
         </Grid>
@@ -28,7 +28,7 @@
 </AuthorizeView>
 
 @code {
-    private List<TemplateDto> templates;
+    private List<SpreadSheetTemplateDto> templates;
 
 
     protected override async Task OnInitializedAsync()

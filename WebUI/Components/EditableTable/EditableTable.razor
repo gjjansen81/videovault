@@ -1,0 +1,76 @@
+﻿@using VideoVault.Domain.Templates
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+@* Render the table *@
+<table @attributes="@TableAttributes">
+    <thead>
+        <tr>
+            <theader>@L["RowNr"]</theader>
+            @for(var i = 0; i < _width; i++)
+            {
+                <theader>CreateColumnHeader(i)</theader>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            @for (var row = 0; row < _height; row++)
+            {
+                @for (var column = 0; column <=_width; column++)
+                {
+                    if (column == 0)
+                    {
+                        <tr> row+1 </tr>
+                        continue;
+                    }
+                    //<tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
+                    <tr>
+                        <InputText type="text"></InputText>
+                    </tr>
+                }
+                
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> TableAttributes { get; set; }
+
+    [Parameter]
+    public ISheetTemplate Sheet { get; set; }
+    private int _height =>  Sheet.Rows.Count();
+    private int _width => Sheet.Rows.Max(x => x.Index);
+
+    // This fragment should contains all the GridColumn
+
+    // GridColumn uses this method to add a column
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // The first render will instantiate the GridColumn defined in the ChildContent.
+            // GridColumn calls AddColumn during its initialization. This means that until
+            // the first render is completed, the columns collection is empty.
+            // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
+            StateHasChanged();
+        }
+    }
+
+    private string CreateColumnHeader(int index)
+    {
+        var columnHeader = "";
+        var remaining = 0;
+        do
+        {
+            columnHeader += (char)('A' + (index - 1) % 26);
+            remaining = index - 26;
+        } 
+        while (remaining > 0);
+        
+        return columnHeader;
+    }
+}

@@ -32,7 +32,7 @@
                     <div class="form-group">
                         <SheetNavigation>
                             <TabControl>
-                                @if (Template.Sheets)
+                                @if (Template.Sheets != null)
                                 {
                                     @foreach (var sheet in Template.Sheets)
                                     {

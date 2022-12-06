@@ -47,7 +47,7 @@ namespace VideoVault.WebApi.Controllers
         {
             await Mediator.Send(new DeleteDataSourceCommand { Guid = guid });
 
-            return NoContent();
+            return Ok();
         }
 
         [HttpGet("[action]")]

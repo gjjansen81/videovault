@@ -22,6 +22,9 @@
             <GridColumn TRowData="DataSourceDto">
                 <a href="/DataSources/design/@context.Guid">@L["BUTTON_DESIGN"]</a>
             </GridColumn>
+            <GridColumn TRowData="DataSourceDto">
+                <button class="btn btn-primary" @onclick="() => DeleteAsync(context.Guid)">@L["BUTTON_DELETE"]</button>
+            </GridColumn>
         </Grid>
         <a href="/DataSources/edit/">@L["BUTTON_ADD"]</a>
     </Authorized>
@@ -51,4 +54,18 @@
             // Do work to load page data and set properties
         }
     }
+
+    private async Task DeleteAsync(Guid guid)
+    {
+        try
+        {
+            await DataSourceService.DeleteAsync(guid);
+
+            _dataSources = (await DataSourceService.GetAsync()).ToList();
+        }
+        catch (ApiException e)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+}
 }

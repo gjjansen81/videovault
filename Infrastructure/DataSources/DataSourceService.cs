@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Common.Attributes;
@@ -55,10 +54,12 @@ namespace Infrastructure.DataSources
         public async Task<DataSourceDto> UpsertAsync(DataSourceDto dataSourceDto)
         {   
             var dataSource = _mapper.Map<DataSource>(dataSourceDto);
-            var mappingNodes = ConvertToMappingNodes(dataSourceDto.RootNode);
+            if (dataSourceDto.RootNode != null)
+            {
+                var mappingNodes = ConvertToMappingNodes(dataSourceDto.RootNode);
 
-            dataSource.Mapper = ConvertToJson(mappingNodes);
-
+                dataSource.Mapper = ConvertToJson(mappingNodes);
+            }
             DataSource entity;
             if (dataSource.Guid != Guid.Empty)
             {
@@ -112,7 +113,10 @@ namespace Infrastructure.DataSources
         {
             var entity = await _context.DataSources.FirstOrDefaultAsync(x => x.Guid == guid);
             if (entity != null)
+            {
                 _context.DataSources.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public List<MappingNodeDto> GetAvailableMappingNodes()

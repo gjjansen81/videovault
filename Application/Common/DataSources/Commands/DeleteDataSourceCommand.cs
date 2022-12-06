@@ -11,11 +11,11 @@ namespace VideoVault.Application.Common.DataSources.Commands
         public Guid Guid { get; set; }
     }
 
-    public class DeleteCustomerCommandHandler : IRequestHandler<DeleteDataSourceCommand, bool>
+    public class DeleteDataSourceCommandHandler : IRequestHandler<DeleteDataSourceCommand, bool>
     {
         private readonly IDataSourceService _DataSourceService;
 
-        public DeleteCustomerCommandHandler(IDataSourceService DataSourceService)
+        public DeleteDataSourceCommandHandler(IDataSourceService DataSourceService)
         {
             _DataSourceService = DataSourceService;
         }

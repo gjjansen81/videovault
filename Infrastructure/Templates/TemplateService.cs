@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
-using VideoVault.Domain.Entities;
 using VideoVault.Domain.Templates;
 using Template = VideoVault.Domain.Entities.Template;
 
@@ -62,6 +61,25 @@ namespace Infrastructure.Templates
             var entity = await _context.Templates.FirstOrDefaultAsync(x => x.Id == id);
             if (entity != null)
                 _context.Templates.Remove(entity);
+        }
+
+        public async Task<SpreadSheetTemplateDto> AddSheetAsync(SpreadSheetTemplateDto spreadSheetTemplateDto, string sheetName)
+        {
+            var template = _mapper.Map<Template>(spreadSheetTemplateDto);
+            
+            if (template.Id != 0)
+            {
+                //_context.Customers.Update(customer);
+                Template entity = await _context.Templates.FirstOrDefaultAsync(x => x.Id == template.Id);
+
+                entity.Sheets.Add(new SheetTemplate() { Name = sheetName });
+                // Validate entity is not null
+            
+                await _context.CommitTransactionAsync();
+                return _mapper.Map<SpreadSheetTemplateDto>(entity);
+            }
+
+            return spreadSheetTemplateDto;
         }
     }
 }

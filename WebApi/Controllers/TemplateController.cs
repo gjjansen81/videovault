@@ -43,10 +43,10 @@ namespace VideoVault.WebApi.Controllers
             return await Mediator.Send(new GetTemplateCommand { Id = id });
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpPost("[action]")]
+        public async Task<ActionResult<SpreadSheetTemplateDto>> AddSheet(AddSheetTemplateCommand command)
         {
-            await Mediator.Send(new DeleteTemplateCommand { Id = id });
+            await Mediator.Send(command);
 
             return NoContent();
         }

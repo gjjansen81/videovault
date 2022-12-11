@@ -7,9 +7,9 @@
 @using VideoVault.WebUI.Components.MappingForm
 @using VideoVault.WebUI.Components.CustomErrorBoundary
 
-@inject IDataSourceClient _dataSourceService
+@inject IDataSourceClient DataSourceService
 @inject IStringLocalizer<App> L
-@inject NavigationManager _navigationManager
+@inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
@@ -71,12 +71,12 @@
         {
             await base.SetParametersAsync(parameters);
 
-            AvailableNodes = (await _dataSourceService.GetAvailableMappingNodesAsync()).ToList();
+            AvailableNodes = (await DataSourceService.GetAvailableMappingNodesAsync()).ToList();
             StateHasChanged();
         }
         catch (ApiException)
         {
-            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
         }
     }
 
@@ -86,14 +86,14 @@
         {
             if (Id != Guid.Empty)
             {
-                DataSource = await _dataSourceService.GetByIdAsync(Id);
+                DataSource = await DataSourceService.GetByIdAsync(Id);
                 RootNode = DataSource.RootNode;
             }
             await base.OnInitializedAsync();
         }
         catch (ApiException)
         {
-            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
         }
         catch (Exception e)
         {
@@ -104,7 +104,7 @@
 
     private async Task HandleValidSubmit()
     {
-        var dataSource = await _dataSourceService.UpdateAsync(Id, new UpsertDataSourceCommand() { DataSource = DataSource });
+        var dataSource = await DataSourceService.UpdateAsync(Id, new UpsertDataSourceCommand() { DataSource = DataSource });
     }
 
     protected override void OnAfterRender(bool firstRender)

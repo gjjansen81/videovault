@@ -10,5 +10,6 @@ namespace VideoVault.Application.Common.Interfaces
         Task<SpreadSheetTemplateDto> GetSingleAsync(int id);
         Task<SpreadSheetTemplateDto> UpsertAsync(SpreadSheetTemplateDto spreadSheetTemplate);
         Task DeleteAsync(int id);
+        Task<SpreadSheetTemplateDto> AddSheetAsync(SpreadSheetTemplateDto spreadSheetTemplateDto, string sheetName);
     }
 }

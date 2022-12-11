@@ -1,7 +1,6 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using VideoVault.Application.Common.Customers.Commands;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
 

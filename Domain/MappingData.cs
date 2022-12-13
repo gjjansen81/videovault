@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using VideoVault.Domain.ValidationRules;
 
 namespace VideoVault.Domain

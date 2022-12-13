@@ -4,11 +4,15 @@ using VideoVault.Domain.Common;
 
 namespace VideoVault.Domain.Entities
 {
-    public class Template : AuditableEntity
+    public class RowTemplate : AuditableEntity
     {
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public List<SheetTemplate> Sheets { get; set; } = new List<SheetTemplate>();
+        public int Index { get; set; }
+        public List<CellTemplate> Cells
+        {
+            get; set;
+        }
     }
 }

@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using VideoVault.Domain.Common;
 
 namespace VideoVault.Domain.Entities
 {
-    public class Template : AuditableEntity
+    public class CellTemplate : AuditableEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public List<SheetTemplate> Sheets { get; set; } = new List<SheetTemplate>();
+        public int Index { get; set; }
+
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public Guid DataSourceGuid { get; set; }
     }
 }

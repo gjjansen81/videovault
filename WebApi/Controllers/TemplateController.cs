@@ -46,9 +46,7 @@ namespace VideoVault.WebApi.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<SpreadSheetTemplateDto>> AddSheet(AddSheetTemplateCommand command)
         {
-            await Mediator.Send(command);
-
-            return NoContent();
+            return await Mediator.Send(command);
         }
     }
 }

@@ -36,6 +36,9 @@ namespace Infrastructure.Persistence
         public DbSet<ApplicationUser> AspNetUsers {  get; set; }
         public DbSet<Customer> Customers{  get; set; }
         public DbSet<Template> Templates{  get; set; }
+        public DbSet<SheetTemplate> SheetTemplates {  get; set; }
+        public DbSet<RowTemplate> RowTemplates {  get; set; }
+        public DbSet<CellTemplate> CellTemplates{  get; set; }
         public DbSet<DataSource> DataSources{  get; set; }
 
         //public DbSet<TodoItem> TodoItems { get; set; }

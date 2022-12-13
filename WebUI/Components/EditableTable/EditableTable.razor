@@ -1,5 +1,5 @@
-﻿@using VideoVault.Domain.Templates
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
+@using VideoVault.WebApi;
 @inject IStringLocalizer<App> L
 
 @* Render the table *@
@@ -40,7 +40,7 @@
     public Dictionary<string, object> TableAttributes { get; set; }
 
     [Parameter]
-    public ISheetTemplate Sheet { get; set; }
+    public SheetTemplateDto Sheet { get; set; }
     private int _height =>  Sheet.Rows.Count();
     private int _width => Sheet.Rows.Max(x => x.Index);
 

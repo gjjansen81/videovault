@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
-using VideoVault.Domain.Templates;
+using VideoVault.Domain.Entities;
 using Template = VideoVault.Domain.Entities.Template;
 
 namespace Infrastructure.Templates

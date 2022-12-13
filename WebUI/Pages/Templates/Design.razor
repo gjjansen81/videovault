@@ -11,9 +11,9 @@
 @using VideoVault.WebUI.Services
 @using VideoVault.WebUI.Components.EditableTable
 
-@inject ITemplateClient _templateService
+@inject ITemplateClient TemplateService
 @inject IStringLocalizer<App> L
-@inject NavigationManager _navigationManager
+@inject NavigationManager NavigationManager
 
 <AuthorizeView roles="superuser">
     <Authorized Context="Auth">
@@ -73,12 +73,12 @@
         try {
             if (Id > 0)
             {
-                Template = await _templateService.GetByIdAsync(Id);
+                Template = await TemplateService.GetByIdAsync(Id);
             }
         }
         catch (ApiException)
         {
-            _navigationManager.NavigateTo($"Identity/Account/Login?redirect={_navigationManager.ToBaseRelativePath(_navigationManager.Uri)}");
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
         }
     }
 
@@ -91,7 +91,7 @@
     {
         try
         {
-            Template = await _templateService.AddSheetAsync(new AddSheetTemplateCommand() { SpreadSheetTemplate = Template, Name = L["TEMPLATE_SHEET_NEWNAME"] });
+            Template = await TemplateService.AddSheetAsync(new AddSheetTemplateCommand() { SpreadSheetTemplate = Template, Name = L["TEMPLATE_SHEET_NEWNAME"] });
         }
         catch (ApiException e)
         {

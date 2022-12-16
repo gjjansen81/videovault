@@ -42,7 +42,7 @@
     [Parameter]
     public SheetTemplateDto Sheet { get; set; }
     private int _height =>  Sheet.Rows.Count();
-    private int _width => Sheet.Rows.Max(x => x.Index);
+    private int _width => Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
 
     // This fragment should contains all the GridColumn
 

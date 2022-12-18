@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using VideoVault.Application.Common.Models;
 using VideoVault.Domain.Entities;
-using VideoVault.Domain.Templates;
 
 namespace VideoVault.Application.Common.Mappings
 {
@@ -19,10 +18,13 @@ namespace VideoVault.Application.Common.Mappings
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
             CreateMap<Template, SpreadSheetTemplateDto>();
-            CreateMap<Domain.Entities.SheetTemplate, SheetTemplateDto>();
-            CreateMap<Domain.Entities.RowTemplate, RowTemplateDto>();
-            CreateMap<Domain.Entities.CellTemplate, CellTemplateDto>();
+            CreateMap<SheetTemplate, SheetTemplateDto>();
+            CreateMap<RowTemplate, RowTemplateDto>();
+            CreateMap<CellTemplate, CellTemplateDto>();
             CreateMap<SpreadSheetTemplateDto, Template>();
+            CreateMap<SheetTemplateDto, SheetTemplate>();
+            CreateMap<RowTemplateDto, RowTemplate>();
+            CreateMap<CellTemplateDto, CellTemplate>();
             CreateMap<DataSource, DataSourceDto>();
             CreateMap<DataSourceDto, DataSource>();
             //ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
@@ -43,7 +45,6 @@ namespace VideoVault.Application.Common.Mappings
                     ?? type.GetInterface("IMapFrom`1").GetMethod("Mapping");
                 
                 methodInfo?.Invoke(instance, new object[] { this });
-
             }
         }
     }

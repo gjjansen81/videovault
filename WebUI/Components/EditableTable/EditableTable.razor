@@ -17,7 +17,7 @@
             <theader>@L["RowNr"]</theader>
             @for(var i = 0; i < _width; i++)
             {
-                <theader>CreateColumnHeader(i)</theader>
+                <theader>@CreateColumnHeader(i)</theader>
             }
         </tr>
     </thead>
@@ -25,17 +25,20 @@
         @{
             @for (var row = 0; row < _height; row++)
             {
-                @for (var column = 0; column <=_width; column++)
+                @for (var column = 0; column <_width; column++)
                 {
                     if (column == 0)
                     {
-                        <tr> row+1 </tr>
+                        <tr> @(row+1) </tr>
                         continue;
                     }
                     //<tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
                     <tr>
-                        <InputText type="text"></InputText>
-                    </tr>
+                        input
+                      <!--
+                      <InputText type="text"></InputText>
+                      -->
+                      </tr>
                 }
                 
             }
@@ -49,8 +52,8 @@
 
     [Parameter]
     public SheetTemplateDto Sheet { get; set; }
-    private int _height =>  Sheet.Rows.Count();
-    private int _width => Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
+    private int _height { get; set; }
+    private int _width { get; set; } 
 
     // This fragment should contains all the GridColumn
 
@@ -65,6 +68,9 @@
             // the first render is completed, the columns collection is empty.
             // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
             StateHasChanged();
+            _height = Sheet.Rows.Count();
+            _width = Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
+
         }
     }
 

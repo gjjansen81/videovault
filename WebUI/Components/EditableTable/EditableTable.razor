@@ -2,6 +2,14 @@
 @using VideoVault.WebApi;
 @inject IStringLocalizer<App> L
 
+<div class="form-group">
+    <label class="col-1">@L["TEMPLATE_NR_ROWS"]</label>
+    <InputNumber @bind-Value="_height" TValue="int" class="form-control col-1"/>
+</div>
+<div class="form-group">
+    <label class="col-1">@L["TEMPLATE_NR_COLUMNS"]</label>
+    <InputNumber @bind-Value="_width" TValue="int" class="form-control col-1"/>
+</div>
 @* Render the table *@
 <table @attributes="@TableAttributes">
     <thead>

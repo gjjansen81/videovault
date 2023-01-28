@@ -28,8 +28,11 @@ namespace Infrastructure.Templates
 
         public async Task<SpreadSheetTemplateDto> GetSingleAsync(int id)
         {
-            return _mapper.Map<SpreadSheetTemplateDto>(await _context.Templates
-                .FirstOrDefaultAsync(x => x.Id ==id));
+            return _mapper.Map<SpreadSheetTemplateDto>(
+                await _context.Templates
+                    .Include(x => x.Sheets)
+                    .FirstOrDefaultAsync(x => x.Id ==id)
+            );
         }
 
         public async Task<SpreadSheetTemplateDto> UpsertAsync(SpreadSheetTemplateDto spreadSheetTemplateDto)
@@ -69,11 +72,9 @@ namespace Infrastructure.Templates
             
             if (template.Id != 0)
             {
-                //_context.Customers.Update(customer);
-                Template entity = await _context.Templates.FirstOrDefaultAsync(x => x.Id == template.Id);
+                Template entity = await _context.Templates.Include(x => x.Sheets).FirstOrDefaultAsync(x => x.Id == template.Id);
 
                 entity.Sheets.Add(new SheetTemplate() { Name = sheetName });
-                // Validate entity is not null
             
                 await _context.CommitTransactionAsync();
                 return _mapper.Map<SpreadSheetTemplateDto>(entity);

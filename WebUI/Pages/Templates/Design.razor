@@ -98,4 +98,18 @@
             NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
         }
     }
+
+    private void UpdateRows(SheetTemplateDto sheet, int height)
+    {
+        var delta = sheet.Rows.Count() - height;
+        if (delta > 0)
+            sheet.Rows.ToList().RemoveRange(height, sheet.Rows.Count() - height);
+        else if (delta < 0)
+            sheet.Rows.ToList().AddRange(new RowTemplateDto[-delta]);
+    }
+
+    private void UpdateColumns()
+    {
+    }
+    
 }

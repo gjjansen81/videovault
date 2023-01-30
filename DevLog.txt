@@ -12,6 +12,10 @@ Wishlist
 
  - Move node creation in addnodemodal to a node factory
 
+ Bugs
+ - datasource: can't save value from node
+
  Now
  - Template design
-	
+	- Save width & height of sheet for display
+	- Link datasource or string value to cell

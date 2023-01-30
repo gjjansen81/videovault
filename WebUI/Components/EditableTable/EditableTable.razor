@@ -3,21 +3,24 @@
 @inject IStringLocalizer<App> L
 
 <div class="form-group">
-    <label class="col-1">@L["TEMPLATE_NR_ROWS"]</label>
-    <InputNumber @bind-Value="_height" TValue="int" class="form-control col-1"/>
-</div>
-<div class="form-group">
-    <label class="col-1">@L["TEMPLATE_NR_COLUMNS"]</label>
-    <InputNumber @bind-Value="_width" TValue="int" class="form-control col-1"/>
+    
+    <div class="m-auto">
+        <label class="col-4">@L["TEMPLATE_NR_ROWS"]</label>
+        <InputNumber @bind-Value="_height" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
+    </div>
+    <div class="m-auto">
+        <label class="col-4">@L["TEMPLATE_NR_COLUMNS"]</label>
+        <InputNumber @bind-Value="_width" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
+    </div>
 </div>
 @* Render the table *@
-<table @attributes="@TableAttributes">
+<table @attributes="@TableAttributes" class="table-bordered w-100">
     <thead>
         <tr>
-            <theader>@L["RowNr"]</theader>
+            <th style="max-width:100px;">@L["RowNr"]</th>
             @for(var i = 0; i < _width; i++)
             {
-                <theader>@CreateColumnHeader(i)</theader>
+                <th>@CreateColumnHeader(i)</th>
             }
         </tr>
     </thead>
@@ -25,22 +28,20 @@
         @{
             @for (var row = 0; row < _height; row++)
             {
-                @for (var column = 0; column <_width; column++)
-                {
-                    if (column == 0)
+                <tr>
+                    @for (var column = 0; column <_width+1; column++)
                     {
-                        <tr> @(row+1) </tr>
-                        continue;
+                        if (column == 0)
+                        {
+                            <td style="max-width:100px;"> @(row+1) </td>
+                            continue;
+                        }
+                        //<tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
+                        <td>
+                          te
+                        </td>
                     }
-                    //<tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
-                    <tr>
-                        input
-                      <!--
-                      <InputText type="text"></InputText>
-                      -->
-                      </tr>
-                }
-                
+                </tr>
             }
         }
     </tbody>
@@ -54,6 +55,7 @@
     public SheetTemplateDto Sheet { get; set; }
     private int _height { get; set; }
     private int _width { get; set; } 
+    private string[,] Values { get; set; }
 
     // This fragment should contains all the GridColumn
 
@@ -84,7 +86,19 @@
             remaining -= 26;
         } 
         while (remaining >= 0);
-        
+
         return columnHeader;
+    }
+
+    private void UpdateTableValues()
+    {
+        Values = new string[_width,_height];
+        for (int column=0; column < _width; column++)
+        {
+            for(int row=0; row<_height;row++ )
+            {
+                Values[column, row] = string.Empty;
+            }
+        }
     }
 }

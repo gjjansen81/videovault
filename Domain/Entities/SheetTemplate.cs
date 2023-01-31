@@ -9,6 +9,8 @@ namespace VideoVault.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public List<RowTemplate> Rows { get; set; }
     }
 }

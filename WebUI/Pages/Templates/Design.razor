@@ -46,7 +46,7 @@
                             </TabControl>
                         </SheetNavigation>
                     </div> 
-                    <button type="submit" class="btn btn-primary">@L["BUTTON_SUBMIT"]</button>
+                    <button type="submit" class="btn btn-primary" @onclick="() => SaveAsync()">@L["BUTTON_SUBMIT"]</button>
                     <button class="btn btn-primary" @onclick="() => NewSheetAsync()">@L["BUTTON_NEWSHEET"]</button>
                 </EditForm>
             </TabPage>
@@ -70,7 +70,8 @@
         {
         };
 
-        try {
+        try 
+        {
             if (Id > 0)
             {
                 Template = await TemplateService.GetByIdAsync(Id);
@@ -92,6 +93,18 @@
         try
         {
             Template = await TemplateService.AddSheetAsync(new AddSheetTemplateCommand() { SpreadSheetTemplate = Template, Name = L["TEMPLATE_SHEET_NEWNAME"] });
+        }
+        catch (ApiException e)
+        {
+            NavigationManager.NavigateTo($"Identity/Account/Login?redirect={NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}");
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        try
+        {
+            Template = await TemplateService.CreateAsync(new UpsertTemplateCommand() { SpreadSheetTemplate = Template });
         }
         catch (ApiException e)
         {

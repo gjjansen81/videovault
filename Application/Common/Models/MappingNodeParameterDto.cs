@@ -8,13 +8,13 @@ public class MappingNodeParameterDto
 {
     private dynamic _value = null;
     public string Name { get; set; }
-    public DataType DateType { get; set; }
+    public DataType DataType { get; set; }
 
     public dynamic Value
     {
         get
         {
-            switch (DateType)
+            switch (DataType)
             {
                 case DataType.Bool:
                     return (bool?) _value;
@@ -48,7 +48,7 @@ public class MappingNodeParameterDto
         if (value == null)
             _value = null;
 
-        switch (DateType)
+        switch (DataType)
         {
             case DataType.Bool:
                 _value = (bool?)value;
@@ -73,7 +73,7 @@ public class MappingNodeParameterDto
 
     private void ExtractFromJsonElement(JsonElement jsonElement)
     {
-        switch (DateType)
+        switch (DataType)
         {
             case DataType.Bool:
                 _value = jsonElement.GetBoolean();

@@ -2,6 +2,7 @@
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
@@ -42,12 +43,16 @@ namespace Infrastructure.Templates
             if (template.Id != 0)
             {
                 //_context.Customers.Update(customer);
-                entity = await _context.Templates.FirstOrDefaultAsync(x => x.Id == template.Id);
+                entity = await _context.Templates.Include(x => x.Sheets).FirstOrDefaultAsync(x => x.Id == template.Id);
 
                 // Validate entity is not null
                 if (entity != null)
                 {
                     _context.Entry(entity).CurrentValues.SetValues(template);
+                    foreach(var sheet in entity.Sheets)
+                    {
+                        _context.Entry(sheet).CurrentValues.SetValues(template.Sheets.FirstOrDefault(x => x.Id == sheet.Id));
+                    }
                 }
             }
             else

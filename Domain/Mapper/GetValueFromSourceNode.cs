@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
-using Newtonsoft.Json.Linq;
 using VideoVault.Domain.Common.Attributes;
 
 namespace VideoVault.Domain.Mapper

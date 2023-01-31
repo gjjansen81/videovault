@@ -10,6 +10,7 @@ using System.Runtime.Remoting;
 using System.Threading.Tasks;
 using VideoVault.Application.Common.Interfaces;
 using VideoVault.Application.Common.Models;
+using VideoVault.Domain;
 using VideoVault.Domain.Common.Attributes;
 using VideoVault.Domain.Entities;
 using VideoVault.Domain.Enums;
@@ -174,7 +175,7 @@ namespace Infrastructure.DataSources
                     Name = property.Name,
                     Description = description.ToUpper(),
                     Placeholder = placeholder.ToUpper(),
-                    DateType = ConvertTypeToDataType(property.PropertyType),
+                    DataType = ConvertTypeToDataType(property.PropertyType),
                     Value = (mappingNode != null) ? property.GetValue(mappingNode) : null
                 });
             }
@@ -218,6 +219,18 @@ namespace Infrastructure.DataSources
         
         private DataType ConvertTypeToDataType(Type type)
         {
+            if (type.IsInterface)
+            {
+                if (typeof(ICoordinate).IsAssignableFrom(type))
+                {
+                    return DataType.Coordinate;
+                }
+
+                if (typeof(IMappingNode).IsAssignableFrom(type))
+                {
+                    return DataType.MappingNode;
+                }
+            }
             switch (Type.GetTypeCode(type))
             {
                 //case TypeCode.Byte:

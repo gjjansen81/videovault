@@ -6,11 +6,11 @@
     
     <div class="m-auto">
         <label class="col-4">@L["TEMPLATE_NR_ROWS"]</label>
-        <InputNumber @bind-Value="_height" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
+        <InputNumber @bind-Value="Sheet.Height" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
     </div>
     <div class="m-auto">
         <label class="col-4">@L["TEMPLATE_NR_COLUMNS"]</label>
-        <InputNumber @bind-Value="_width" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
+        <InputNumber @bind-Value="Sheet.Width" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
     </div>
 </div>
 @* Render the table *@
@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th style="max-width:100px;">@L["RowNr"]</th>
-            @for(var i = 0; i < _width; i++)
+            @for(var i = 0; i < Sheet.Width; i++)
             {
                 <th>@CreateColumnHeader(i)</th>
             }
@@ -26,10 +26,10 @@
     </thead>
     <tbody>
         @{
-            @for (var row = 0; row < _height; row++)
+            @for (var row = 0; row < Sheet.Height; row++)
             {
                 <tr>
-                    @for (var column = 0; column <_width+1; column++)
+                    @for (var column = 0; column < Sheet.Width + 1; column++)
                     {
                         if (column == 0)
                         {
@@ -53,8 +53,6 @@
 
     [Parameter]
     public SheetTemplateDto Sheet { get; set; }
-    private int _height { get; set; }
-    private int _width { get; set; } 
     private string[,] Values { get; set; }
 
     // This fragment should contains all the GridColumn
@@ -70,8 +68,8 @@
             // the first render is completed, the columns collection is empty.
             // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
             StateHasChanged();
-            _height = Sheet.Rows.Count();
-            _width = Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
+            //_height = Sheet.Rows.Count();
+            //_width = Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
 
         }
     }
@@ -92,13 +90,13 @@
 
     private void UpdateTableValues()
     {
-        Values = new string[_width,_height];
+        /*Values = new string[_width,_height];
         for (int column=0; column < _width; column++)
         {
             for(int row=0; row<_height;row++ )
             {
                 Values[column, row] = string.Empty;
             }
-        }
+        }*/
     }
 }

@@ -8,5 +8,7 @@
         Double,
         String,
         DateTime,
+        MappingNode,
+        Coordinate,
     }
 }

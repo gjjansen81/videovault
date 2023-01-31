@@ -17,5 +17,4 @@ Wishlist
 
  Now
  - Template design
-	- Save width & height of sheet for display
 	- Link datasource or string value to cell

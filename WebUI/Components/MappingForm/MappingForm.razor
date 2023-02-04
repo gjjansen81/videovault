@@ -29,17 +29,21 @@ else
                             <label for="@parameter.Name">@L[parameter.Description]: </label>
                         </td>
                         <td>
-                            @if (parameter.DateType == DataType.Bool)
+                            @if (parameter.DataType == DataType.Bool)
                             {
                                 <ParameterInputBoolean Parameter="parameter"></ParameterInputBoolean>
                             }
-                            else if (parameter.DateType == DataType.Int)
+                            else if (parameter.DataType == DataType.Int)
                             {
                                 <ParameterInputInteger Parameter="parameter"></ParameterInputInteger>
                             }
-                            else if (parameter.DateType == DataType.DateTime)
+                            else if (parameter.DataType == DataType.DateTime)
                             {
                                 <ParameterInputDateTime Parameter="parameter"></ParameterInputDateTime>
+                            }
+                            else if (parameter.DataType == DataType.Coordinate)
+                            {
+                                <ParameterInputCoordinate Parameter="parameter"></ParameterInputCoordinate>
                             }
                             else
                             {

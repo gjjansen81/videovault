@@ -267,11 +267,17 @@ namespace Infrastructure.DataSources
                 PropertyInfo prop = t.GetProperty(parameter.Name);
                 if (prop == null)
                     continue;
-                
-                if (parameter.Value == null)
-                    continue;
-                
-                prop.SetValue(node, parameter.Value);
+
+                if (parameter.DataType == DataType.Coordinate)
+                {
+                    var jsonString = ((System.Text.Json.JsonElement)parameter.Value).GetString();
+                    var value = JsonConvert.DeserializeObject<ExcelCoordinate>(jsonString.ToString());
+                    prop.SetValue(node, value);
+                }
+                else if (parameter.Value != null)
+                {
+                    prop.SetValue(node, parameter.Value);
+                }
             }
 
             if (mappingNodeDto.Children != null)

@@ -1,0 +1,82 @@
+﻿@using Newtonsoft.Json;
+@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>
+                @L["MAPPINGFORM_COORDINDATE_SHEET"]
+            </td>
+            <td>
+                @L["MAPPINGFORM_COORDINDATE_COLUMN"]
+            </td>
+            <td>
+                @L["MAPPINGFORM_COORDINDATE_ROW"]
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <InputText type="text" id="Parameter.Name" class="form-control" @bind-Value="Sheet" placeholder="@L[Parameter.Placeholder]"></InputText>
+            </td>
+            <td>
+                <InputText type="text" id="Parameter.Name" class="form-control" @bind-Value="Column" placeholder="@L[Parameter.Placeholder]"></InputText>
+            </td>
+            <td>
+                <InputText type="number" id="Parameter.Name" class="form-control" @bind-Value="Row" placeholder="@L[Parameter.Placeholder]"></InputText>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    
+@code {
+    [Parameter] 
+    public MappingNodeParameterDto Parameter { get; set; }
+
+    private Dictionary<string, string> Values = new ();
+
+    private string Sheet
+    {
+        get => Values.GetValueOrDefault("SheetName");
+        set => UpdateCoordinate("SheetName", value);
+    }
+
+    private string Column
+    {
+        get => Values.GetValueOrDefault("ColumnIndex");
+        set => UpdateCoordinate("ColumnIndex", value);
+    }
+
+    private string Row
+    {
+        get => Values.GetValueOrDefault("RowIndex");
+        set => UpdateCoordinate("RowIndex", value);
+    }
+
+    private void UpdateCoordinate(string key, string value)
+    {
+        if (Values.ContainsKey(key))
+            Values[key] = value;
+        else
+            Values.Add(key, value);
+
+        Parameter.Value = JsonConvert.SerializeObject(Values);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (Parameter.Value != null)
+                Values = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(Parameter.Value.ToString());
+      
+                // The first render will instantiate the GridColumn defined in the ChildContent.
+            // GridColumn calls AddColumn during its initialization. This means that until
+            // the first render is completed, the columns collection is empty.
+            // Calling StateHasChanged() will re-render the component, so the second time it will know the columns
+            StateHasChanged();
+        }
+    }
+}
+    

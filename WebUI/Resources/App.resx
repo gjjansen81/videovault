@@ -120,6 +120,15 @@
   <data name="BUTTON_ADD" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="BUTTON_DELETE" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="BUTTON_DESIGN" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="BUTTON_EDIT" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="BUTTON_SETPASSWORD" xml:space="preserve">
     <value>Set password</value>
   </data>
@@ -165,8 +174,41 @@
   <data name="CUSTOMERS_EDIT_TAB_USERS_TITLE" xml:space="preserve">
     <value>Users</value>
   </data>
+  <data name="DATASOURCES_DESIGN_TITLE" xml:space="preserve">
+    <value>Design datasource</value>
+  </data>
+  <data name="DATASOURCES_EDIT_TAB_GENERAL_NAME" xml:space="preserve">
+    <value>Edit datasource</value>
+  </data>
+  <data name="DATASOURCES_EDIT_TAB_GENERAL_TITLE" xml:space="preserve">
+    <value>Edit datasource</value>
+  </data>
+  <data name="DATASOURCES_GENERAL_TITLE" xml:space="preserve">
+    <value>Datasource</value>
+  </data>
+  <data name="MAPPINGFORM_COORDINDATE_COLUMN" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="MAPPINGFORM_COORDINDATE_ROW" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="MAPPINGFORM_COORDINDATE_SHEET" xml:space="preserve">
+    <value>Sheet</value>
+  </data>
   <data name="MAPPINGFORM_NOTHINGTOCONFIGURE" xml:space="preserve">
     <value>Nothing to configure</value>
+  </data>
+  <data name="TEMPLATES_DESIGN_TITLE" xml:space="preserve">
+    <value>Design template</value>
+  </data>
+  <data name="TEMPLATES_EDIT_TAB_GENERAL_NAME" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="TEMPLATES_EDIT_TAB_GENERAL_TITLE" xml:space="preserve">
+    <value>Edit template</value>
+  </data>
+  <data name="TEMPLATES_GENERAL_TITLE" xml:space="preserve">
+    <value>Template</value>
   </data>
   <data name="USERS_EDIT_TAB_GENERAL_EMAILADDRESS" xml:space="preserve">
     <value>E-mail address</value>

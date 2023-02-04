@@ -32,7 +32,7 @@ public class MappingNodeParameterDto
         }
         set
         {
-            if (value is System.Text.Json.JsonElement jsonElement)
+            if (value is JsonElement jsonElement)
             {
                 ExtractFromJsonElement(jsonElement);
             }

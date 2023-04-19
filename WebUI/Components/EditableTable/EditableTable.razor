@@ -2,6 +2,13 @@
 @using VideoVault.WebApi;
 @inject IStringLocalizer<App> L
 
+<style>
+    .selected-cell
+    {
+        background-color: red;
+    }
+</style>
+
 <div class="form-group">
     
     <div class="m-auto">
@@ -12,6 +19,7 @@
         <label class="col-4">@L["TEMPLATE_NR_COLUMNS"]</label>
         <InputNumber @bind-Value="Sheet.Width" TValue="int" class="form-control col-1 d-inline" @onchange=UpdateTableValues />
     </div>
+    @pressedKey
 </div>
 @* Render the table *@
 <table @attributes="@TableAttributes" class="table-bordered w-100">
@@ -36,9 +44,11 @@
                             <td style="max-width:100px;"> @(row+1) </td>
                             continue;
                         }
+                        int localRow = row;
+                        int localColumn = column;
                         //<tr @key="item.GetHashCode()" class="@(RowClass?.Invoke(item, index++))">
-                        <td>
-                          te
+                        <td @onclick="(args) => OnClick(args, localRow, localColumn)" class="@(Selected.Contains((localRow, localColumn)) ? "selected-cell" : "")">
+                          
                         </td>
                     }
                 </tr>
@@ -46,20 +56,20 @@
         }
     </tbody>
 </table>
-
 @code {
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object> TableAttributes { get; set; }
 
     [Parameter]
     public SheetTemplateDto Sheet { get; set; }
+    private List<(int, int)> Selected { get; set; } = new ();
     private string[,] Values { get; set; }
-
+    private string pressedKey;
     // This fragment should contains all the GridColumn
 
     // GridColumn uses this method to add a column
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
@@ -70,7 +80,6 @@
             StateHasChanged();
             //_height = Sheet.Rows.Count();
             //_width = Sheet.Rows.Select(x => x.Index).DefaultIfEmpty(0).Max();
-
         }
     }
 
@@ -92,11 +101,29 @@
     {
         /*Values = new string[_width,_height];
         for (int column=0; column < _width; column++)
-        {
-            for(int row=0; row<_height;row++ )
             {
+            for(int row=0; row<_height;row++ )
+                {
                 Values[column, row] = string.Empty;
-            }
+        }
         }*/
+    }
+
+
+    private void OnClick(MouseEventArgs args, int row, int column)
+    {
+        var index = Selected.IndexOf((row, column));
+        if (index >= 0)
+        {
+            Selected.RemoveAt(index);
+        }
+        else
+        {
+            if (!args.CtrlKey)
+            {
+                Selected.Clear();
+            }                
+            Selected.Add((row, column));
+        }
     }
 }

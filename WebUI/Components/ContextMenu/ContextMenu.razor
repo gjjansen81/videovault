@@ -1,0 +1,34 @@
+﻿@using VideoVault.WebApi
+@using Microsoft.Extensions.Localization
+@using VideoVault.WebUI.Components.MappingForm;
+
+@inject IStringLocalizer<App> L
+
+@if (IsVisible)
+{
+
+    <div class="dropdown" style="top: @(-PosY)px; left: @(PosX/2)px;">
+        <div class="dropdown-menu" style="display: inline-block" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" href="#" id="edit" @oncontextmenu="(args) => OnClick(args)">Edit</a>
+    </div>
+</div>
+}
+
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+    [Parameter]
+    public double PosX { get; set; }
+    [Parameter]
+    public double PosY { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    private void OnClick(MouseEventArgs args)
+    {
+    }
+
+}
+    
